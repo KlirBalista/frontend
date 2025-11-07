@@ -1,0 +1,103 @@
+/* Custom animations for the BirthCare header */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(255, 107, 107, 0.5); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slide-in-bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header logo animations */
+.logo-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.logo-glow:hover {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Navigation link animations */
+.nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #ff5252);
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::before {
+  width: 100%;
+}
+
+/* Button hover effects */
+.btn-modern {
+  position: relative;
+  background: linear-gradient(45deg, #ff6b6b, #ff5252, #ff6b6b);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.btn-modern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #ff6b6b, #ff5252);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+}
+
+/* Mobile menu animations */
+.mobile-menu {
+  animation: slide-in-bounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Glassmorphism effect */
+.glass-effect {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive animations */
+@media (prefers-reduced-motion: reduce) {
+  .logo-float,
+  .logo-glow,
+  .btn-modern {
+    animation: none;
+  }
+}

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newborn Screening Record</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.4;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .header h2 {
+            margin: 5px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .header h3 {
+            margin: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .header p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            width: 130px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .form-group input, .form-group select {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid #000;
+            padding: 2px;
+            font-size: 12px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin: 20px 0 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+            font-size: 10px;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .test-name {
+            text-align: left;
+            font-weight: bold;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .collection-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .followup-section {
+            margin-bottom: 20px;
+        }
+        .checkbox-list {
+            margin: 10px 0;
+        }
+        .checkbox-list label {
+            display: block;
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        textarea {
+            width: 100%;
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .signature-box {
+            text-align: center;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+        .signature-label {
+            font-size: 10px;
+        }
+        @media print {
+            body {
+                margin: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>REPUBLIC OF THE PHILIPPINES</h1>
+        <h2>CITY GOVERNMENT OF DAVAO</h2>
+        <p>BUHANGIN HEALTH CENTER - BIRTHING HOME</p>
+        <p>NHA Buhangin, Buhangin District, Davao City</p>
+        <h3>NEWBORN SCREENING RECORD</h3>
+    </div>
+
+    <!-- Patient Information -->
+    <div class="info-section">
+        <div>
+            <div class="form-group">
+                <label>Child's Name:</label>
+                <input type="text" />
+            </div>
+            <div class="form-group">
+                <label>Date of Birth:</label>
+                <input type="date" />
+            </div>
+            <div class="form-group">
+                <label>Birth Weight:</label>
+                <input type="text" placeholder="grams" />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>Sex:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="sex" /> Male</label>
+                    <label><input type="radio" name="sex" /> Female</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Gestational Age:</label>
+                <input type="text" placeholder="weeks" />
+            </div>
+            <div class="form-group">
+                <label>Screening ID:</label>
+                <input type="text" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Mother's Information -->
+    <div class="section-title">Mother's Information</div>
+    <div class="info-section">
+        <div>
+            <div class="form-group">
+                <label>Mother's Name:</label>
+                <input type="text" />
+            </div>
+            <div class="form-group">
+                <label>Address:</label>
+                <input type="text" />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>Age:</label>
+                <input type="text" />
+            </div>
+            <div class="form-group">
+                <label>Phone:</label>
+                <input type="text" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Screening Tests Table -->
+    <div class="section-title">Screening Tests</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Test</th>
+                <th>Sample Taken</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Result</th>
+                <th>Date Reported</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="test-name">Congenital Hypothyroidism (CH)</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+            <tr>
+                <td class="test-name">Congenital Adrenal Hyperplasia (CAH)</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+            <tr>
+                <td class="test-name">Galactosemia (GAL)</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+            <tr>
+                <td class="test-name">Phenylketonuria (PKU)</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+            <tr>
+                <td class="test-name">G6PD Deficiency</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+            <tr>
+                <td class="test-name">Maple Syrup Urine Disease (MSUD)</td>
+                <td>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" /> Y</label>
+                        <label><input type="checkbox" /> N</label>
+                    </div>
+                </td>
+                <td><input type="date" /></td>
+                <td><input type="time" /></td>
+                <td>
+                    <select>
+                        <option>--</option>
+                        <option>Normal</option>
+                        <option>Abnormal</option>
+                        <option>Pending</option>
+                        <option>Repeat</option>
+                    </select>
+                </td>
+                <td><input type="date" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Sample Collection Information -->
+    <div class="collection-info">
+        <div>
+            <div class="section-title">Sample Collection</div>
+            <div class="form-group">
+                <label>Age at Collection:</label>
+                <input type="text" placeholder="hours" />
+            </div>
+            <div class="form-group">
+                <label>Quality:</label>
+                <select>
+                    <option>Select</option>
+                    <option>Adequate</option>
+                    <option>Inadequate</option>
+                    <option>Contaminated</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Method:</label>
+                <select>
+                    <option>Select</option>
+                    <option>Heel Stick</option>
+                    <option>Venipuncture</option>
+                    <option>Cord Blood</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <div class="section-title">Healthcare Provider</div>
+            <div class="form-group">
+                <label>Collector:</label>
+                <input type="text" />
+            </div>
+            <div class="form-group">
+                <label>Laboratory:</label>
+                <input type="text" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow-up Actions -->
+    <div class="followup-section">
+        <div class="section-title">Follow-up Actions</div>
+        <div class="checkbox-list">
+            <label><input type="checkbox" /> No action required - all tests normal</label>
+            <label><input type="checkbox" /> Repeat screening recommended</label>
+            <label><input type="checkbox" /> Refer to specialist for evaluation</label>
+            <label><input type="checkbox" /> Start immediate treatment</label>
+        </div>
+        <div>
+            <strong>Comments:</strong>
+            <textarea rows="3" placeholder="Additional notes..."></textarea>
+        </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures">
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">Sample Collector</div>
+            <div class="signature-label">Name and Signature</div>
+        </div>
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">Laboratory Technician</div>
+            <div class="signature-label">Name and Signature</div>
+        </div>
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">Attending Physician</div>
+            <div class="signature-label">Name and Signature</div>
+        </div>
+    </div>
+</body>
+</html>
