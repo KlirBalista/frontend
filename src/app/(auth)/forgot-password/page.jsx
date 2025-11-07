@@ -55,7 +55,7 @@ const Page = () => {
         </div>
 
         <div className="flex items-center justify-end mt-4">
-          <Button>Email Password Reset Link</Button>
+          <Button type="submit">Email Password Reset Link</Button>
         </div>
       </form>
     </AuthCard>
