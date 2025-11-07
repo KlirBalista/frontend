@@ -11,22 +11,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     data: user,
     error,
     mutate,
-  } = useSWR(
-    middleware ? "/api/user" : null, // Only fetch if middleware is set
-    () =>
-      axios
-        .get("/api/user")
-        .then((res) => res.data)
-        .catch((error) => {
-          if (error.response.status !== 409) throw error;
+  } = useSWR("/api/user", () =>
+    axios
+      .get("/api/user")
+      .then((res) => res.data)
+      .catch((error) => {
+        if (error.response.status !== 409) throw error;
 
-          router.push("/api/verify-email");
-        }),
-    {
-      revalidateOnMount: true,
-      revalidateOnFocus: false,
-      dedupingInterval: 60000, // Cache for 1 minute
-    }
+        router.push("/api/verify-email");
+      })
   );
 
   const csrf = () => axios.get("/sanctum/csrf-cookie");
