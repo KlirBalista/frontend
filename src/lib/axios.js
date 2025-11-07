@@ -9,6 +9,25 @@ const axios = Axios.create({
   withXSRFToken: true,
 });
 
+// Request interceptor to manually inject XSRF token from cookie
+axios.interceptors.request.use(
+  (config) => {
+    // Manually read XSRF-TOKEN cookie and set as header
+    if (typeof document !== 'undefined') {
+      const xsrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+      
+      if (xsrfToken && !config.headers['X-XSRF-TOKEN']) {
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor to handle subscription errors
 axios.interceptors.response.use(
   (response) => {
