@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "@/lib/axios";
+import Loading from "@/components/Loading";
 import { 
   DocumentTextIcon, 
   ClockIcon, 
@@ -62,13 +63,7 @@ const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50/30 via-pink-50/20 to-white">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#BF3853]"></div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   const getStatusColor = (status) => {
