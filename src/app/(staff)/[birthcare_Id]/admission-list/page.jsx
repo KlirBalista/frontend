@@ -361,18 +361,8 @@ const AdmissionListPage = () => {
             </div>
           )}
 
-          {/* Loading State */}
-          {loading && admissions.length === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
-                <p className="mt-4 text-gray-700 font-semibold">Loading admissions...</p>
-              </div>
-            </div>
-          )}
-
           {/* Admissions Table */}
-          {!loading && admissions.length > 0 && (
+          {admissions.length > 0 && (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -497,7 +487,7 @@ const AdmissionListPage = () => {
           )}
 
           {/* No Results */}
-          {!loading && admissions.length === 0 && !error && (
+          {admissions.length === 0 && !error && (
             <div className="p-16 text-center">
               <div className="flex flex-col items-center justify-center">
                 <div className="w-20 h-20 bg-gradient-to-br from-[#FDB3C2]/30 to-[#F891A5]/30 rounded-full flex items-center justify-center mb-4">
