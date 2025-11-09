@@ -2,7 +2,6 @@
 
 import { useAuth } from "@/hooks/auth.jsx";
 import Navigation from "@/app/(admin)/Navigation.jsx";
-import Loading from "@/components/Loading.jsx";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -19,7 +18,14 @@ const AppLayout = ({ children }) => {
 
   // Show loading state while user data is being fetched
   if (!user) {
-    return <Loading />;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rose-50/30 via-pink-50/20 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   // Prevent rendering for non-admin users until redirect occurs
