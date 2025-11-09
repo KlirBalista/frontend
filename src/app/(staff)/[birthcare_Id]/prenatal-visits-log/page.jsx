@@ -472,7 +472,7 @@ const PrenatalVisitsLogPage = () => {
                 <p className="mt-4 text-gray-700 font-semibold">Loading visit logs...</p>
               </div>
             </div>
-          )
+          ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-20 h-20 bg-gradient-to-br from-[#FDB3C2]/30 to-[#F891A5]/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FileText className="w-10 h-10 text-[#BF3853]" />
