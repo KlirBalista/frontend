@@ -173,7 +173,7 @@ const TransactionsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50/30 via-pink-50/20 to-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -292,12 +292,14 @@ const TransactionsPage = () => {
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg border-0 overflow-hidden">
           {/* Loading State */}
           {loading && (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#A41F39]"></div>
-              <span className="ml-2 text-gray-600">Loading transactions...</span>
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+                <p className="mt-4 text-gray-700 font-semibold">Loading transactions...</p>
+              </div>
             </div>
           )}
 
