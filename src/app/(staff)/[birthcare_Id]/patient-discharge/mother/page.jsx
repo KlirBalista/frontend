@@ -6,6 +6,7 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
 import { CheckCircle, X, ChevronDown, Search, Plus, Trash2 } from "lucide-react";
 import { saveMotherDischargeAsPDF, downloadMotherDischargePDF } from "@/utils/pdfGenerator";
+import Loading from '@/components/Loading';
 
 
 const MotherDischargePage = () => {

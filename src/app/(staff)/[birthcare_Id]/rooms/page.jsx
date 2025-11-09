@@ -10,6 +10,7 @@ import Label from "@/components/Label";
 import InputError from "@/components/InputError";
 import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "@/lib/axios";
+import Loading from '@/components/Loading';
 
 const RoomsPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -103,11 +104,7 @@ const RoomsPage = () => {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check

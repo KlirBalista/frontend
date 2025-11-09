@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from '@/lib/axios';
 import { useAuth } from '@/hooks/auth';
+import Loading from '@/components/Loading';
 
 export default function BillingPage() {
   const { birthcare_Id } = useParams();
@@ -109,11 +110,7 @@ export default function BillingPage() {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check

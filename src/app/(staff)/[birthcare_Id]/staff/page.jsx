@@ -10,6 +10,7 @@ import StaffModal from "./components/StaffModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import { useAuth } from "@/hooks/auth";
 import { PlusIcon, PencilIcon, TrashIcon, UsersIcon } from "@heroicons/react/24/outline";
+import Loading from '@/components/Loading';
 
 const StaffPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -176,11 +177,7 @@ const StaffPage = () => {
   );
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Unauthorized: not role 2 and not role 3 with manage_staff
@@ -192,11 +189,7 @@ const StaffPage = () => {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
