@@ -25,6 +25,7 @@ const Login = () => {
   const [shouldRemember, setShouldRemember] = useState(false);
   const [errors, setErrors] = useState([]);
   const [status, setStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (router.reset?.length > 0 && errors.length === 0) {
@@ -36,14 +37,19 @@ const Login = () => {
 
   const submitForm = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
-    await login({
-      email,
-      password,
-      remember: shouldRemember,
-      setErrors,
-      setStatus,
-    });
+    try {
+      await login({
+        email,
+        password,
+        remember: shouldRemember,
+        setErrors,
+        setStatus,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <div className="min-h-screen bg-[#FDFDFC] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -154,15 +160,28 @@ const Login = () => {
             {/* Login Button */}
             <button
               type="submit"
-              className="group relative w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:from-[#A41F39] hover:to-[#8B1A2F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853]/50 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+              disabled={isLoading}
+              className="group relative w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:from-[#A41F39] hover:to-[#8B1A2F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853]/50 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#BF3853] to-[#A41F39] opacity-100 group-hover:opacity-90 transition-opacity"></div>
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#A41F39] to-[#8B1A2F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative flex items-center">
-                <svg className="w-5 h-5 mr-3 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-                Sign In
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing In...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 mr-3 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Sign In
+                  </>
+                )}
               </div>
             </button>
           </form>

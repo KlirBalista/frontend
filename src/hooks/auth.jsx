@@ -47,14 +47,16 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     setErrors([]);
     setStatus(null);
 
-    axios
-      .post("/login", props)
-      .then(() => mutate())
-      .catch((error) => {
-        if (error.response.status !== 422) throw error;
-
+    try {
+      await axios.post("/login", props);
+      await mutate();
+    } catch (error) {
+      if (error.response?.status === 422) {
         setErrors(error.response.data.errors);
-      });
+        return; // keep function resolved after handling validation errors
+      }
+      throw error;
+    }
   };
 
   const forgotPassword = async ({ setErrors, setStatus, email }) => {
@@ -107,7 +109,22 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
   useEffect(() => {
     if (middleware === "guest" && redirectIfAuthenticated && user) {
-      router.push(redirectIfAuthenticated);
+      // Dynamic redirect based on user role
+      let dashboardUrl = redirectIfAuthenticated;
+      
+      if (user.system_role_id === 1) {
+        dashboardUrl = "/dashboard"; // Super Admin
+      } else if (user.system_role_id === 2) {
+        dashboardUrl = "/facility-dashboard"; // Facility Owner
+      } else if (user.system_role_id === 3) {
+        // Staff - redirect to their facility dashboard
+        const birthcare_Id = user?.birth_care_staff?.birth_care_id;
+        if (birthcare_Id) {
+          dashboardUrl = `/${birthcare_Id}/dashboard`;
+        }
+      }
+      
+      router.push(dashboardUrl);
     }
 
     if (middleware === "auth" && user && !user.email_verified_at)

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth.jsx";
-import { Eye, Trash2, FileText, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, FileText, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import CustomDialog from '@/components/CustomDialog';
 
 const PatientDocumentsPage = () => {
@@ -26,7 +26,6 @@ const PatientDocumentsPage = () => {
   const documentsPerPage = 5;
   
   // Dialog state
-  const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, documentId: null, documentTitle: '' });
   const [notifyDialog, setNotifyDialog] = useState({ isOpen: false, type: 'info', title: '', message: '' });
 
   // Fetch patients for filter dropdown
@@ -190,64 +189,6 @@ const PatientDocumentsPage = () => {
     }
   };
 
-  const handleDelete = (documentId, documentTitle = '') => {
-    setDeleteDialog({ 
-      isOpen: true, 
-      documentId, 
-      documentTitle 
-    });
-  };
-  
-  const confirmDelete = async () => {
-    try {
-      console.log('Deleting document:', deleteDialog.documentId);
-      await axios.delete(
-        `/api/birthcare/${birthcare_Id}/patient-documents/${deleteDialog.documentId}`
-      );
-      
-      // Close dialog first
-      setDeleteDialog({ isOpen: false, documentId: null, documentTitle: '' });
-      
-      // Show success message as custom dialog
-      setNotifyDialog({
-        isOpen: true,
-        type: 'success',
-        title: 'Deleted!',
-        message: 'Document deleted successfully.'
-      });
-      fetchDocuments(); // Refresh list
-      console.log('Document deleted and list refreshed');
-    } catch (error) {
-      console.error('Delete failed:', error);
-      
-      // Close dialog first
-      setDeleteDialog({ isOpen: false, documentId: null, documentTitle: '' });
-      
-      if (error.response?.status === 404) {
-        setNotifyDialog({
-          isOpen: true,
-          type: 'warning',
-          title: 'Not Found',
-          message: 'Document not found. It may have already been deleted.'
-        });
-        fetchDocuments(); // Refresh list anyway
-      } else if (error.response?.status === 403) {
-        setNotifyDialog({
-          isOpen: true,
-          type: 'error',
-          title: 'Permission Denied',
-          message: 'You do not have permission to delete this document.'
-        });
-      } else {
-        setNotifyDialog({
-          isOpen: true,
-          type: 'error',
-          title: 'Delete Failed',
-          message: `Failed to delete document: ${error.message}`
-        });
-      }
-    }
-  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
@@ -435,13 +376,6 @@ const PatientDocumentsPage = () => {
                               >
                                 <Eye size={18} />
                               </button>
-                              <button
-                                onClick={() => handleDelete(document.id, document.title)}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-                                title="Delete Document"
-                              >
-                                <Trash2 size={18} />
-                              </button>
                             </div>
                           </td>
                         </tr>
@@ -503,19 +437,6 @@ const PatientDocumentsPage = () => {
         </div>
       </div>
       
-      {/* Delete Confirmation Dialog */}
-      <CustomDialog
-        isOpen={deleteDialog.isOpen}
-        onClose={() => setDeleteDialog({ isOpen: false, documentId: null, documentTitle: '' })}
-        onConfirm={confirmDelete}
-        type="warning"
-        title="Delete Document"
-        message={`Are you sure you want to delete "${deleteDialog.documentTitle}"? This action cannot be undone and the document will be permanently removed from the system.`}
-        confirmText="Delete Document"
-        cancelText="Cancel"
-        showCancel={true}
-      />
-
       {/* Notification Dialog */}
       <CustomDialog
         isOpen={notifyDialog.isOpen}
