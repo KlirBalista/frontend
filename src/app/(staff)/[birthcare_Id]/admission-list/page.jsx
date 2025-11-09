@@ -339,7 +339,6 @@ const AdmissionListPage = () => {
                     {admissions.length} admissions
                   </span>
                   {searchTerm && <span className="ml-2 text-gray-500"> matching "{searchTerm}"</span>}
-                  {loading && <span className="ml-2 text-[#BF3853] animate-pulse">Loading...</span>}
                 </p>
               </div>
               <div className="flex items-center gap-2">
