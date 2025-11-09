@@ -59,291 +59,249 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFC] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#FDB3C2]/20 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-[#F891A5]/20 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-[#E56D85]/15 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
-      </div>
-      
-      {/* Register Form Container */}
-      <div className="relative z-10 w-full max-w-lg">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="relative inline-block group">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-lg shadow-[#E56D85]/30 group-hover:shadow-[#BF3853]/40 transition-all duration-300 group-hover:scale-110 mb-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-white transform group-hover:scale-110 transition-transform duration-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
+    <div className="min-h-screen grid lg:grid-cols-2 bg-white">
+      {/* Left Panel - Brand/Welcome */}
+      <div className="hidden lg:flex relative overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/birth.jpg')" }}
+          ></div>
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-16 text-white">
+          {/* Logo */}
+          <div className="mb-8">
+            <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-2xl mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300"></div>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">Create Account</h1>
+
+          <div className="max-w-2xl text-center">
+            <h1 className="text-5xl font-bold mb-6 drop-shadow-lg whitespace-nowrap">Welcome to BirthCare</h1>
+            <p className="text-xl text-white/90 leading-relaxed text-justify">
+              At BirthCare, we believe that every birth story is special. Our platform is here to support you and your team in providing gentle, compassionate care—whether you're managing appointments, updating patient records, or keeping everything organized with ease. With tools made just for birthing homes, we help you focus on nurturing mothers and welcoming new life with confidence and heart.
+            </p>
+          </div>
         </div>
-          
-        {/* Register Card */}
-        <div className="group relative">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#E56D85] to-[#BF3853] rounded-2xl opacity-20 group-hover:opacity-30 transition-all duration-300 blur-sm"></div>
-          <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-white/20">
-            
-          <form onSubmit={submitForm} className="space-y-6">
-            {/* General Error Display */}
-            {errors.general && (
-              <div className="p-4 bg-red-100 border border-red-200 text-red-700 rounded-xl">
-                <ul>
-                  {errors.general.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            
-            {/* Name Fields Row */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* First Name */}
-              <div className="group">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name
-                </label>
-                <div className="relative">
+      </div>
+
+      {/* Right Panel - Register Form */}
+      <div className="flex items-center justify-center p-8 lg:p-16 bg-gray-50">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <div className="lg:hidden text-center mb-8">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-lg mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-800">BIRTHCARE</h1>
+          </div>
+          {/* Form Card */}
+          <div className="bg-white rounded-3xl p-8 shadow-xl max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h2>
+              <p className="text-gray-600">Fill in your details to get started</p>
+            </div>
+
+            <form onSubmit={submitForm} className="space-y-5">
+              {errors.general && (
+                <div className="p-4 bg-red-100 border border-red-200 text-red-700 rounded-xl">
+                  <ul>
+                    {errors.general.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {/* Name Fields Row */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* First Name */}
+                <div>
                   <input
                     id="firstname"
                     type="text"
                     value={firstname}
                     onChange={(event) => setFirstname(onlyLetters(event.target.value))}
-                    className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                     placeholder="First Name"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                     pattern="^[A-Za-z ]+$"
                     title="Only letters and spaces are allowed"
                     required
                     autoFocus
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <InputError messages={errors.firstname} className="mt-2" />
                 </div>
-                <InputError messages={errors.firstname} className="mt-2" />
-              </div>
 
-              {/* Last Name */}
-              <div className="group">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name
-                </label>
-                <div className="relative">
+                {/* Last Name */}
+                <div>
                   <input
                     id="lastname"
                     type="text"
                     value={lastname}
                     onChange={(event) => setLastname(onlyLetters(event.target.value))}
-                    className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                     placeholder="Last Name"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                     pattern="^[A-Za-z ]+$"
                     title="Only letters and spaces are allowed"
                     required
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <InputError messages={errors.lastname} className="mt-2" />
                 </div>
-                <InputError messages={errors.lastname} className="mt-2" />
               </div>
-            </div>
 
-            {/* Middle Name */}
-            <div className="group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Middle Name
-              </label>
-              <div className="relative">
+              {/* Middle Name */}
+              <div>
                 <input
                   id="middlename"
                   type="text"
                   value={middlename}
                   onChange={(event) => setMiddlename(onlyLetters(event.target.value))}
-                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                   placeholder="Middle Name (Optional)"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                   pattern="^[A-Za-z ]*$"
                   title="Only letters and spaces are allowed"
                 />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <InputError messages={errors.middlename} className="mt-2" />
               </div>
-              <InputError messages={errors.middlename} className="mt-2" />
-            </div>
 
-            {/* Contact Number */}
-            <div className="group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contact Number
-              </label>
-              <div className="relative">
+              {/* Contact Number */}
+              <div>
                 <input
                   id="contact_number"
                   type="tel"
                   value={contactNumber}
                   onChange={(event) => setContactNumber(onlyDigits(event.target.value))}
-                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                   placeholder="Contact Number"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                   inputMode="numeric"
                   pattern="^[0-9]+$"
                   title="Digits only"
                 />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <InputError messages={errors.contact_number} className="mt-2" />
               </div>
-              <InputError messages={errors.contact_number} className="mt-2" />
-            </div>
 
-            {/* Address */}
-            <div className="group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address
-              </label>
-              <div className="relative">
+              {/* Address */}
+              <div>
                 <input
                   id="address"
                   type="text"
                   value={address}
                   onChange={(event) => setAddress(onlyAlnumSpace(event.target.value))}
-                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                   placeholder="Address"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                   pattern="^[A-Za-z0-9 ]*$"
                   title="Only letters, numbers and spaces are allowed"
                 />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <InputError messages={errors.address} className="mt-2" />
               </div>
-              <InputError messages={errors.address} className="mt-2" />
-            </div>
 
-            {/* Email Field */}
-            <div className="group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
+              {/* Email Field */}
+              <div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                   placeholder="Email Address"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                   required
                 />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <InputError messages={errors.email} className="mt-2" />
               </div>
-              <InputError messages={errors.email} className="mt-2" />
-            </div>
 
-            {/* Password Fields Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Password Field */}
-              <div className="group">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
+              {/* Password Fields Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Password Field */}
+                <div>
                   <input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                     placeholder="Password"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                     required
                     autoComplete="new-password"
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <InputError messages={errors.password} className="mt-2" />
                 </div>
-                <InputError messages={errors.password} className="mt-2" />
-              </div>
 
-              {/* Confirm Password Field */}
-              <div className="group">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
+                {/* Confirm Password Field */}
+                <div>
                   <input
                     id="passwordConfirmation"
                     type="password"
                     value={passwordConfirmation}
                     onChange={(event) => setPasswordConfirmation(event.target.value)}
-                    className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BF3853]/50 focus:border-[#BF3853] transition-all duration-300 backdrop-blur-sm"
                     placeholder="Confirm Password"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E56D85] focus:border-transparent transition-all duration-300"
                     required
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#E56D85]/10 to-[#BF3853]/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <InputError messages={errors.password_confirmation} className="mt-2" />
                 </div>
-                <InputError messages={errors.password_confirmation} className="mt-2" />
               </div>
-            </div>
 
-            {/* Terms and Conditions Checkbox */}
-            <div className="flex items-start">
-              <input
-                id="terms"
-                type="checkbox"
-                checked={agreedToTerms}
-                onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-[#BF3853] focus:ring-[#BF3853]/50 cursor-pointer"
-              />
-              <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
-                I have read and agree to the website{' '}
-                <button
-                  type="button"
-                  onClick={() => setShowTermsModal(true)}
-                  className="text-[#BF3853] hover:text-[#A41F39] underline"
-                >
-                  terms and conditions
-                </button>{' '}
-                <span className="text-red-500">*</span>
-              </label>
-            </div>
+              {/* Terms and Conditions Checkbox */}
+              <div className="flex items-start">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-[#E56D85] focus:ring-[#E56D85] cursor-pointer"
+                />
+                <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
+                  I agree to the{' '}
+                  <button
+                    type="button"
+                    onClick={() => setShowTermsModal(true)}
+                    className="text-[#E56D85] hover:text-[#BF3853] underline"
+                  >
+                    terms and conditions
+                  </button>
+                </label>
+              </div>
 
-            {/* Register Button */}
-            <button
-              type="submit"
-              disabled={!agreedToTerms || isLoading}
-              className="group relative w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:from-[#A41F39] hover:to-[#8B1A2F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853]/50 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#BF3853] to-[#A41F39] opacity-100 group-hover:opacity-90 transition-opacity"></div>
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#A41F39] to-[#8B1A2F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative flex items-center justify-center">
+              {/* Register Button */}
+              <button
+                type="submit"
+                disabled={!agreedToTerms || isLoading}
+                className="w-full px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-[#E56D85] to-[#BF3853] rounded-xl hover:from-[#BF3853] hover:to-[#A41F39] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E56D85] transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
                 {isLoading ? (
-                  <>
+                  <span className="flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Creating Account...
-                  </>
+                  </span>
                 ) : (
                   'Register'
                 )}
-              </div>
-            </button>
-          </form>
-          
-          {/* Sign In Link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link href="/login" className="font-semibold text-[#BF3853] hover:text-[#A41F39] transition-colors duration-300">
-                Sign in
-              </Link>
-            </p>
-          </div>
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Already have an account?{' '}
+                <Link href="/login" className="font-semibold text-[#E56D85] hover:text-[#BF3853] transition-colors">
+                  Sign in
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
       {/* Terms and Conditions Modal */}
       {showTermsModal && (

@@ -73,7 +73,7 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="max-w-2xl">
+          <div className="max-w-2xl text-center">
             <h1 className="text-5xl font-bold mb-6 drop-shadow-lg whitespace-nowrap">Welcome to BirthCare</h1>
             <p className="text-xl text-white/90 leading-relaxed text-justify">
               At BirthCare, we believe that every birth story is special. Our platform is here to support you and your team in providing gentle, compassionate care—whether you're managing appointments, updating patient records, or keeping everything organized with ease. With tools made just for birthing homes, we help you focus on nurturing mothers and welcoming new life with confidence and heart.
