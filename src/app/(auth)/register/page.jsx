@@ -301,7 +301,6 @@ const RegisterPage = () => {
           </div>
         </div>
       </div>
-    </div>
 
       {/* Terms and Conditions Modal */}
       {showTermsModal && (
