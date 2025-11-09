@@ -58,8 +58,8 @@ const Login = () => {
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: "url('/birth.jpg')" }}
           ></div>
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#E56D85]/80 via-[#F891A5]/70 to-[#BF3853]/80"></div>
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
         {/* Content */}
@@ -74,30 +74,10 @@ const Login = () => {
           </div>
 
           <div className="max-w-md text-center">
-            <h1 className="text-5xl font-bold mb-6 drop-shadow-lg">Welcome Back</h1>
-            <p className="text-xl text-white/90 leading-relaxed mb-8">
-              Your trusted partner in maternal health care management.
+            <h1 className="text-5xl font-bold mb-6 drop-shadow-lg">Welcome to BirthCare</h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              At BirthCare, we believe that every birth story is special. Our platform is here to support you and your team in providing gentle, compassionate care—whether you're managing appointments, updating patient records, or keeping everything organized with ease. With tools made just for birthing homes, we help you focus on nurturing mothers and welcoming new life with confidence and heart.
             </p>
-            <div className="space-y-4 text-left bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-              <div className="flex items-start gap-3">
-                <svg className="w-6 h-6 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-white/90">Manage appointments & patient records</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <svg className="w-6 h-6 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-white/90">Secure & compliant data storage</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <svg className="w-6 h-6 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-white/90">Real-time updates & notifications</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
