@@ -222,10 +222,10 @@ const PatientDocumentsPage = () => {
 
   if (loading && documents.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff6b6b] mx-auto"></div>
-          <span className="mt-2 block">Loading documents...</span>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E56D85] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading documents...</p>
         </div>
       </div>
     );
