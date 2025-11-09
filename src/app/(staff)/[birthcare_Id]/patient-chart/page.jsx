@@ -366,9 +366,11 @@ const PatientChartPage = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#BF3853] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading patient charts...</p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+              <p className="mt-4 text-gray-700 font-semibold">Loading patient charts...</p>
+            </div>
           </div>
         )}
 

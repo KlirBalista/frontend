@@ -555,8 +555,11 @@ const MotherDischargePage = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -572,10 +575,10 @@ const MotherDischargePage = () => {
 
   if (loadingFacility) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading facility information...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading facility information...</p>
         </div>
       </div>
     );

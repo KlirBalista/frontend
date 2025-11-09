@@ -466,11 +466,13 @@ const PrenatalVisitsLogPage = () => {
           </div>
 
           {loading && currentLogs.length === 0 ? (
-            <div className="flex justify-center items-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-[#BF3853]" />
-              <span className="ml-3 text-gray-900 font-medium">Loading visit logs...</span>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+                <p className="mt-4 text-gray-700 font-semibold">Loading visit logs...</p>
+              </div>
             </div>
-          ) : currentLogs.length === 0 ? (
+          )
             <div className="text-center py-12">
               <div className="w-20 h-20 bg-gradient-to-br from-[#FDB3C2]/30 to-[#F891A5]/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FileText className="w-10 h-10 text-[#BF3853]" />

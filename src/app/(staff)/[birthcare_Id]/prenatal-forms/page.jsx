@@ -430,14 +430,10 @@ const PrenatalFormsPage = () => {
 
   if (loading && patients.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F891A5]/20 rounded-2xl py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-[#FDB3C2]/30 min-h-[calc(100vh-4rem)]">
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E56D85]"></div>
-              <span className="ml-3 text-[#A41F39] font-medium">Loading patients...</span>
-            </div>
-          </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading patients...</p>
         </div>
       </div>
     );
@@ -488,9 +484,11 @@ const PrenatalFormsPage = () => {
 
         {/* Loading State */}
         {loadingForms && (
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-[#FDB3C2]/30 p-12 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E56D85] mx-auto"></div>
-            <p className="mt-4 text-[#A41F39] font-medium">Loading prenatal forms...</p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+              <p className="mt-4 text-gray-700 font-semibold">Loading prenatal forms...</p>
+            </div>
           </div>
         )}
 

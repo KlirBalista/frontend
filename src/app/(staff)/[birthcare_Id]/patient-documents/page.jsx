@@ -224,8 +224,8 @@ const PatientDocumentsPage = () => {
     return (
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E56D85] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading documents...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading documents...</p>
         </div>
       </div>
     );
