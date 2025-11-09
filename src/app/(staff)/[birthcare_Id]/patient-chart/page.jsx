@@ -14,6 +14,7 @@ import {
 import axios from '@/lib/axios';
 import PatientChartModal from '@/components/PatientChartModal';
 import CustomDialog from '@/components/CustomDialog';
+import Loading from '@/components/Loading';
 
 const PatientChartPage = () => {
   const { user } = useAuth({ middleware: "auth" });

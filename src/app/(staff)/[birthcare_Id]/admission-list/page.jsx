@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import axios from '@/lib/axios';
 import PatientAdmissionModal from './PatientAdmissionModal';
+import Loading from '@/components/Loading';
 
 const AdmissionListPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -84,12 +85,7 @@ const AdmissionListPage = () => {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E56D85]"></div>
-        <span className="ml-3 text-[#A41F39] font-medium">Loading patients...</span>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check
