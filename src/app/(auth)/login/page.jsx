@@ -8,6 +8,32 @@ import AuthSessionStatus from "@/app/(auth)/AuthSessionStatus.jsx";
 import InputError from "@/components/InputError.jsx";
 import "./animations.css";
 
+// Small component to provide interactive tilt
+const InteractiveCard = ({ children }) => {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const handleMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rotY = (px - 0.5) * 12; // left-right
+    const rotX = (0.5 - py) * 12; // up-down
+    setTilt({ x: rotX, y: rotY });
+  };
+  const reset = () => setTilt({ x: 0, y: 0 });
+  return (
+    <div
+      className="group relative card-tilt"
+      onMouseMove={handleMove}
+      onMouseLeave={reset}
+      style={{ transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
+    >
+      {/* glow border */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-[#E56D85] to-[#BF3853] rounded-2xl opacity-20 group-hover:opacity-40 transition-all duration-300 blur-sm"></div>
+      {children}
+    </div>
+  );
+};
+
 const Login = () => {
   const router = useRouter();
 
@@ -51,7 +77,7 @@ const Login = () => {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#FFF9FA]">
       {/* Left: Brand/Visual Panel */}
-      <div className="relative hidden lg:block overflow-hidden bg-gradient-to-br from-[#FDE5EB] via-[#FBD5DF] to-[#FFF1F4]">
+      <div className="relative hidden lg:block overflow-hidden bg-gradient-to-br from-[#FDE5EB] via-[#FBD5DF] to-[#FFF1F4] gradient-bg-animate">
         {/* Decorative blobs */}
         <div className="absolute -top-16 -left-10 w-80 h-80 bg-[#FDB3C2]/40 rounded-full blur-3xl animate-float"></div>
         <div className="absolute top-20 -right-16 w-96 h-96 bg-[#F891A5]/30 rounded-full blur-3xl animate-float animation-delay-1500"></div>
@@ -69,7 +95,7 @@ const Login = () => {
 
         {/* Content */}
         <div className="relative z-10 h-full flex items-center justify-center p-16">
-          <div className="max-w-md">
+          <div className="max-w-md animate-fade-in-up">
             <div className="mb-8">
               <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-lg shadow-[#E56D85]/30">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,18 +114,22 @@ const Login = () => {
             </ul>
           </div>
         </div>
+
+        {/* Bottom wave */}
+        <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 80 C 240 140 480 20 720 80 C 960 140 1200 40 1440 80 L1440 120 L0 120 Z" fill="#ffffff55" />
+        </svg>
       </div>
 
       {/* Right: Form Panel */}
       <div className="relative flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8 lg:hidden">
+          <div className="text-center mb-8 lg:hidden animate-fade-in-up">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">Welcome Back</h1>
             <p className="mt-1 text-gray-600">Sign in to your BirthCare account</p>
           </div>
 
-          <div className="group relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#E56D85] to-[#BF3853] rounded-2xl opacity-20 group-hover:opacity-30 transition-all duration-300 blur-sm"></div>
+          <InteractiveCard>
             <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-white/20">
               <AuthSessionStatus className="mb-4" status={status} />
 
@@ -162,7 +192,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:from-[#A41F39] hover:to-[#8B1A2F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853]/50 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="btn-shimmer btn-hover-lift group relative w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:from-[#A41F39] hover:to-[#8B1A2F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853]/50 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#BF3853] to-[#A41F39] opacity-100 group-hover:opacity-90 transition-opacity"></div>
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#A41F39] to-[#8B1A2F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -196,7 +226,7 @@ const Login = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </InteractiveCard>
         </div>
       </div>
     </div>

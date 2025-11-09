@@ -74,6 +74,19 @@
   }
 }
 
+/* New: animated gradient pan */
+@keyframes gradient-pan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* New: button shimmer */
+@keyframes shimmer {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(150%); }
+}
+
 /* Animation classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
@@ -103,6 +116,33 @@
   animation: rotate-border 20s linear infinite;
 }
 
+/* New helpers */
+.gradient-bg-animate {
+  background-size: 200% 200%;
+  animation: gradient-pan 12s ease-in-out infinite;
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -50%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer 2s infinite;
+}
+
+.card-tilt {
+  will-change: transform;
+  transition: transform 150ms ease;
+  transform-style: preserve-3d;
+}
+
+/*************************/
 /* Delay classes */
 .animation-delay-100 {
   animation-delay: 0.1s;
@@ -217,4 +257,15 @@
   height: 3px;
   background: rgba(236, 72, 153, 0.6);
   animation: float 10s ease-in-out infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-glow,
+  .animate-rotate-border,
+  .gradient-bg-animate,
+  .btn-shimmer::after {
+    animation: none !important;
+  }
 }
