@@ -195,9 +195,9 @@ const PatientSearch = ({ birthcareId, onPatientSelect }) => {
 
       {/* Loading State */}
       {loading && (
-        <div className="text-center py-4">
-          <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-          <p className="mt-2 text-sm text-gray-500">Loading patients...</p>
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading patients...</p>
         </div>
       )}
 
