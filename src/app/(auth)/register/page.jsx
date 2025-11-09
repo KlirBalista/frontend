@@ -7,6 +7,7 @@ import Label from "@/components/Label.jsx";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth";
 import { useState } from "react";
+import "../login/animations.css";
 
 const RegisterPage = () => {
   const { register } = useAuth({
@@ -61,7 +62,7 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-white">
       {/* Left Panel - Brand/Welcome */}
-      <div className="hidden lg:flex relative overflow-hidden">
+      <div className="hidden lg:flex relative overflow-hidden animate-slide-in-left">
         {/* Background Image */}
         <div className="absolute inset-0">
           <div 
@@ -73,7 +74,7 @@ const RegisterPage = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center items-center w-full p-16 text-white">
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-16 text-white animate-fade-in-up animation-delay-300">
           {/* Logo */}
           <div className="mb-8">
             <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-2xl mb-6">
@@ -93,7 +94,7 @@ const RegisterPage = () => {
       </div>
 
       {/* Right Panel - Register Form */}
-      <div className="flex items-center justify-center p-8 lg:p-16 bg-gray-50">
+      <div className="flex items-center justify-center p-8 lg:p-16 bg-gray-50 animate-slide-in-right">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
@@ -105,7 +106,7 @@ const RegisterPage = () => {
             <h1 className="text-2xl font-bold text-gray-800">BIRTHCARE</h1>
           </div>
           {/* Form Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="bg-white rounded-3xl p-8 shadow-xl max-h-[calc(100vh-4rem)] overflow-y-auto animate-fade-in-up animation-delay-300">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h2>
               <p className="text-gray-600">Fill in your details to get started</p>
