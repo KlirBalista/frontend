@@ -194,7 +194,10 @@ const RolePage = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading roles...</p>
+        </div>
       </div>
     );
   }

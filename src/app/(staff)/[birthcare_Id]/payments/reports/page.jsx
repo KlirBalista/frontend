@@ -318,8 +318,8 @@ export default function PaymentsReportsPage() {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite] text-blue-600"></div>
-          <div className="text-lg mt-2 text-gray-900">Loading payment reports...</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading reports & analytics...</p>
         </div>
       </div>
     );

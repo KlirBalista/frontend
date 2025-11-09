@@ -160,8 +160,8 @@ const PaymentDashboard = ({ birthcareId }) => {
         <div className="p-4">
           {loading ? (
             <div className="text-center py-8">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite] text-blue-600"></div>
-              <p className="mt-2 text-gray-500">Loading patient payment data...</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+              <p className="mt-4 text-gray-700 font-semibold">Loading patient payment data...</p>
             </div>
           ) : (
             <>
