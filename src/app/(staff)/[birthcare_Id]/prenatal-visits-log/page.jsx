@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import axios from '@/lib/axios';
 import { Notification, useNotification } from '@/components/Notification';
+import Loading from '@/components/Loading';
 
 const PrenatalVisitsLogPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -125,11 +126,7 @@ const PrenatalVisitsLogPage = () => {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check

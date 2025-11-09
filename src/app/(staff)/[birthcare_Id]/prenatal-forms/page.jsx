@@ -13,6 +13,7 @@ import {
   Download
 } from "lucide-react";
 import CustomDialog from '@/components/CustomDialog';
+import Loading from '@/components/Loading';
 // Removed unused useReactToPrint import
 
 const PrenatalFormsPage = () => {
@@ -163,11 +164,7 @@ const PrenatalFormsPage = () => {
   }, [showStaffDropdown]);
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check
