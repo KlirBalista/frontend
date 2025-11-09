@@ -151,19 +151,10 @@ const SubscriptionPage = () => {
 
   if (loading) {
     return (
-      <div className="lg:p-6 w-full h-full pt-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white overflow-hidden shadow-sm rounded-lg p-6">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded mb-4 w-1/3"></div>
-              <div className="h-4 bg-gray-200 rounded mb-6 w-2/3"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="h-96 bg-gray-200 rounded-2xl"></div>
-                <div className="h-96 bg-gray-200 rounded-2xl"></div>
-                <div className="h-96 bg-gray-200 rounded-2xl"></div>
-              </div>
-            </div>
-          </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading subscription plans...</p>
         </div>
       </div>
     );
