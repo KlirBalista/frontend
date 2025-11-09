@@ -298,7 +298,7 @@ export default function FacilityDashboard() {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 12rem)' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E56D85] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading dashboard...</p>
