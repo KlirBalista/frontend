@@ -49,6 +49,13 @@ export default function FacilityDashboard() {
   const [isUploadingDocuments, setIsUploadingDocuments] = useState(false);
   const [uploadError, setUploadError] = useState(null);
   const [isResubmitting, setIsResubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState('summary');
+  const tabs = [
+    { key: 'summary', label: 'Summary' },
+    { key: 'metrics', label: 'Metrics' },
+    { key: 'activity', label: 'Activity' },
+    { key: 'manage', label: 'Manage' },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -489,6 +496,27 @@ export default function FacilityDashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* In-card Tabs */}
+        <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-2 mb-6 sticky top-3 z-10 shadow-sm">
+          <div className="flex gap-2">
+            {tabs.map(t => (
+              <button
+                key={t.key}
+                onClick={() => setActiveTab(t.key)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                  activeTab === t.key
+                    ? 'bg-[#BF3853] text-white shadow'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === 'summary' && (
+          <>
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-white rounded-lg shadow p-6">
@@ -632,9 +660,8 @@ export default function FacilityDashboard() {
               </div>
             </div>
       </div>
-
-        {/* Additional Metrics Grid */}
-        {dashboardStats && (
+         {/* Additional Metrics Grid */}
+        {activeTab === 'metrics' && dashboardStats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Capacity Overview */}
             <div className="bg-white rounded-lg shadow p-6">
@@ -693,7 +720,7 @@ export default function FacilityDashboard() {
           )}
         
         {/* Recent Activity */}
-        {dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
+        {activeTab === 'activity' && dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Recent Admissions</h2>
@@ -735,6 +762,7 @@ export default function FacilityDashboard() {
           )}
 
         {/* Facility Management Grid */}
+        {activeTab === 'manage' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Facility Details */}
           <div className="bg-white rounded-lg shadow p-6">
@@ -1053,6 +1081,7 @@ export default function FacilityDashboard() {
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
