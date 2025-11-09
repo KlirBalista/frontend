@@ -1858,16 +1858,17 @@ export const generateReferralPDF = async (referralData, patients = [], birthCare
     }
     
     // Draw label
-    doc.setFontSize(9);
-    doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(label, x + 2, y + 5);
+    doc.text(label, x + 2, y + 4);
     
     // Draw value if exists and not header
     if (value && value !== '' && !isHeader) {
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       const lines = doc.splitTextToSize(String(value), width - 6);
-      doc.text(lines, x + 2, y + 10);
+      doc.text(lines, x + 2, y + 9);
     }
     
     return y + height;
