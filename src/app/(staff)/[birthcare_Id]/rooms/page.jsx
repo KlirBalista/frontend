@@ -344,7 +344,7 @@ const RoomsPage = () => {
                 <p className="mt-4 text-gray-700 font-semibold">Loading rooms...</p>
               </div>
             </div>
-          )
+          ) : loadingError ? (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                 <p className="text-sm text-red-600 mb-3">Error: {loadingError}</p>
