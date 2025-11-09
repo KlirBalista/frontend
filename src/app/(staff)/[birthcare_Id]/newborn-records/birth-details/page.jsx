@@ -6,7 +6,7 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
 import { saveBirthDetailsAsPDF, downloadBirthDetailsPDF } from "@/utils/pdfGenerator";
 import SearchablePatientSelect from "@/components/SearchablePatientSelect";
-import CustomDialog from "@/components/CustomDialog';
+import CustomDialog from "@/components/CustomDialog";
 
 export default function BirthDetails() {
   const { birthcare_Id } = useParams();
