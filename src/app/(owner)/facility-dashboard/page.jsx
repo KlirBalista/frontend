@@ -659,8 +659,11 @@ export default function FacilityDashboard() {
                 </div>
               </div>
             </div>
-      </div>
-         {/* Additional Metrics Grid */}
+        </div>
+        </>
+        )}
+         
+        {/* Additional Metrics Grid */}
         {activeTab === 'metrics' && dashboardStats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Capacity Overview */}
