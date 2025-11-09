@@ -1268,36 +1268,6 @@ export default function PatientChargesPage() {
         </div>
       )}
 
-      {/* Button to open Saved Charges Modal */}
-      {selectedPatient && savedCharges.length > 0 && (
-        <div className="mt-8 bg-white border border-gray-200 rounded-lg shadow-sm">
-          <div className="px-6 py-4 bg-white border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Saved Charges for this Patient</h2>
-              <button
-                onClick={() => setShowSavedChargesModal(true)}
-                className="text-sm font-medium text-gray-900 hover:text-gray-900"
-              >
-                View Details →
-              </button>
-            </div>
-          </div>
-          <div className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-900">
-                Saved on: <span className="font-medium">{new Date(savedCharges[0].saved_at).toLocaleString()}</span>
-              </div>
-              <p className="text-sm text-gray-900">Emergency Services × 1</p>
-              <button
-                onClick={() => setShowSavedChargesModal(true)}
-                className="bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-green-700 transition-colors"
-              >
-                Finalize and Charge Patient
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Saved Charges Modal - Rose Theme */}
       <Transition appear show={showSavedChargesModal} as={Fragment}>
