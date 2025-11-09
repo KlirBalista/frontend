@@ -66,16 +66,16 @@ const Login = () => {
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-16 text-white">
           {/* Logo */}
           <div className="mb-8">
-            <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-2xl mb-6">
+            <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E56D85] to-[#BF3853] shadow-2xl mb-6">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
           </div>
 
-          <div className="max-w-md text-center">
-            <h1 className="text-5xl font-bold mb-6 drop-shadow-lg">Welcome to BirthCare</h1>
-            <p className="text-xl text-white/90 leading-relaxed">
+          <div className="max-w-2xl">
+            <h1 className="text-5xl font-bold mb-6 drop-shadow-lg whitespace-nowrap">Welcome to BirthCare</h1>
+            <p className="text-xl text-white/90 leading-relaxed text-justify">
               At BirthCare, we believe that every birth story is special. Our platform is here to support you and your team in providing gentle, compassionate care—whether you're managing appointments, updating patient records, or keeping everything organized with ease. With tools made just for birthing homes, we help you focus on nurturing mothers and welcoming new life with confidence and heart.
             </p>
           </div>
