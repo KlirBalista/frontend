@@ -13,7 +13,6 @@ import {
   Download
 } from "lucide-react";
 import CustomDialog from '@/components/CustomDialog';
-import Loading from '@/components/Loading';
 // Removed unused useReactToPrint import
 
 const PrenatalFormsPage = () => {
@@ -164,7 +163,7 @@ const PrenatalFormsPage = () => {
   }, [showStaffDropdown]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

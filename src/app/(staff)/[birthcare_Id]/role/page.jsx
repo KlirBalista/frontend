@@ -10,7 +10,6 @@ import RoleModal from "./components/RoleModal";
 import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import { useAuth } from "@/hooks/auth";
 import { PlusIcon, PencilIcon, TrashIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import Loading from '@/components/Loading';
 
 const RolePage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -181,7 +180,7 @@ const RolePage = () => {
   );
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Unauthorized: not role 2 and not role 3 with manage_role

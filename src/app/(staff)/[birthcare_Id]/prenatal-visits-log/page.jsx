@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import axios from '@/lib/axios';
 import { Notification, useNotification } from '@/components/Notification';
-import Loading from '@/components/Loading';
 
 const PrenatalVisitsLogPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -126,7 +125,7 @@ const PrenatalVisitsLogPage = () => {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

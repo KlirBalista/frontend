@@ -6,7 +6,6 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth.jsx";
 import { Eye, FileText, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import CustomDialog from '@/components/CustomDialog';
-import Loading from '@/components/Loading';
 
 const PatientDocumentsPage = () => {
   const { birthcare_Id } = useParams();

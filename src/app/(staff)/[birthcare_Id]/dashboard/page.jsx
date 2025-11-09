@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from '@/lib/axios';
-import Loading from '@/components/Loading';
 
 const Dashboard = () => {
   const params = useParams();
@@ -43,7 +42,14 @@ const Dashboard = () => {
   }, [birthcare_id]);
 
   if (loading && !dashboardData) {
-    return <Loading />;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {

@@ -10,7 +10,6 @@ import Label from "@/components/Label";
 import InputError from "@/components/InputError";
 import { PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "@/lib/axios";
-import Loading from '@/components/Loading';
 
 const RoomsPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -104,7 +103,7 @@ const RoomsPage = () => {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

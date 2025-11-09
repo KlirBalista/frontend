@@ -6,7 +6,6 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
 import { CheckCircle, X, ChevronDown, Plus, Trash2, Search } from "lucide-react";
 import { saveNewbornDischargeAsPDF, downloadNewbornDischargePDF } from "@/utils/pdfGenerator";
-import Loading from '@/components/Loading';
 
 const NewbornDischargePage = () => {
   const { user } = useAuth({ middleware: "auth" });

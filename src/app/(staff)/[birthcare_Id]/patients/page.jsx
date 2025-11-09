@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { Search, Filter, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
 import axios from '@/lib/axios';
 import PatientRegistrationModal from '@/components/PatientRegistrationModal';
-import Loading from '@/components/Loading';
 
 const PatientListPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -159,7 +158,7 @@ const PatientListPage = () => {
   }, [user, birthcare_Id, currentPage, debouncedSearchTerm, statusFilter]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

@@ -8,7 +8,6 @@ import { useReactToPrint } from 'react-to-print';
 import { saveLaborMonitoringAsPDF, downloadLaborMonitoringPDF } from '@/utils/pdfGenerator';
 import SearchablePatientSelect from "@/components/SearchablePatientSelect";
 import CustomDialog from "@/components/CustomDialog";
-import Loading from '@/components/Loading';
 
 export default function LaborMonitoring() {
   const { birthcare_Id } = useParams();
@@ -150,7 +149,7 @@ export default function LaborMonitoring() {
   }, [selectedPatient]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

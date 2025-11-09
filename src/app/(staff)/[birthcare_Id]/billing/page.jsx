@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from '@/lib/axios';
 import { useAuth } from '@/hooks/auth';
-import Loading from '@/components/Loading';
 
 export default function BillingPage() {
   const { birthcare_Id } = useParams();
@@ -110,7 +109,7 @@ export default function BillingPage() {
   }, [user, birthcare_Id]);
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check

@@ -5,7 +5,6 @@ import axios from "@/lib/axios";
 import { useParams } from "next/navigation";
 import { CheckCircle, X, Calendar, User } from "lucide-react";
 import SearchablePatientSelect from "@/components/SearchablePatientSelect";
-import Loading from '@/components/Loading';
 
 const PatientPrenatalPage = () => {
   const { user } = useAuth({ middleware: "auth" });
@@ -140,7 +139,7 @@ const PatientPrenatalPage = () => {
   };
 
   if (!user) {
-    return <Loading />;
+    return null;
   }
 
   // Authorization check
