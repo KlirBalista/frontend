@@ -207,7 +207,7 @@ const Navigation = ({ user }) => {
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xl font-bold text-white truncate">
-                  {facility?.name || "Birthing Center"}
+                  {facility?.name}
                 </span>
                 <span className="text-sm text-white/90 font-medium">
                   BirthCare System
