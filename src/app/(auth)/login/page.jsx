@@ -64,8 +64,12 @@ const Login = () => {
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
+      {/* Split curtains */}
+      <div className={`pointer-events-none absolute inset-y-0 left-0 w-1/2 z-20 bg-white/10 backdrop-blur-sm transition-transform duration-700 ease-in-out ${slideOut ? '-translate-x-full' : 'translate-x-0'}`}></div>
+      <div className={`pointer-events-none absolute inset-y-0 right-0 w-1/2 z-20 bg-white/10 backdrop-blur-sm transition-transform duration-700 ease-in-out ${slideOut ? 'translate-x-full' : 'translate-x-0'}`}></div>
+
       {/* Main Container with slide animation */}
-      <div className={`relative z-10 min-h-screen flex items-center justify-center p-4 transition-transform duration-700 ease-in-out ${slideOut ? '-translate-x-full' : 'translate-x-0'}`}>
+      <div className={`relative z-10 min-h-screen flex items-center justify-center p-4 transition-transform duration-700 ease-in-out ${slideOut ? '-translate-x-24' : 'translate-x-0'}`}>
         {/* Login Card */}
         <div className="w-full max-w-md">
           {/* Logo/Brand */}
@@ -79,7 +83,7 @@ const Login = () => {
           </div>
 
           {/* Card */}
-          <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">
+          <div className={`relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transition-all duration-700 ease-in-out ${slideOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-white">Hi Designer</h2>
               <p className="text-gray-300 text-sm mt-1">Welcome to BIRTHCARE</p>
