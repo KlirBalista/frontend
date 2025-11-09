@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/auth.jsx";
 import { Trash2, Edit3, Search, ChevronLeft, ChevronRight, UserPlus } from "lucide-react";
 import PatientReferralModal from "@/components/PatientReferralModal";
 import CustomDialog from "@/components/CustomDialog";
+import Loading from "@/components/Loading";
 
 const ReferralsPage = () => {
   const { birthcare_Id } = useParams();
@@ -160,11 +161,7 @@ const ReferralsPage = () => {
   };
 
   if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Authorization check
@@ -177,18 +174,7 @@ const ReferralsPage = () => {
   }
 
   if (loading && referrals.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#F891A5]/20 rounded-2xl py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-2xl border-2 border-[#F891A5] min-h-[calc(100vh-4rem)]">
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#BF3853]"></div>
-              <span className="ml-2 text-[#A41F39] font-semibold">Loading referrals...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
