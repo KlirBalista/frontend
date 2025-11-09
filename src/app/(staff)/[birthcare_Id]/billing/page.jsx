@@ -280,8 +280,10 @@ export default function BillingPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E56D85]"></div>
-        <span className="ml-3 text-[#A41F39] font-medium">Loading charges...</span>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Loading charges...</p>
+        </div>
       </div>
     );
   }
