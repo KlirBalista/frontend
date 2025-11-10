@@ -52,9 +52,8 @@ export default function FacilityDashboard() {
   const [activeTab, setActiveTab] = useState('summary');
   const tabs = [
     { key: 'summary', label: 'Summary' },
-    { key: 'metrics', label: 'Metrics' },
-    { key: 'activity', label: 'Activity' },
-    { key: 'manage', label: 'Manage' },
+    { key: 'facility', label: 'Facility' },
+    { key: 'documents', label: 'Documents' },
   ];
 
   useEffect(() => {
@@ -435,10 +434,20 @@ export default function FacilityDashboard() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <button className="text-sm font-medium text-[#BF3853] border-b-2 border-[#BF3853] pb-1">Summary</button>
-              <button className="text-sm text-gray-500 hover:text-gray-700 pb-1">Overview</button>
-              <button className="text-sm text-gray-500 hover:text-gray-700 pb-1">Comparison</button>
+            <div className="flex items-center gap-6 mt-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`text-sm font-medium pb-1 transition-colors ${
+                    activeTab === tab.key
+                      ? 'text-[#BF3853] border-b-2 border-[#BF3853]'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
           
@@ -481,6 +490,8 @@ export default function FacilityDashboard() {
         </div>
 
         {/* Main Content */}
+        {activeTab === 'summary' && (
+          <>
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -657,69 +668,10 @@ export default function FacilityDashboard() {
             </tbody>
           </table>
         </div>
-         
-        {/* Additional Metrics Grid */}
-        {dashboardStats && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Capacity Overview */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Facility Capacity</h2>
-                <BuildingOffice2Icon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-lg p-4">
-                    <div className="text-2xl font-bold text-[#A41F39]">{dashboardStats?.overview?.total_beds || 0}</div>
-                    <div className="text-sm text-gray-600">Total Beds</div>
-                  </div>
-                  <div className="bg-white rounded-lg p-4">
-                    <div className="text-2xl font-bold text-[#BF3853]">{dashboardStats?.capacity?.available_beds || 0}</div>
-                    <div className="text-sm text-gray-600">Available</div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-600">Occupancy Rate</span>
-                    <span className="text-lg font-bold">{dashboardStats?.capacity?.occupancy_rate || 0}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-[#A41F39] h-2 rounded-full transition-all" 
-                      style={{ width: `${dashboardStats?.capacity?.occupancy_rate || 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Performance Metrics */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Performance</h2>
-                <StarIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="space-y-4">
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-[#A41F39]">{dashboardStats?.performance?.total_prenatal_visits || 0}</div>
-                  <div className="text-sm text-gray-600">Total Prenatal Visits</div>
-                </div>
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-[#E56D85]">{dashboardStats?.performance?.average_stay_duration || 0} days</div>
-                  <div className="text-sm text-gray-600">Avg Stay Duration</div>
-                </div>
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-[#BF3853]">{dashboardStats?.monthly_stats?.prenatal_visits || 0}</div>
-                  <div className="text-sm text-gray-600">Monthly Prenatal Visits</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          )}
-        
+
         {/* Recent Activity */}
         {dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <div className="bg-white rounded-2xl shadow-sm p-6 mt-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Recent Admissions</h2>
                 <ClipboardDocumentCheckIcon className="h-5 w-5 text-gray-400" />
@@ -756,13 +708,127 @@ export default function FacilityDashboard() {
                 </table>
               </div>
             </div>
-
           )}
 
-        {/* Facility Management Grid */}
+        {/* Performance & Subscription Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          {/* Performance Metrics */}
+          {dashboardStats && (
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">Performance</h2>
+                <StarIcon className="h-5 w-5 text-gray-400" />
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-4">
+                  <div className="text-2xl font-bold text-[#A41F39]">{dashboardStats?.performance?.total_prenatal_visits || 0}</div>
+                  <div className="text-sm text-gray-700">Total Prenatal Visits</div>
+                </div>
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4">
+                  <div className="text-2xl font-bold text-[#E56D85]">{dashboardStats?.performance?.average_stay_duration || 0} days</div>
+                  <div className="text-sm text-gray-700">Avg Stay Duration</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
+                  <div className="text-2xl font-bold text-[#BF3853]">{dashboardStats?.monthly_stats?.prenatal_visits || 0}</div>
+                  <div className="text-sm text-gray-700">Monthly Prenatal Visits</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Subscription Details */}
+          <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Subscription</h2>
+              <CreditCardIcon className="h-5 w-5 text-gray-400" />
+            </div>
+            {subscription?.status === "active" ? (
+              <div className="space-y-4">
+                <div className="flex items-center bg-green-50 rounded-xl p-4">
+                  <CheckCircleIcon className="h-6 w-6 text-green-500 mr-3" />
+                  <span className="text-green-600 font-semibold">
+                    Active Subscription
+                  </span>
+                </div>
+                {subscription.subscription?.end_date && (
+                  <div className="flex items-center bg-gray-50 rounded-xl p-3">
+                    <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
+                    <div>
+                      <div className="text-xs text-gray-500">Expires</div>
+                      <div className="text-sm font-medium text-gray-900">{new Date(subscription.subscription.end_date).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+                )}
+                {subscription.subscription?.start_date && (
+                  <div className="flex items-center bg-gray-50 rounded-xl p-3">
+                    <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
+                    <div>
+                      <div className="text-xs text-gray-500">Started</div>
+                      <div className="text-sm font-medium text-gray-900">{new Date(subscription.subscription.start_date).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3">
+                  <CreditCardIcon className="h-5 w-5 text-blue-600 mr-3" />
+                  <div>
+                    <div className="text-xs text-blue-600">Plan</div>
+                    <div className="text-sm font-semibold text-blue-900">{subscription.subscription?.plan?.plan_name || "N/A"}</div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center bg-red-50 rounded-xl p-4">
+                <XCircleIcon className="h-6 w-6 text-red-500 mr-3" />
+                <span className="text-red-600 font-semibold">
+                  No active subscription
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+          </>
+        )}
+
+        {/* Facility Tab */}
+        {activeTab === 'facility' && (
+          <>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Facility Details */}
-          <div className="bg-white rounded-lg shadow p-6">
+          {/* Facility Capacity Card */}
+          {dashboardStats && (
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">Facility Capacity</h2>
+                <BuildingOffice2Icon className="h-5 w-5 text-gray-400" />
+              </div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-4">
+                    <div className="text-2xl font-bold text-[#A41F39]">{dashboardStats?.overview?.total_beds || 0}</div>
+                    <div className="text-sm text-gray-700">Total Beds</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4">
+                    <div className="text-2xl font-bold text-[#BF3853]">{dashboardStats?.capacity?.available_beds || 0}</div>
+                    <div className="text-sm text-gray-700">Available</div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">Occupancy Rate</span>
+                    <span className="text-lg font-bold text-purple-900">{dashboardStats?.capacity?.occupancy_rate || 0}%</span>
+                  </div>
+                  <div className="w-full bg-white/50 rounded-full h-2">
+                    <div 
+                      className="bg-purple-600 h-2 rounded-full transition-all" 
+                      style={{ width: `${dashboardStats?.capacity?.occupancy_rate || 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Facility Details Card */}
+          <div className="bg-white rounded-2xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Facility Details
@@ -873,9 +939,9 @@ export default function FacilityDashboard() {
                 </div>
               </div>
             </div>
-        
-          {/* Facility Information */}
-          <div className="bg-white rounded-lg shadow p-6">
+
+          {/* Facility Information Card */}
+          <div className="bg-white rounded-2xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Facility Information
@@ -970,114 +1036,76 @@ export default function FacilityDashboard() {
               </div>
             </div>
         </div>
+          </>
+        )}
 
-        {/* Additional Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Subscription Details */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-gray-900">
-                Subscription
-              </h2>
-              <CreditCardIcon className="h-4 w-4 text-gray-400" />
-            </div>
-            {subscription?.status === "active" ? (
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
-                  <span className="text-green-600 font-medium text-sm">
-                    Active Subscription
-                  </span>
-                </div>
-                {subscription.subscription?.end_date && (
-                  <div className="flex items-center">
-                    <CalendarIcon className="h-4 w-4 text-gray-400 mr-2" />
-                    <span className="text-xs text-gray-600">
-                      Expires: {new Date(subscription.subscription.end_date).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-                {subscription.subscription?.start_date && (
-                  <div className="flex items-center">
-                    <CalendarIcon className="h-4 w-4 text-gray-400 mr-2" />
-                    <span className="text-xs text-gray-600">
-                      Started: {new Date(subscription.subscription.start_date).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-center">
-                  <CreditCardIcon className="h-4 w-4 text-gray-400 mr-2" />
-                  <span className="text-xs text-gray-600">
-                    Plan: {subscription.subscription?.plan?.plan_name || "N/A"}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <XCircleIcon className="h-4 w-4 text-red-500 mr-2" />
-                <span className="text-red-600 font-medium text-sm">
-                  No active subscription
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Documents */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-gray-900">Documents</h2>
-              <DocumentTextIcon className="h-4 w-4 text-gray-400" />
+        {/* Documents Tab */}
+        {activeTab === 'documents' && (
+          <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
+              <DocumentTextIcon className="h-5 w-5 text-gray-400" />
             </div>
             
             {birthcare.status === "rejected" && (
-              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-xs text-red-800 mb-2">
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-sm text-red-800 mb-2 font-medium">
                   Your facility was rejected. Please upload updated documents to resubmit.
                 </p>
                 {birthcare.rejection_reason && (
-                  <p className="text-xs text-red-700 italic">
+                  <p className="text-sm text-red-700 italic">
                     Reason: {birthcare.rejection_reason}
                   </p>
                 )}
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {birthcare.documents && birthcare.documents.length > 0 ? (
                 birthcare.documents.map((doc, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-shadow"
                   >
-                    <span className="font-medium text-gray-700 text-sm">
-                      {doc.document_type}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white rounded-lg shadow-sm">
+                        <DocumentTextIcon className="h-5 w-5 text-[#BF3853]" />
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {doc.document_type}
+                      </span>
+                    </div>
                     <Button
                       variant="primary"
                       size="sm"
                       onClick={() => window.open(doc.url, "_blank")}
-                      className="text-xs px-3 py-1 bg-[#A41F39] hover:bg-[#BF3853]"
+                      className="px-4 py-2 bg-[#A41F39] hover:bg-[#BF3853] text-white rounded-lg"
                     >
                       View
                     </Button>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 italic">No documents uploaded yet.</p>
+                <div className="text-center py-8">
+                  <DocumentTextIcon className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+                </div>
               )}
             </div>
 
             {uploadError && (
-              <p className="mt-2 text-xs text-red-600">{uploadError}</p>
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-sm text-red-600">{uploadError}</p>
+              </div>
             )}
             {isUploadingDocuments && (
-              <div className="mt-2 flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#BF3853]"></div>
-                <span className="text-sm text-gray-600">Uploading...</span>
+              <div className="mt-4 flex items-center justify-center space-x-2 p-4 bg-blue-50 rounded-xl">
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-t-2 border-blue-200 border-t-[#BF3853]"></div>
+                <span className="text-sm text-gray-700 font-medium">Uploading...</span>
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
