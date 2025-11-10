@@ -159,7 +159,7 @@ const Dashboard = () => {
           />
         </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="bg-[#F891A5]/20 rounded-2xl grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left column with Facility Capacity and Trends taking half height each */}
         <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Capacity Overview */}
