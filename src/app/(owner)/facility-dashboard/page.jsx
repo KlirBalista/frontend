@@ -766,6 +766,7 @@ export default function FacilityDashboard() {
 
         {/* Facility Management Grid */}
         {activeTab === 'manage' && (
+        <>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Facility Details */}
           <div className="bg-white rounded-lg shadow p-6">
@@ -1084,6 +1085,7 @@ export default function FacilityDashboard() {
             )}
           </div>
         </div>
+        </>
         )}
       </div>
     </div>
