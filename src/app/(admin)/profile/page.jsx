@@ -11,7 +11,6 @@ import {
   KeyIcon,
   CheckCircleIcon,
   XCircleIcon,
-  CameraIcon,
 } from "@heroicons/react/24/outline";
 
 const ProfilePage = () => {
@@ -20,9 +19,6 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileImagePreview, setProfileImagePreview] = useState(null);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -49,7 +45,6 @@ const ProfilePage = () => {
         new_password: "",
         confirm_password: "",
       });
-      setProfileImagePreview(user.profile_image_url || null);
       setLoading(false);
     }
   }, [user]);
@@ -162,66 +157,6 @@ const ProfilePage = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setMessage({ type: "error", text: "Please select a valid image file" });
-        return;
-      }
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setMessage({ type: "error", text: "Image size should be less than 5MB" });
-        return;
-      }
-      setProfileImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleImageUpload = async () => {
-    if (!profileImage) return;
-
-    setIsUploadingImage(true);
-    try {
-      // Create FormData object for file upload (same pattern as document uploads)
-      const formDataToUpload = new FormData();
-      formDataToUpload.append('profile_image', profileImage);
-
-      // Ensure CSRF cookie is set for Sanctum
-      await axios.get('/sanctum/csrf-cookie');
-
-      // Submit the profile image to backend (backend will handle Supabase upload)
-      await axios.post(
-        '/api/user/profile-image',
-        formDataToUpload,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      setMessage({ type: "success", text: "Profile image updated successfully!" });
-      setProfileImage(null);
-      mutate(); // Refresh user data
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setMessage({
-        type: "error",
-        text: error.response?.data?.message || "Failed to upload image. Please try again.",
-      });
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
   const handleCancel = () => {
     if (user) {
       setFormData({
@@ -234,8 +169,6 @@ const ProfilePage = () => {
         new_password: "",
         confirm_password: "",
       });
-      setProfileImagePreview(user.profile_image_url || null);
-      setProfileImage(null);
     }
     setFormErrors({});
     setIsEditing(false);
@@ -295,30 +228,9 @@ const ProfilePage = () => {
           <div className="px-6 py-4 bg-gradient-to-r from-[#BF3853] to-[#A41F39]">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className="relative group">
-                  {profileImagePreview ? (
-                    <img
-                      src={profileImagePreview}
-                      alt="Profile"
-                      className="h-20 w-20 rounded-full object-cover shadow-lg border-2 border-white/30"
-                    />
-                  ) : (
-                    <div className="h-20 w-20 rounded-full bg-white/30 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                      {user?.firstname?.charAt(0) || "U"}
-                      {user?.lastname?.charAt(0) || ""}
-                    </div>
-                  )}
-                  {isEditing && (
-                    <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
-                      <CameraIcon className="h-8 w-8 text-white" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                      />
-                    </label>
-                  )}
+                <div className="h-20 w-20 rounded-full bg-white/30 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                  {user?.firstname?.charAt(0) || "U"}
+                  {user?.lastname?.charAt(0) || ""}
                 </div>
                 <div className="ml-6">
                   <h2 className="text-2xl font-bold text-white">
@@ -328,15 +240,6 @@ const ProfilePage = () => {
                   <span className="inline-flex mt-2 px-3 py-1 text-xs font-bold rounded-full bg-white/20 text-white">
                     {user?.system_role_id === 1 ? "Administrator" : user?.system_role_id === 2 ? "Owner" : "Staff"}
                   </span>
-                  {profileImage && (
-                    <button
-                      onClick={handleImageUpload}
-                      disabled={isUploadingImage}
-                      className="block mt-2 text-xs text-white/90 hover:text-white underline disabled:opacity-50"
-                    >
-                      {isUploadingImage ? "Uploading..." : "Save Image"}
-                    </button>
-                  )}
                 </div>
               </div>
               {!isEditing && (
