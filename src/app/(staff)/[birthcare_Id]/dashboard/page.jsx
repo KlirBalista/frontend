@@ -326,7 +326,7 @@ const StatCard = ({ title, value, icon, color }) => {
   };
 
   return (
-    <div className={`rounded-2xl border ${c.border} ${c.bg} backdrop-blur-sm shadow-lg p-6 flex flex-col justify-between h-36`}>
+    <div className={`rounded-xl border border-gray-200 ${c.bg} shadow-sm hover:shadow-md transition-all duration-300 p-6 flex flex-col justify-between h-36`}>
       <div className="flex items-start justify-between">
         <p className={`text-sm font-medium ${c.title}`}>{title}</p>
         <div className={`rounded-xl ${c.iconBg} p-2.5`}>
