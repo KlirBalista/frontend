@@ -159,7 +159,7 @@ const Dashboard = () => {
           />
         </div>
 
-      <div className="bg-[#F891A5]/20 rounded-2xl grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left column with Facility Capacity and Trends taking half height each */}
         <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Capacity Overview */}
@@ -301,20 +301,16 @@ const Dashboard = () => {
 const StatCard = ({ title, value, icon, color }) => {
   const palette = {
     pink1: {
-      gradient: 'from-rose-400 to-pink-500',
-      shadow: 'hover:shadow-rose-200'
+      bg: 'bg-[#FDB3C2]/10', border: 'border-[#FDB3C2]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#FDB3C2]/20', icon: 'text-[#BF3853]'
     },
     pink2: {
-      gradient: 'from-pink-400 to-rose-500',
-      shadow: 'hover:shadow-pink-200'
+      bg: 'bg-[#F891A5]/10', border: 'border-[#F891A5]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#F891A5]/20', icon: 'text-[#BF3853]'
     },
     pink3: {
-      gradient: 'from-fuchsia-400 to-pink-500',
-      shadow: 'hover:shadow-fuchsia-200'
+      bg: 'bg-[#E56D85]/10', border: 'border-[#E56D85]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#E56D85]/20', icon: 'text-[#BF3853]'
     },
     pink4: {
-      gradient: 'from-purple-400 to-pink-500',
-      shadow: 'hover:shadow-purple-200'
+      bg: 'bg-[#BF3853]/10', border: 'border-[#BF3853]/30', title: 'text-[#A41F39]', value: 'text-[#A41F39]', iconBg: 'bg-[#BF3853]/20', icon: 'text-[#A41F39]'
     }
   };
 
@@ -330,17 +326,17 @@ const StatCard = ({ title, value, icon, color }) => {
   };
 
   return (
-    <div className={`bg-gradient-to-br ${c.gradient} rounded-2xl p-6 shadow-sm ${c.shadow} hover:shadow-md transition-all duration-300 hover:scale-105`}>
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-          <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className={`rounded-2xl border ${c.border} ${c.bg} backdrop-blur-sm shadow-lg p-6 flex flex-col justify-between h-36`}>
+      <div className="flex items-start justify-between">
+        <p className={`text-sm font-medium ${c.title}`}>{title}</p>
+        <div className={`rounded-xl ${c.iconBg} p-2.5`}>
+          <svg className={`h-5 w-5 ${c.icon}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {iconComponents[icon] || iconComponents.users}
           </svg>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-white">{value}</p>
-          <p className="text-sm text-white/90">{title}</p>
-        </div>
+      </div>
+      <div>
+        <p className={`text-3xl font-bold ${c.value}`}>{value}</p>
       </div>
     </div>
   );
