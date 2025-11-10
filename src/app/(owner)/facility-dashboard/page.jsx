@@ -527,51 +527,59 @@ export default function FacilityDashboard() {
         {activeTab === 'summary' && (
           <>
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <UserGroupIcon className="h-6 w-6 text-white" />
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-white">{dashboardStats?.overview?.total_staff || staffCount}</p>
-                <p className="text-sm text-blue-50">Total Staff</p>
+                <p className="text-sm text-gray-600 font-medium">Total Staff</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {dashboardStats?.overview?.total_staff || staffCount}
+                </p>
+              </div>
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <UserGroupIcon className="h-6 w-6 text-blue-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <UserIcon className="h-6 w-6 text-white" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-white">{dashboardStats?.overview?.total_patients || 0}</p>
-                <p className="text-sm text-green-50">Active Patients</p>
+                <p className="text-sm text-gray-600 font-medium">Active Patients</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {dashboardStats?.overview?.total_patients || 0}
+                </p>
+              </div>
+              <div className="p-3 bg-green-100 rounded-lg">
+                <UserIcon className="h-6 w-6 text-green-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <CalendarIcon className="h-6 w-6 text-white" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-white">{dashboardStats?.overview?.active_admissions || 0}</p>
-                <p className="text-sm text-purple-50">Active Admissions</p>
+                <p className="text-sm text-gray-600 font-medium">Active Admissions</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {dashboardStats?.overview?.active_admissions || 0}
+                </p>
+              </div>
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <CalendarIcon className="h-6 w-6 text-purple-600" />
               </div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <BuildingOffice2Icon className="h-6 w-6 text-white" />
-              </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-white">{dashboardStats?.overview?.total_beds || 0}</p>
-                <p className="text-sm text-pink-50">Total Beds</p>
+                <p className="text-sm text-gray-600 font-medium">Total Beds</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {dashboardStats?.overview?.total_beds || 0}
+                </p>
+              </div>
+              <div className="p-3 bg-pink-100 rounded-lg">
+                <BuildingOffice2Icon className="h-6 w-6 text-pink-600" />
               </div>
             </div>
           </div>
