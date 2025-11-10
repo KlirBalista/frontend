@@ -41,12 +41,10 @@ const SubscriptionSuccessPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FDB3C2]/10 to-[#F891A5]/10">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#BF3853] mx-auto mb-4"></div>
-            <p className="text-gray-600">Verifying your payment...</p>
-          </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-[#BF3853] mx-auto"></div>
+          <p className="mt-4 text-gray-700 font-semibold">Verifying your payment...</p>
         </div>
       </div>
     );
