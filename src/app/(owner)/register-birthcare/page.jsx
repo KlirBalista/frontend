@@ -15,6 +15,7 @@ import InputError from "../../../components/InputError";
 export default function RegisterBirthcare() {
   const router = useRouter();
   const { user } = useAuth({ middleware: "auth" });
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -161,6 +162,33 @@ export default function RegisterBirthcare() {
   // Check if user has an active subscription
   const hasActiveSubscription = subscription?.status === "active";
 
+  // Step configuration
+  const steps = [
+    { id: 1, name: 'Facility Info', icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { id: 2, name: 'Location', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' },
+    { id: 3, name: 'Documents', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+  ];
+
+  const nextStep = () => {
+    if (currentStep < steps.length) setCurrentStep(currentStep + 1);
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
+  };
+
+  const validateStep = async () => {
+    if (currentStep === 1) {
+      const nameValid = await watch('name');
+      return nameValid && nameValid.length > 0;
+    }
+    if (currentStep === 2) {
+      const location = watch('location');
+      return location && Array.isArray(location) && location.length === 2;
+    }
+    return true;
+  };
+
   // Loading state
   if (isCheckingSubscription || isCheckingBirthcare) {
     return (
@@ -224,7 +252,7 @@ export default function RegisterBirthcare() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 py-6">
-      <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-[#BF3853] via-[#E56D85] to-[#F891A5] px-6 py-6">
@@ -240,12 +268,51 @@ export default function RegisterBirthcare() {
             </div>
           </div>
 
-          {/* Content Section */}
-          <div className="px-6 py-6 bg-gradient-to-b from-gray-50 to-white">
-            <div className="mx-auto">
+          {/* Step Progress Indicator */}
+          <div className="bg-white px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center flex-1">
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
+                      currentStep > step.id
+                        ? 'bg-[#BF3853] border-[#BF3853]'
+                        : currentStep === step.id
+                        ? 'bg-white border-[#BF3853] ring-4 ring-[#FDB3C2]/20'
+                        : 'bg-white border-gray-300'
+                    }`}>
+                      {currentStep > step.id ? (
+                        <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <span className={`text-sm font-semibold ${
+                          currentStep === step.id ? 'text-[#BF3853]' : 'text-gray-400'
+                        }`}>
+                          {step.id}
+                        </span>
+                      )}
+                    </div>
+                    <span className={`mt-2 text-xs font-medium ${
+                      currentStep >= step.id ? 'text-[#BF3853]' : 'text-gray-400'
+                    }`}>
+                      {step.name}
+                    </span>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className={`flex-1 h-0.5 -mt-6 transition-all ${
+                      currentStep > step.id ? 'bg-[#BF3853]' : 'bg-gray-300'
+                    }`} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {/* If previous registration was rejected, show guidance banner */}
-      {existingBirthcare?.status?.toLowerCase() === "rejected" && (
+          {/* Content Section */}
+          <div className="px-8 py-8 bg-gradient-to-b from-gray-50 to-white min-h-[500px]">
+            {/* If previous registration was rejected, show guidance banner */}
+            {existingBirthcare?.status?.toLowerCase() === "rejected" && (
         <div className="bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-400 rounded-lg p-4 mb-6 shadow-sm">
           <div className="flex items-center gap-2">
             <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -310,213 +377,274 @@ export default function RegisterBirthcare() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Facility Information */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 bg-blue-500 rounded-lg">
-              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-bold text-gray-800">
-              Facility Information
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {/* Facility Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Facility Name <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="name"
-                type="text"
-                {...register("name", {
-                  required: "Facility name is required",
-                  maxLength: {
-                    value: 100,
-                    message: "Facility name must be less than 100 characters",
-                  },
-                })}
-                className="mt-1 block w-full"
-              />
-              <InputError
-                messages={errors.name ? [errors.name.message] : []}
-                className="mt-2"
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                rows={4}
-                {...register("description", {
-                  maxLength: {
-                    value: 500,
-                    message: "Description must be less than 500 characters",
-                  },
-                })}
-                className="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm transition-all duration-200 focus:border-[#BF3853] focus:ring-4 focus:ring-[#FDB3C2]/20 focus:outline-none hover:border-gray-300 resize-none"
-              />
-              <InputError
-                messages={
-                  errors.description ? [errors.description.message] : []
-                }
-                className="mt-2"
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                Briefly describe your facility and the services offered.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Location Section */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 bg-purple-500 rounded-lg">
-              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-bold text-gray-800">
-              Facility Location <span className="text-red-500">*</span>
-            </h2>
-          </div>
-
-          <Controller
-            name="location"
-            control={control}
-            rules={{ required: "Please select a location on the map" }}
-            render={({ field }) => (
-              <LocationPicker
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.location?.message}
-              />
-            )}
-          />
-        </div>
-
-        {/* Documents Section */}
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 bg-emerald-500 rounded-lg">
-              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-bold text-gray-800">
-              Required Documents
-            </h2>
-          </div>
-
-          <div className="space-y-6">
-            {/* PhilHealth Accreditation (Optional) */}
-            <Controller
-              name="philhealth_cert"
-              control={control}
-              render={({ field }) => (
-                <DocumentUpload
-                  label="PhilHealth Accreditation Certificate"
-                  name="philhealth_cert"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.philhealth_cert?.message}
-                  required={false}
-                  accept="application/pdf,image/jpeg,image/png"
-                />
-              )}
-            />
-
-            {/* Business Permit */}
-            <Controller
-              name="business_permit"
-              control={control}
-              rules={existingBirthcare?.status?.toLowerCase() === 'rejected' ? {} : { required: "Business Permit is required" }}
-              render={({ field }) => (
-                <DocumentUpload
-                  label="Business Permit from Local Government Unit (LGU)"
-                  name="business_permit"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.business_permit?.message}
-                  required={existingBirthcare?.status?.toLowerCase() !== 'rejected'}
-                  accept="application/pdf,image/jpeg,image/png"
-                />
-              )}
-            />
-
-            {/* DOH Certificate */}
-            <Controller
-              name="doh_cert"
-              control={control}
-              rules={existingBirthcare?.status?.toLowerCase() === 'rejected' ? {} : { required: "DOH Certificate is required" }}
-              render={({ field }) => (
-                <DocumentUpload
-                  label="DOH Certificate of Compliance"
-                  name="doh_cert"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.doh_cert?.message}
-                  required={existingBirthcare?.status?.toLowerCase() !== 'rejected'}
-                  accept="application/pdf,image/jpeg,image/png"
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        {/* Submission Section */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 border border-gray-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
-              <p className="font-medium text-gray-700">* Required fields</p>
-              <p className="mt-1 flex items-center gap-2">
-                <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Step 1: Facility Information */}
+        {currentStep === 1 && (
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6 shadow-sm animate-fadeIn">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="p-2 bg-blue-500 rounded-lg">
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Your application will be reviewed by an administrator.
-              </p>
+              </div>
+              <h2 className="text-lg font-bold text-gray-800">
+                Facility Information
+              </h2>
             </div>
 
-            <Button
-              type="submit"
-              className={`px-6 py-3 bg-gradient-to-r from-[#A41F39] to-[#BF3853] hover:from-[#923649] hover:to-[#A41F39] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  {existingBirthcare?.status?.toLowerCase() === 'rejected' ? 'Resubmitting...' : 'Submitting...'}
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {existingBirthcare?.status?.toLowerCase() === 'rejected' ? 'Resubmit Application' : 'Submit Registration'}
-                </span>
+            <div className="space-y-4">
+              {/* Facility Name */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Facility Name <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  id="name"
+                  type="text"
+                  {...register("name", {
+                    required: "Facility name is required",
+                    maxLength: {
+                      value: 100,
+                      message: "Facility name must be less than 100 characters",
+                    },
+                  })}
+                  className="mt-1 block w-full"
+                />
+                <InputError
+                  messages={errors.name ? [errors.name.message] : []}
+                  className="mt-2"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  rows={4}
+                  {...register("description", {
+                    maxLength: {
+                      value: 500,
+                      message: "Description must be less than 500 characters",
+                    },
+                  })}
+                  className="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm transition-all duration-200 focus:border-[#BF3853] focus:ring-4 focus:ring-[#FDB3C2]/20 focus:outline-none hover:border-gray-300 resize-none"
+                />
+                <InputError
+                  messages={
+                    errors.description ? [errors.description.message] : []
+                  }
+                  className="mt-2"
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  Briefly describe your facility and the services offered.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Location Section */}
+        {currentStep === 2 && (
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6 shadow-sm animate-fadeIn">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="p-2 bg-purple-500 rounded-lg">
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-bold text-gray-800">
+                Facility Location <span className="text-red-500">*</span>
+              </h2>
+            </div>
+
+            <Controller
+              name="location"
+              control={control}
+              rules={{ required: "Please select a location on the map" }}
+              render={({ field }) => (
+                <LocationPicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.location?.message}
+                />
               )}
-            </Button>
+            />
+          </div>
+        )}
+
+        {/* Step 3: Documents Section */}
+        {currentStep === 3 && (
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-6 shadow-sm animate-fadeIn">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="p-2 bg-emerald-500 rounded-lg">
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-bold text-gray-800">
+                Required Documents
+              </h2>
+            </div>
+
+            <div className="space-y-6">
+              {/* PhilHealth Accreditation (Optional) */}
+              <Controller
+                name="philhealth_cert"
+                control={control}
+                render={({ field }) => (
+                  <DocumentUpload
+                    label="PhilHealth Accreditation Certificate"
+                    name="philhealth_cert"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.philhealth_cert?.message}
+                    required={false}
+                    accept="application/pdf,image/jpeg,image/png"
+                  />
+                )}
+              />
+
+              {/* Business Permit */}
+              <Controller
+                name="business_permit"
+                control={control}
+                rules={existingBirthcare?.status?.toLowerCase() === 'rejected' ? {} : { required: "Business Permit is required" }}
+                render={({ field }) => (
+                  <DocumentUpload
+                    label="Business Permit from Local Government Unit (LGU)"
+                    name="business_permit"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.business_permit?.message}
+                    required={existingBirthcare?.status?.toLowerCase() !== 'rejected'}
+                    accept="application/pdf,image/jpeg,image/png"
+                  />
+                )}
+              />
+
+              {/* DOH Certificate */}
+              <Controller
+                name="doh_cert"
+                control={control}
+                rules={existingBirthcare?.status?.toLowerCase() === 'rejected' ? {} : { required: "DOH Certificate is required" }}
+                render={({ field }) => (
+                  <DocumentUpload
+                    label="DOH Certificate of Compliance"
+                    name="doh_cert"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.doh_cert?.message}
+                    required={existingBirthcare?.status?.toLowerCase() !== 'rejected'}
+                    accept="application/pdf,image/jpeg,image/png"
+                  />
+                )}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Navigation Buttons */}
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 border border-gray-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Previous Button */}
+            <div className="flex gap-3">
+              {currentStep > 1 && (
+                <Button
+                  type="button"
+                  onClick={prevStep}
+                  className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Previous
+                  </span>
+                </Button>
+              )}
+            </div>
+
+            {/* Progress Info */}
+            <div className="text-sm text-gray-600 text-center">
+              {currentStep < steps.length ? (
+                <p className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Step {currentStep} of {steps.length}
+                </p>
+              ) : (
+                <div>
+                  <p className="font-medium text-gray-700">* Required fields</p>
+                  <p className="mt-1 flex items-center gap-2 justify-center">
+                    <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Your application will be reviewed by an administrator.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Next/Submit Button */}
+            <div className="flex gap-3">
+              {currentStep < steps.length ? (
+                <Button
+                  type="button"
+                  onClick={async () => {
+                    const isValid = await validateStep();
+                    if (isValid) {
+                      nextStep();
+                    } else {
+                      setServerError('Please complete all required fields before proceeding.');
+                    }
+                  }}
+                  className="px-6 py-3 bg-gradient-to-r from-[#A41F39] to-[#BF3853] hover:from-[#923649] hover:to-[#A41F39] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <span className="flex items-center gap-2">
+                    Next
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className={`px-6 py-3 bg-gradient-to-r from-[#A41F39] to-[#BF3853] hover:from-[#923649] hover:to-[#A41F39] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {existingBirthcare?.status?.toLowerCase() === 'rejected' ? 'Resubmitting...' : 'Submitting...'}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {existingBirthcare?.status?.toLowerCase() === 'rejected' ? 'Resubmit Application' : 'Submit Registration'}
+                    </span>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-              </form>
+      </form>
             </div>
           </div>
         </div>
