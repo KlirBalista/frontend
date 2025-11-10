@@ -551,7 +551,7 @@ export default function FacilityDashboard() {
         </div>
 
         {/* Monthly Birth Reports Chart */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Monthly Birth Reports</h2>
               <div className="flex items-center gap-4">
