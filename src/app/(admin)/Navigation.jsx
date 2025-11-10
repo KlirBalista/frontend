@@ -99,9 +99,17 @@ const Navigation = ({ user }) => {
               className="flex items-center p-2 rounded-lg hover:bg-[#FDB3C2]/30 transition-colors"
             >
               <div className="flex-shrink-0">
-                <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-gradient-to-br from-[#BF3853] to-[#A41F39] text-white shadow-sm">
-                  {user?.firstname?.charAt(0) || "U"}
-                </div>
+                {user?.profile_image_url ? (
+                  <img
+                    src={user.profile_image_url}
+                    alt="Profile"
+                    className="h-10 w-10 rounded-full object-cover shadow-sm border-2 border-white/20"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-gradient-to-br from-[#BF3853] to-[#A41F39] text-white shadow-sm">
+                    {user?.firstname?.charAt(0) || "U"}
+                  </div>
+                )}
               </div>
             </button>
 
@@ -348,9 +356,17 @@ const Navigation = ({ user }) => {
                   className="flex items-center w-full p-3 rounded-lg text-white/90 hover:bg-white/20 hover:text-white transition-colors"
                 >
                   <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-white/30 text-white shadow-sm">
-                      {user?.firstname?.charAt(0) || "U"}
-                    </div>
+                    {user?.profile_image_url ? (
+                      <img
+                        src={user.profile_image_url}
+                        alt="Profile"
+                        className="h-10 w-10 rounded-full object-cover shadow-sm border-2 border-white/20"
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full flex items-center justify-center font-medium bg-white/30 text-white shadow-sm">
+                        {user?.firstname?.charAt(0) || "U"}
+                      </div>
+                    )}
                   </div>
                   <div className="ml-3 text-left">
                     <p className="text-sm font-medium">
