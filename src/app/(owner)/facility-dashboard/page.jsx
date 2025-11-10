@@ -543,131 +543,119 @@ export default function FacilityDashboard() {
           </div>
         </div>
 
-        {/* Charts + Mini Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Chart - spans 2 columns */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
+        {/* Monthly Birth Reports Chart */}
+        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Participation</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Sort by</span>
-                <select className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#BF3853]">
-                  <option>Monthly</option>
-                  <option>Yearly</option>
-                </select>
+              <h2 className="text-lg font-semibold text-gray-900">Monthly Birth Reports</h2>
+              <div className="flex items-center gap-4">
+                <div className="text-sm">
+                  <span className="text-gray-500">Total Births: </span>
+                  <span className="font-semibold text-gray-900">{dashboardStats?.birth_statistics?.total_births || 0}</span>
+                </div>
+                <div className="text-sm">
+                  <span className="text-gray-500">This Month: </span>
+                  <span className="font-semibold text-[#BF3853]">{dashboardStats?.birth_statistics?.this_month_births || 0}</span>
+                </div>
               </div>
             </div>
-            <div className="relative h-48">
-              <svg className="w-full h-full" viewBox="0 0 700 200" preserveAspectRatio="none">
-                <line x1="0" y1="0" x2="0" y2="160" stroke="#e5e7eb" strokeWidth="1" />
-                <line x1="0" y1="160" x2="700" y2="160" stroke="#e5e7eb" strokeWidth="1" />
-                <text x="10" y="20" fontSize="10" fill="#9ca3af">400</text>
-                <text x="10" y="85" fontSize="10" fill="#9ca3af">200</text>
-                <text x="10" y="155" fontSize="10" fill="#9ca3af">0</text>
-                <path d="M 50,120 Q 120,100 180,90 T 320,70 T 460,90 T 580,60 T 680,80" fill="none" stroke="url(#lineGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M 50,120 Q 120,100 180,90 T 320,70 T 460,90 T 580,60 T 680,80 L 680,160 L 50,160 Z" fill="url(#areaGradient)" />
-                <defs>
-                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#8B5CF6" />
-                    <stop offset="50%" stopColor="#A78BFA" />
-                    <stop offset="100%" stopColor="#C4B5FD" />
-                  </linearGradient>
-                  <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <text x="50" y="180" fontSize="11" fill="#9ca3af">JUN</text>
-                <text x="150" y="180" fontSize="11" fill="#9ca3af">JUL</text>
-                <text x="250" y="180" fontSize="11" fill="#9ca3af">AUG</text>
-                <text x="350" y="180" fontSize="11" fill="#9ca3af">SEP</text>
-                <text x="450" y="180" fontSize="11" fill="#9ca3af">OCT</text>
-                <text x="550" y="180" fontSize="11" fill="#9ca3af">NOV</text>
-                <text x="650" y="180" fontSize="11" fill="#9ca3af">DEC</text>
-              </svg>
-              <div className="absolute top-10 left-1/4 bg-[#5B47DB] text-white px-4 py-2 rounded-lg text-sm shadow-lg pointer-events-none">
-                <div className="font-medium">Employees</div>
-                <div className="text-xs opacity-90">Member: 255</div>
-                <div className="text-xs opacity-90">8 August 2021</div>
+            {dashboardStats?.birth_statistics?.monthly_data && dashboardStats.birth_statistics.monthly_data.length > 0 ? (
+              <div className="relative h-64">
+                <svg className="w-full h-full" viewBox="0 0 800 250" preserveAspectRatio="none">
+                  {/* Y-axis */}
+                  <line x1="50" y1="0" x2="50" y2="200" stroke="#e5e7eb" strokeWidth="2" />
+                  {/* X-axis */}
+                  <line x1="50" y1="200" x2="780" y2="200" stroke="#e5e7eb" strokeWidth="2" />
+                  
+                  {/* Y-axis labels */}
+                  {(() => {
+                    const maxBirths = Math.max(...(dashboardStats.birth_statistics.monthly_data.map(d => d.births || 0)), 1);
+                    const yStep = Math.ceil(maxBirths / 4);
+                    return [0, 1, 2, 3, 4].map(i => (
+                      <text key={i} x="20" y={200 - (i * 50)} fontSize="12" fill="#9ca3af" textAnchor="end">
+                        {i * yStep}
+                      </text>
+                    ));
+                  })()}
+                  
+                  {/* Line path */}
+                  <path
+                    d={(() => {
+                      const monthlyData = dashboardStats.birth_statistics.monthly_data;
+                      const maxBirths = Math.max(...monthlyData.map(d => d.births || 0), 1);
+                      const xStep = 730 / Math.max(monthlyData.length - 1, 1);
+                      const points = monthlyData.map((data, index) => {
+                        const x = 50 + (index * xStep);
+                        const y = 200 - ((data.births || 0) / maxBirths * 180);
+                        return `${x},${y}`;
+                      });
+                      return `M ${points.join(' L ')}`;
+                    })()}
+                    fill="none"
+                    stroke="url(#birthGradient)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  
+                  {/* Area fill */}
+                  <path
+                    d={(() => {
+                      const monthlyData = dashboardStats.birth_statistics.monthly_data;
+                      const maxBirths = Math.max(...monthlyData.map(d => d.births || 0), 1);
+                      const xStep = 730 / Math.max(monthlyData.length - 1, 1);
+                      const points = monthlyData.map((data, index) => {
+                        const x = 50 + (index * xStep);
+                        const y = 200 - ((data.births || 0) / maxBirths * 180);
+                        return `${x},${y}`;
+                      });
+                      const lastX = 50 + ((monthlyData.length - 1) * xStep);
+                      return `M ${points.join(' L ')} L ${lastX},200 L 50,200 Z`;
+                    })()}
+                    fill="url(#birthAreaGradient)"
+                  />
+                  
+                  {/* Data points */}
+                  {dashboardStats.birth_statistics.monthly_data.map((data, index) => {
+                    const maxBirths = Math.max(...dashboardStats.birth_statistics.monthly_data.map(d => d.births || 0), 1);
+                    const xStep = 730 / Math.max(dashboardStats.birth_statistics.monthly_data.length - 1, 1);
+                    const x = 50 + (index * xStep);
+                    const y = 200 - ((data.births || 0) / maxBirths * 180);
+                    return (
+                      <circle key={index} cx={x} cy={y} r="4" fill="#BF3853" stroke="white" strokeWidth="2" />
+                    );
+                  })}
+                  
+                  <defs>
+                    <linearGradient id="birthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#A41F39" />
+                      <stop offset="50%" stopColor="#BF3853" />
+                      <stop offset="100%" stopColor="#E56D85" />
+                    </linearGradient>
+                    <linearGradient id="birthAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#BF3853" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#BF3853" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* X-axis month labels */}
+                  {dashboardStats.birth_statistics.monthly_data.map((data, index) => {
+                    const xStep = 730 / Math.max(dashboardStats.birth_statistics.monthly_data.length - 1, 1);
+                    const x = 50 + (index * xStep);
+                    return (
+                      <text key={index} x={x} y="220" fontSize="11" fill="#9ca3af" textAnchor="middle">
+                        {data.month}
+                      </text>
+                    );
+                  })}
+                </svg>
               </div>
-            </div>
-          </div>
-
-          {/* Mini KPI Cards */}
-          <div className="grid grid-cols-2 gap-4">
-            {[{
-              label: 'Plan Month',
-              value: dashboardStats?.birth_statistics?.this_month_births || 12,
-            },{
-              label: 'Member Average',
-              value: dashboardStats?.birth_statistics?.avg_births_per_month || 293,
-            },{
-              label: 'Member Month',
-              value: dashboardStats?.monthly_stats?.prenatal_visits || 222,
-            },{
-              label: 'Member Plan',
-              value: dashboardStats?.overview?.total_patients || 37,
-            }].map((kpi, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
-                <div className="text-sm text-gray-500">{kpi.label}</div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                <ChartBarIcon className="h-16 w-16 mb-3" />
+                <p className="text-sm">No birth data available yet</p>
               </div>
-            ))}
+            )}
           </div>
-        </div>
-
-        {/* Work Management Table - full width */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Work management</h2>
-            <button className="text-gray-400 hover:text-gray-600">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-              </svg>
-            </button>
-          </div>
-
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-xs text-gray-500 uppercase">
-                <th className="pb-4 font-medium">SERVICE</th>
-                <th className="pb-4 font-medium">PRIORITY</th>
-                <th className="pb-4 font-medium">TOTAL</th>
-                <th className="pb-4 font-medium">LAST PAYMENT</th>
-                <th className="pb-4 font-medium">STATUS</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {dashboardStats?.recent_activity && dashboardStats.recent_activity.slice(0, 4).map((item, idx) => (
-                <tr key={idx} className="border-t border-gray-100">
-                  <td className="py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <ClipboardDocumentCheckIcon className="w-5 h-5 text-gray-600" />
-                      </div>
-                      <span className="font-medium text-gray-900">{item.patient_name}</span>
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="inline-block px-3 py-1 text-xs font-medium bg-orange-100 text-orange-700 rounded-full">
-                      Medium
-                    </span>
-                  </td>
-                  <td className="py-4 font-medium text-gray-900">$200</td>
-                  <td className="py-4 text-gray-600">{item.admission_date}</td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                        <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '80%' }}></div>
-                      </div>
-                      <span className="text-xs font-medium text-gray-900">80%</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
 
         {/* Recent Activity */}
         {dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
@@ -710,79 +698,87 @@ export default function FacilityDashboard() {
             </div>
           )}
 
-        {/* Performance & Subscription Grid */}
+        {/* Performance & Subscription */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Performance Metrics */}
+          {/* Performance - compact list style */}
           {dashboardStats && (
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Performance</h2>
-                <StarIcon className="h-5 w-5 text-gray-400" />
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-semibold text-gray-900">Performance</h2>
+                <StarIcon className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="space-y-4">
-                <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-4">
-                  <div className="text-2xl font-bold text-[#A41F39]">{dashboardStats?.performance?.total_prenatal_visits || 0}</div>
-                  <div className="text-sm text-gray-700">Total Prenatal Visits</div>
+              <div className="divide-y divide-gray-100">
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-rose-50 text-[#A41F39] font-semibold">TP</span>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Total Prenatal Visits</div>
+                      <div className="text-xs text-gray-500">All time</div>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-900">{dashboardStats?.performance?.total_prenatal_visits || 0}</div>
                 </div>
-                <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4">
-                  <div className="text-2xl font-bold text-[#E56D85]">{dashboardStats?.performance?.average_stay_duration || 0} days</div>
-                  <div className="text-sm text-gray-700">Avg Stay Duration</div>
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-pink-50 text-[#BF3853] font-semibold">AD</span>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Avg Stay Duration</div>
+                      <div className="text-xs text-gray-500">In days</div>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-900">{dashboardStats?.performance?.average_stay_duration || 0}<span className="text-sm font-medium text-gray-500 ml-1">days</span></div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
-                  <div className="text-2xl font-bold text-[#BF3853]">{dashboardStats?.monthly_stats?.prenatal_visits || 0}</div>
-                  <div className="text-sm text-gray-700">Monthly Prenatal Visits</div>
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-violet-50 text-violet-600 font-semibold">MV</span>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Monthly Prenatal Visits</div>
+                      <div className="text-xs text-gray-500">This month</div>
+                    </div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-900">{dashboardStats?.monthly_stats?.prenatal_visits || 0}</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Subscription Details */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Subscription</h2>
-              <CreditCardIcon className="h-5 w-5 text-gray-400" />
+          {/* Subscription - status pill and details */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-gray-900">Subscription</h2>
+              <CreditCardIcon className="h-4 w-4 text-gray-400" />
             </div>
-            {subscription?.status === "active" ? (
-              <div className="space-y-4">
-                <div className="flex items-center bg-green-50 rounded-xl p-4">
-                  <CheckCircleIcon className="h-6 w-6 text-green-500 mr-3" />
-                  <span className="text-green-600 font-semibold">
-                    Active Subscription
-                  </span>
-                </div>
-                {subscription.subscription?.end_date && (
-                  <div className="flex items-center bg-gray-50 rounded-xl p-3">
-                    <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
-                    <div>
-                      <div className="text-xs text-gray-500">Expires</div>
-                      <div className="text-sm font-medium text-gray-900">{new Date(subscription.subscription.end_date).toLocaleDateString()}</div>
-                    </div>
-                  </div>
-                )}
-                {subscription.subscription?.start_date && (
-                  <div className="flex items-center bg-gray-50 rounded-xl p-3">
-                    <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
-                    <div>
-                      <div className="text-xs text-gray-500">Started</div>
-                      <div className="text-sm font-medium text-gray-900">{new Date(subscription.subscription.start_date).toLocaleDateString()}</div>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3">
-                  <CreditCardIcon className="h-5 w-5 text-blue-600 mr-3" />
-                  <div>
-                    <div className="text-xs text-blue-600">Plan</div>
-                    <div className="text-sm font-semibold text-blue-900">{subscription.subscription?.plan?.plan_name || "N/A"}</div>
-                  </div>
+
+            <div className="flex items-center justify-between mb-4">
+              <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${subscription?.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                {subscription?.status === 'active' ? <CheckCircleIcon className="h-4 w-4" /> : <XCircleIcon className="h-4 w-4" />}
+                {subscription?.status === 'active' ? 'Active' : 'Inactive'}
+              </span>
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                Plan
+                <span className="text-blue-900">{subscription?.subscription?.plan?.plan_name || 'N/A'}</span>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
+                <CalendarIcon className="h-4 w-4 text-gray-400" />
+                <div>
+                  <div className="text-xs text-gray-500">Started</div>
+                  <div className="text-sm font-medium text-gray-900">{subscription?.subscription?.start_date ? new Date(subscription.subscription.start_date).toLocaleDateString() : '—'}</div>
                 </div>
               </div>
-            ) : (
-              <div className="flex items-center bg-red-50 rounded-xl p-4">
-                <XCircleIcon className="h-6 w-6 text-red-500 mr-3" />
-                <span className="text-red-600 font-semibold">
-                  No active subscription
-                </span>
+              <div className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
+                <CalendarIcon className="h-4 w-4 text-gray-400" />
+                <div>
+                  <div className="text-xs text-gray-500">Expires</div>
+                  <div className="text-sm font-medium text-gray-900">{subscription?.subscription?.end_date ? new Date(subscription.subscription.end_date).toLocaleDateString() : '—'}</div>
+                </div>
               </div>
+            </div>
+
+            {subscription?.status !== 'active' && (
+              <p className="mt-4 text-xs text-gray-500">No active subscription. Visit billing to activate a plan.</p>
             )}
           </div>
         </div>
