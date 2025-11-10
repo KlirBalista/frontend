@@ -692,7 +692,7 @@ export default function FacilityDashboard() {
                       <div className="text-xs text-gray-500">In days</div>
                     </div>
                   </div>
-                  <div className="text-xl font-bold text-gray-900">{dashboardStats?.performance?.average_stay_duration || 0}<span className="text-sm font-medium text-gray-500 ml-1">days</span></div>
+                  <div className="text-xl font-bold text-gray-900">{dashboardStats?.performance?.average_stay_duration || 0}</div>
                 </div>
                 <div className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
