@@ -588,7 +588,7 @@ export default function FacilityDashboard() {
         {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Left Column: Monthly Birth Reports */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 lg:row-span-2">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:row-span-2">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Monthly Birth Reports</h2>
               <div className="flex items-center gap-4">
@@ -703,7 +703,7 @@ export default function FacilityDashboard() {
 
           {/* Right Column Top: Performance */}
           {dashboardStats && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-semibold text-gray-900">Performance</h2>
                 <StarIcon className="h-4 w-4 text-gray-400" />
@@ -744,7 +744,7 @@ export default function FacilityDashboard() {
           )}
 
           {/* Subscription - status pill and details */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold text-gray-900">Subscription</h2>
               <CreditCardIcon className="h-4 w-4 text-gray-400" />
@@ -798,7 +798,7 @@ export default function FacilityDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Facility Capacity Card */}
           {dashboardStats && (
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Facility Capacity</h2>
                 <BuildingOffice2Icon className="h-5 w-5 text-gray-400" />
@@ -831,7 +831,7 @@ export default function FacilityDashboard() {
           )}
 
           {/* Facility Details Card */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Facility Details
@@ -944,7 +944,7 @@ export default function FacilityDashboard() {
             </div>
 
           {/* Facility Information Card */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Facility Information
@@ -1044,7 +1044,7 @@ export default function FacilityDashboard() {
 
         {/* Documents Tab */}
         {activeTab === 'documents' && (
-          <div className="bg-white rounded-2xl shadow-sm p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
               <DocumentTextIcon className="h-5 w-5 text-gray-400" />
