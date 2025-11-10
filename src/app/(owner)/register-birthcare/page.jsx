@@ -255,7 +255,7 @@ export default function RegisterBirthcare() {
       <div className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-[#BF3853] via-[#E56D85] to-[#F891A5] px-6 py-6">
+          <div className="bg-[#A41F39] px-6 py-6">
             <div className="flex items-center justify-center text-center gap-3">
               <div className="p-2 bg-white/20 backdrop-blur-lg rounded-xl">
                 <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -379,7 +379,7 @@ export default function RegisterBirthcare() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Step 1: Facility Information */}
         {currentStep === 1 && (
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6 shadow-sm animate-fadeIn">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm animate-fadeIn">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-2 bg-blue-500 rounded-lg">
                 <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -418,24 +418,25 @@ export default function RegisterBirthcare() {
                 />
               </div>
 
-              {/* Description */}
+              {/* Address */}
               <div>
                 <label
                   htmlFor="description"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Description
+                  Address <span className="text-red-500">*</span>
                 </label>
-                <textarea
+                <Input
                   id="description"
-                  rows={4}
+                  type="text"
                   {...register("description", {
+                    required: "Address is required",
                     maxLength: {
                       value: 500,
-                      message: "Description must be less than 500 characters",
+                      message: "Address must be less than 500 characters",
                     },
                   })}
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white shadow-sm transition-all duration-200 focus:border-[#BF3853] focus:ring-4 focus:ring-[#FDB3C2]/20 focus:outline-none hover:border-gray-300 resize-none"
+                  className="mt-1 block w-full"
                 />
                 <InputError
                   messages={
@@ -443,9 +444,6 @@ export default function RegisterBirthcare() {
                   }
                   className="mt-2"
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  Briefly describe your facility and the services offered.
-                </p>
               </div>
             </div>
           </div>
@@ -453,7 +451,7 @@ export default function RegisterBirthcare() {
 
         {/* Step 2: Location Section */}
         {currentStep === 2 && (
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6 shadow-sm animate-fadeIn">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm animate-fadeIn">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-2 bg-purple-500 rounded-lg">
                 <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -483,7 +481,7 @@ export default function RegisterBirthcare() {
 
         {/* Step 3: Documents Section */}
         {currentStep === 3 && (
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-6 shadow-sm animate-fadeIn">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm animate-fadeIn">
             <div className="flex items-center gap-2 mb-6">
               <div className="p-2 bg-emerald-500 rounded-lg">
                 <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -575,14 +573,7 @@ export default function RegisterBirthcare() {
 
             {/* Progress Info */}
             <div className="text-sm text-gray-600 text-center">
-              {currentStep < steps.length ? (
-                <p className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Step {currentStep} of {steps.length}
-                </p>
-              ) : (
+              {currentStep === steps.length && (
                 <div>
                   <p className="font-medium text-gray-700">* Required fields</p>
                   <p className="mt-1 flex items-center gap-2 justify-center">
