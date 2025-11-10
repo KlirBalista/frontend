@@ -550,8 +550,10 @@ export default function FacilityDashboard() {
           </div>
         </div>
 
-        {/* Monthly Birth Reports Chart */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 max-w-6xl mx-auto">
+        {/* Main Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Left Column: Monthly Birth Reports */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 lg:row-span-2">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Monthly Birth Reports</h2>
               <div className="flex items-center gap-4">
@@ -566,19 +568,19 @@ export default function FacilityDashboard() {
               </div>
             </div>
             {dashboardStats?.birth_statistics?.monthly_data && dashboardStats.birth_statistics.monthly_data.length > 0 ? (
-              <div className="relative h-64">
-                <svg className="w-full h-full" viewBox="0 0 800 250" preserveAspectRatio="none">
+              <div className="relative h-96">
+                <svg className="w-full h-full" viewBox="0 0 800 380" preserveAspectRatio="none">
                   {/* Y-axis */}
-                  <line x1="50" y1="0" x2="50" y2="200" stroke="#e5e7eb" strokeWidth="2" />
+                  <line x1="50" y1="20" x2="50" y2="330" stroke="#e5e7eb" strokeWidth="2" />
                   {/* X-axis */}
-                  <line x1="50" y1="200" x2="780" y2="200" stroke="#e5e7eb" strokeWidth="2" />
+                  <line x1="50" y1="330" x2="780" y2="330" stroke="#e5e7eb" strokeWidth="2" />
                   
                   {/* Y-axis labels */}
                   {(() => {
                     const maxBirths = Math.max(...(dashboardStats.birth_statistics.monthly_data.map(d => d.births || 0)), 1);
                     const yStep = Math.ceil(maxBirths / 4);
                     return [0, 1, 2, 3, 4].map(i => (
-                      <text key={i} x="20" y={200 - (i * 50)} fontSize="12" fill="#9ca3af" textAnchor="end">
+                      <text key={i} x="20" y={330 - (i * 77.5)} fontSize="12" fill="#9ca3af" textAnchor="end">
                         {i * yStep}
                       </text>
                     ));
@@ -592,7 +594,7 @@ export default function FacilityDashboard() {
                       const xStep = 730 / Math.max(monthlyData.length - 1, 1);
                       const points = monthlyData.map((data, index) => {
                         const x = 50 + (index * xStep);
-                        const y = 200 - ((data.births || 0) / maxBirths * 180);
+                        const y = 330 - ((data.births || 0) / maxBirths * 300);
                         return `${x},${y}`;
                       });
                       return `M ${points.join(' L ')}`;
@@ -612,11 +614,11 @@ export default function FacilityDashboard() {
                       const xStep = 730 / Math.max(monthlyData.length - 1, 1);
                       const points = monthlyData.map((data, index) => {
                         const x = 50 + (index * xStep);
-                        const y = 200 - ((data.births || 0) / maxBirths * 180);
+                        const y = 330 - ((data.births || 0) / maxBirths * 300);
                         return `${x},${y}`;
                       });
                       const lastX = 50 + ((monthlyData.length - 1) * xStep);
-                      return `M ${points.join(' L ')} L ${lastX},200 L 50,200 Z`;
+                      return `M ${points.join(' L ')} L ${lastX},330 L 50,330 Z`;
                     })()}
                     fill="url(#birthAreaGradient)"
                   />
@@ -626,7 +628,7 @@ export default function FacilityDashboard() {
                     const maxBirths = Math.max(...dashboardStats.birth_statistics.monthly_data.map(d => d.births || 0), 1);
                     const xStep = 730 / Math.max(dashboardStats.birth_statistics.monthly_data.length - 1, 1);
                     const x = 50 + (index * xStep);
-                    const y = 200 - ((data.births || 0) / maxBirths * 180);
+                    const y = 330 - ((data.births || 0) / maxBirths * 300);
                     return (
                       <circle key={index} cx={x} cy={y} r="4" fill="#BF3853" stroke="white" strokeWidth="2" />
                     );
@@ -649,7 +651,7 @@ export default function FacilityDashboard() {
                     const xStep = 730 / Math.max(dashboardStats.birth_statistics.monthly_data.length - 1, 1);
                     const x = 50 + (index * xStep);
                     return (
-                      <text key={index} x={x} y="220" fontSize="11" fill="#9ca3af" textAnchor="middle">
+                      <text key={index} x={x} y="355" fontSize="11" fill="#9ca3af" textAnchor="middle">
                         {data.month}
                       </text>
                     );
@@ -657,57 +659,14 @@ export default function FacilityDashboard() {
                 </svg>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+              <div className="flex flex-col items-center justify-center h-96 text-gray-400">
                 <ChartBarIcon className="h-16 w-16 mb-3" />
                 <p className="text-sm">No birth data available yet</p>
               </div>
             )}
           </div>
 
-        {/* Recent Activity */}
-        {dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-6 mt-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Recent Admissions</h2>
-                <ClipboardDocumentCheckIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-2 text-sm font-medium text-gray-600">Patient</th>
-                      <th className="text-left py-2 text-sm font-medium text-gray-600">Date</th>
-                      <th className="text-left py-2 text-sm font-medium text-gray-600">Room/Bed</th>
-                      <th className="text-left py-2 text-sm font-medium text-gray-600">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dashboardStats.recent_activity.map((admission, index) => (
-                      <tr key={index} className="border-b border-gray-100">
-                        <td className="py-3 font-medium text-gray-900">{admission.patient_name}</td>
-                        <td className="py-3 text-gray-600">{admission.admission_date}</td>
-                        <td className="py-3 text-gray-600">{admission.room_bed}</td>
-                        <td className="py-3">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            admission.status === 'in-labor' ? 'bg-[#FDB3C2] text-[#A41F39]' :
-                            admission.status === 'delivered' ? 'bg-[#F891A5]/20 text-[#BF3853]' :
-                            admission.status === 'discharged' ? 'bg-[#E56D85]/20 text-[#A41F39]' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
-                            {admission.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-        {/* Performance & Subscription */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Performance - compact list style */}
+          {/* Right Column Top: Performance */}
           {dashboardStats && (
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
