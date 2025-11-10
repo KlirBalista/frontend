@@ -429,7 +429,7 @@ export default function FacilityDashboard() {
   const displayName = birthcare?.owner_name || birthcare?.name || "there";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+    <div className="min-h-screen bg-[#F891A5]/20 rounded-2xl p-8">
       <div className="max-w-7xl mx-auto">
         {/* Greeting Header with Actions */}
         <div className="flex items-start md:items-center justify-between mb-6">
