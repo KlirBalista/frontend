@@ -189,12 +189,23 @@ const ProfilePage = () => {
 
     setIsUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('profile_image', profileImage);
+      // Create FormData object for file upload (same pattern as document uploads)
+      const formDataToUpload = new FormData();
+      formDataToUpload.append('profile_image', profileImage);
 
-      await axios.post('/api/user/profile/image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      // Ensure CSRF cookie is set for Sanctum
+      await axios.get('/sanctum/csrf-cookie');
+
+      // Submit the profile image to backend (backend will handle Supabase upload)
+      await axios.post(
+        '/api/user/profile-image',
+        formDataToUpload,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       setMessage({ type: "success", text: "Profile image updated successfully!" });
       setProfileImage(null);
