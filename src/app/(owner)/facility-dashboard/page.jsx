@@ -426,15 +426,20 @@ export default function FacilityDashboard() {
   }
 
   const isApproved = approvalStatus?.status === "approved";
+  const displayName = birthcare?.owner_name || birthcare?.name || "there";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Clean Header with Buttons */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Greeting Header with Actions */}
+        <div className="flex items-start md:items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <div className="flex items-center gap-6 mt-1">
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Hello {displayName}</h1>
+              <span className="text-2xl md:text-3xl">👋</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">Here’s your facility snapshot.</p>
+            <div className="flex items-center gap-6 mt-6">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -450,41 +455,43 @@ export default function FacilityDashboard() {
               ))}
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {approvalStatus?.status === "pending" && (
-              <div className="bg-yellow-100 rounded-lg px-4 py-2">
-                <span className="text-sm font-medium text-yellow-800">⏳ Awaiting Approval</span>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-full px-3 py-1.5">
+                <span className="text-xs font-medium text-yellow-800">Awaiting Approval</span>
               </div>
             )}
             {approvalStatus?.status === "rejected" && (
               <Link href="/register-birthcare">
-                <Button className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                <Button className="px-4 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white font-medium">
                   Update & Resubmit
                 </Button>
               </Link>
             )}
-            <Button
+            <button
               onClick={handleToggleVisibility}
               disabled={isTogglingVisibility || birthcare.status === "pending"}
-              className="px-4 py-2.5 bg-[#A41F39] hover:bg-[#8B1830] text-white rounded-lg font-medium flex items-center gap-2"
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${birthcare.is_public ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'} disabled:opacity-60`}
             >
               {isTogglingVisibility ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
               ) : (
                 <>
+                  <span className={`h-2.5 w-2.5 rounded-full ${birthcare.is_public ? 'bg-green-500' : 'bg-gray-400'}`}></span>
                   <EyeIcon className="h-4 w-4" />
-                  {birthcare.is_public ? "Public" : "Private"}
+                  <span className="text-sm font-medium">{birthcare.is_public ? 'Public' : 'Private'}</span>
                 </>
               )}
-            </Button>
+            </button>
             <Link href={`/${birthcare.id}/dashboard`}>
-              <Button
+              <button
                 disabled={!isApproved}
-                className="px-4 py-2.5 bg-[#BF3853] hover:bg-[#A41F39] text-white rounded-lg font-medium disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#A41F39] to-[#BF3853] text-white font-medium disabled:opacity-50 hover:from-[#8F1D35] hover:to-[#A41F39]"
               >
-                Go to Dashboard
-              </Button>
+                <ArrowTrendingUpIcon className="h-4 w-4" />
+                Go to dashboard
+              </button>
             </Link>
           </div>
         </div>
