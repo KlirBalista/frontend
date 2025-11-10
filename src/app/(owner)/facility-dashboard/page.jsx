@@ -657,9 +657,6 @@ export default function FacilityDashboard() {
             </tbody>
           </table>
         </div>
-              </div>
-            </div>
-        </div>
          
         {/* Additional Metrics Grid */}
         {dashboardStats && (
