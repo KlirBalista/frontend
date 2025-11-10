@@ -645,7 +645,6 @@ export default function RegisterBirthcare() {
           </div>
         </div>
       </form>
-            </div>
           </div>
         </div>
       </div>
