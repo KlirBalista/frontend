@@ -513,7 +513,7 @@ export default function FacilityDashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-[#F891A5]/20 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
                 <UserIcon className="h-6 w-6 text-green-600" />
