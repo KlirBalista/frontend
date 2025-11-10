@@ -715,15 +715,21 @@ export default function FacilityDashboard() {
               <CreditCardIcon className="h-4 w-4 text-gray-400" />
             </div>
 
-            <div className="flex items-center justify-between mb-4">
-              <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${subscription?.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                {subscription?.status === 'active' ? <CheckCircleIcon className="h-4 w-4" /> : <XCircleIcon className="h-4 w-4" />}
-                {subscription?.status === 'active' ? 'Active' : 'Inactive'}
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
-                Plan
-                <span className="text-blue-900">{subscription?.subscription?.plan?.plan_name || 'N/A'}</span>
-              </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
+                {subscription?.status === 'active' ? <CheckCircleIcon className="h-4 w-4 text-green-600" /> : <XCircleIcon className="h-4 w-4 text-red-600" />}
+                <div>
+                  <div className="text-xs text-gray-500">Status</div>
+                  <div className={`text-sm font-medium ${subscription?.status === 'active' ? 'text-green-700' : 'text-red-700'}`}>{subscription?.status === 'active' ? 'Active' : 'Inactive'}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
+                <CreditCardIcon className="h-4 w-4 text-blue-600" />
+                <div>
+                  <div className="text-xs text-gray-500">Plan</div>
+                  <div className="text-sm font-medium text-gray-900">{subscription?.subscription?.plan?.plan_name || 'N/A'}</div>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
