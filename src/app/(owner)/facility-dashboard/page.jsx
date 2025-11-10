@@ -429,242 +429,240 @@ export default function FacilityDashboard() {
   const isApproved = approvalStatus?.status === "approved";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-white shadow-sm mb-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center space-x-3">
-              <div className="bg-[#BF3853] p-2 rounded-lg">
-                <BuildingOffice2Icon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  {birthcare.name?.toUpperCase() || "BIRTHING HOME"}
-                </h1>
-                <p className="text-sm text-gray-600">BirthCare System</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Clean Header with Buttons */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <button className="text-sm font-medium text-[#BF3853] border-b-2 border-[#BF3853] pb-1">Summary</button>
+              <button className="text-sm text-gray-500 hover:text-gray-700 pb-1">Overview</button>
+              <button className="text-sm text-gray-500 hover:text-gray-700 pb-1">Comparison</button>
             </div>
-            <div className="flex items-center space-x-3">
-              {approvalStatus?.status === "pending" && (
-                <div className="bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-1">
-                  <span className="text-sm text-yellow-800">
-                    Awaiting Approval
-                  </span>
-                </div>
-              )}
-              {approvalStatus?.status === "rejected" && (
-                <Link href="/register-birthcare">
-                  <Button
-                    variant="primary"
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700"
-                  >
-                    Update & Resubmit
-                  </Button>
-                </Link>
-              )}
-              <Button
-                variant="primary"
-                onClick={handleToggleVisibility}
-                disabled={isTogglingVisibility || birthcare.status === "pending"}
-                className="px-4 py-2 bg-[#A41F39] hover:bg-[#BF3853]"
-              >
-                {isTogglingVisibility ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-2">
-                    <EyeIcon className="h-4 w-4" />
-                    <span className="text-sm">{birthcare.is_public ? "Private" : "Public"}</span>
-                  </div>
-                )}
-              </Button>
-              <Link href={`/${birthcare.id}/dashboard`}>
-                <Button
-                  variant="primary"
-                  disabled={!isApproved}
-                  className="px-4 py-2 bg-[#BF3853] hover:bg-[#A41F39] disabled:opacity-60"
-                >
-                  Go to Dashboard
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {approvalStatus?.status === "pending" && (
+              <div className="bg-yellow-100 rounded-lg px-4 py-2">
+                <span className="text-sm font-medium text-yellow-800">⏳ Awaiting Approval</span>
+              </div>
+            )}
+            {approvalStatus?.status === "rejected" && (
+              <Link href="/register-birthcare">
+                <Button className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                  Update & Resubmit
                 </Button>
               </Link>
+            )}
+            <Button
+              onClick={handleToggleVisibility}
+              disabled={isTogglingVisibility || birthcare.status === "pending"}
+              className="px-4 py-2.5 bg-[#A41F39] hover:bg-[#8B1830] text-white rounded-lg font-medium flex items-center gap-2"
+            >
+              {isTogglingVisibility ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+              ) : (
+                <>
+                  <EyeIcon className="h-4 w-4" />
+                  {birthcare.is_public ? "Public" : "Private"}
+                </>
+              )}
+            </Button>
+            <Link href={`/${birthcare.id}/dashboard`}>
+              <Button
+                disabled={!isApproved}
+                className="px-4 py-2.5 bg-[#BF3853] hover:bg-[#A41F39] text-white rounded-lg font-medium disabled:opacity-50"
+              >
+                Go to Dashboard
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                <UserGroupIcon className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{dashboardStats?.overview?.total_staff || staffCount}</p>
+                <p className="text-sm text-gray-500">Total Staff</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
+                <UserIcon className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{dashboardStats?.overview?.total_patients || 0}</p>
+                <p className="text-sm text-gray-500">Active Patients</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
+                <CalendarIcon className="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{dashboardStats?.overview?.active_admissions || 0}</p>
+                <p className="text-sm text-gray-500">Active Admissions</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl">
+                <BuildingOffice2Icon className="h-6 w-6 text-pink-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{dashboardStats?.overview?.total_beds || 0}</p>
+                <p className="text-sm text-gray-500">Total Beds</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* In-card Tabs */}
-        <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-2 mb-6 sticky top-3 z-10 shadow-sm">
-          <div className="flex gap-2">
-            {tabs.map(t => (
-              <button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                  activeTab === t.key
-                    ? 'bg-[#BF3853] text-white shadow'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {t.label}
-              </button>
+        {/* Charts + Mini Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Chart - spans 2 columns */}
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Participation</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Sort by</span>
+                <select className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#BF3853]">
+                  <option>Monthly</option>
+                  <option>Yearly</option>
+                </select>
+              </div>
+            </div>
+            <div className="relative h-48">
+              <svg className="w-full h-full" viewBox="0 0 700 200" preserveAspectRatio="none">
+                <line x1="0" y1="0" x2="0" y2="160" stroke="#e5e7eb" strokeWidth="1" />
+                <line x1="0" y1="160" x2="700" y2="160" stroke="#e5e7eb" strokeWidth="1" />
+                <text x="10" y="20" fontSize="10" fill="#9ca3af">400</text>
+                <text x="10" y="85" fontSize="10" fill="#9ca3af">200</text>
+                <text x="10" y="155" fontSize="10" fill="#9ca3af">0</text>
+                <path d="M 50,120 Q 120,100 180,90 T 320,70 T 460,90 T 580,60 T 680,80" fill="none" stroke="url(#lineGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M 50,120 Q 120,100 180,90 T 320,70 T 460,90 T 580,60 T 680,80 L 680,160 L 50,160 Z" fill="url(#areaGradient)" />
+                <defs>
+                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#8B5CF6" />
+                    <stop offset="50%" stopColor="#A78BFA" />
+                    <stop offset="100%" stopColor="#C4B5FD" />
+                  </linearGradient>
+                  <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <text x="50" y="180" fontSize="11" fill="#9ca3af">JUN</text>
+                <text x="150" y="180" fontSize="11" fill="#9ca3af">JUL</text>
+                <text x="250" y="180" fontSize="11" fill="#9ca3af">AUG</text>
+                <text x="350" y="180" fontSize="11" fill="#9ca3af">SEP</text>
+                <text x="450" y="180" fontSize="11" fill="#9ca3af">OCT</text>
+                <text x="550" y="180" fontSize="11" fill="#9ca3af">NOV</text>
+                <text x="650" y="180" fontSize="11" fill="#9ca3af">DEC</text>
+              </svg>
+              <div className="absolute top-10 left-1/4 bg-[#5B47DB] text-white px-4 py-2 rounded-lg text-sm shadow-lg pointer-events-none">
+                <div className="font-medium">Employees</div>
+                <div className="text-xs opacity-90">Member: 255</div>
+                <div className="text-xs opacity-90">8 August 2021</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mini KPI Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            {[{
+              label: 'Plan Month',
+              value: dashboardStats?.birth_statistics?.this_month_births || 12,
+            },{
+              label: 'Member Average',
+              value: dashboardStats?.birth_statistics?.avg_births_per_month || 293,
+            },{
+              label: 'Member Month',
+              value: dashboardStats?.monthly_stats?.prenatal_visits || 222,
+            },{
+              label: 'Member Plan',
+              value: dashboardStats?.overview?.total_patients || 37,
+            }].map((kpi, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
+                <div className="text-sm text-gray-500">{kpi.label}</div>
+              </div>
             ))}
           </div>
         </div>
 
-        {activeTab === 'summary' && (
-          <>
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600">Total Staff</p>
-              <div className="rounded-full bg-[#FDB3C2] p-2">
-                <UserGroupIcon className="h-5 w-5 text-[#BF3853]" />
-              </div>
-            </div>
-            <p className="text-4xl font-bold text-[#BF3853]">{dashboardStats?.overview?.total_staff || staffCount}</p>
-            <p className="text-xs text-gray-500 mt-1">Total Staff</p>
+        {/* Work Management Table - full width */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Work management</h2>
+            <button className="text-gray-400 hover:text-gray-600">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
+            </button>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600">Active Patients</p>
-              <div className="rounded-full bg-[#FDB3C2] p-2">
-                <UserIcon className="h-5 w-5 text-[#BF3853]" />
-              </div>
-            </div>
-            <p className="text-4xl font-bold text-[#BF3853]">{dashboardStats?.overview?.total_patients || 0}</p>
-            <p className="text-xs text-gray-500 mt-1">Active Patients</p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600">Active Admissions</p>
-              <div className="rounded-full bg-[#FDB3C2] p-2">
-                <CalendarIcon className="h-5 w-5 text-[#BF3853]" />
-              </div>
-            </div>
-            <p className="text-4xl font-bold text-[#BF3853]">{dashboardStats?.overview?.active_admissions || 0}</p>
-            <p className="text-xs text-gray-500 mt-1">Active Admissions</p>
-          </div>
-        </div>
-
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Monthly Births Report */}
-          <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Monthly Births Report
-                </h2>
-                <ChartBarIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="space-y-3">
-                {/* Chart Container */}
-                <div className="relative h-32 bg-white rounded-lg p-3">
-                  {/* Y-axis labels */}
-                  <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 py-2">
-                    <span>20</span>
-                    <span>10</span>
-                    <span>0</span>
-                  </div>
-                  
-                  {/* Chart bars */}
-                  <div className="ml-6 h-full flex items-end justify-between space-x-1">
-                    {(dashboardStats?.birth_statistics?.monthly_data || [
-                      { month: 'Jan', value: 0 },
-                      { month: 'Feb', value: 0 },
-                      { month: 'Mar', value: 0 },
-                      { month: 'Apr', value: 0 },
-                      { month: 'May', value: 0 },
-                      { month: 'Jun', value: 0 }
-                    ]).map((data, index) => (
-                      <div key={index} className="flex flex-col items-center flex-1">
-                        <div 
-                          className={`w-full rounded-t-sm transition-all duration-300 relative group ${
-                            data.value === 0 
-                              ? 'bg-gray-200 h-1' 
-                              : 'bg-[#F891A5] hover:bg-[#E56D85]'
-                          }`}
-                          style={data.value > 0 ? { height: `${(data.value / 20) * 100}%` } : {}}
-                        >
-                          {/* Tooltip */}
-                          <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 transition-opacity z-10">
-                            {data.value} births
-                          </div>
-                        </div>
-                        <span className="text-xs text-gray-600 mt-1">{data.month}</span>
+          <table className="w-full">
+            <thead>
+              <tr className="text-left text-xs text-gray-500 uppercase">
+                <th className="pb-4 font-medium">SERVICE</th>
+                <th className="pb-4 font-medium">PRIORITY</th>
+                <th className="pb-4 font-medium">TOTAL</th>
+                <th className="pb-4 font-medium">LAST PAYMENT</th>
+                <th className="pb-4 font-medium">STATUS</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {dashboardStats?.recent_activity && dashboardStats.recent_activity.slice(0, 4).map((item, idx) => (
+                <tr key={idx} className="border-t border-gray-100">
+                  <td className="py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <ClipboardDocumentCheckIcon className="w-5 h-5 text-gray-600" />
                       </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Chart Summary */}
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-white rounded-lg p-2">
-                    <div className="text-lg font-bold text-[#A41F39]">{dashboardStats?.birth_statistics?.total_births || 0}</div>
-                    <div className="text-xs text-gray-600">Total</div>
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <div className="text-lg font-bold text-[#BF3853]">{dashboardStats?.birth_statistics?.this_month_births || 0}</div>
-                    <div className="text-xs text-gray-600">This Month</div>
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <div className="text-lg font-bold text-[#E56D85]">{dashboardStats?.birth_statistics?.avg_births_per_month || '0.0'}</div>
-                    <div className="text-xs text-gray-600">Avg/Month</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        
-          {/* Quick Stats */}
-          <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Quick Stats
-                </h2>
-                <ArrowTrendingUpIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="space-y-3">
-                <div className="bg-white rounded-lg p-3">
-                  <div className="flex items-center">
-                    <UserGroupIcon className="h-5 w-5 text-[#A41F39] mr-3" />
-                    <div>
-                      <div className="text-xl font-bold text-[#A41F39]">{dashboardStats?.overview?.total_staff || staffCount}</div>
-                      <div className="text-xs text-gray-600">Total Staff</div>
+                      <span className="font-medium text-gray-900">{item.patient_name}</span>
                     </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-3">
-                  <div className="flex items-center">
-                    <UserIcon className="h-5 w-5 text-[#BF3853] mr-3" />
-                    <div>
-                      <div className="text-xl font-bold text-[#BF3853]">{dashboardStats?.overview?.total_patients || 0}</div>
-                      <div className="text-xs text-gray-600">Active Patients</div>
+                  </td>
+                  <td className="py-4">
+                    <span className="inline-block px-3 py-1 text-xs font-medium bg-orange-100 text-orange-700 rounded-full">
+                      Medium
+                    </span>
+                  </td>
+                  <td className="py-4 font-medium text-gray-900">$200</td>
+                  <td className="py-4 text-gray-600">{item.admission_date}</td>
+                  <td className="py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '80%' }}></div>
+                      </div>
+                      <span className="text-xs font-medium text-gray-900">80%</span>
                     </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-3">
-                  <div className="flex items-center">
-                    <CalendarIcon className="h-5 w-5 text-[#E56D85] mr-3" />
-                    <div>
-                      <div className="text-xl font-bold text-[#E56D85]">{dashboardStats?.overview?.active_admissions || 0}</div>
-                      <div className="text-xs text-gray-600">Active Admissions</div>
-                    </div>
-                  </div>
-                </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
               </div>
             </div>
         </div>
-        </>
-        )}
          
         {/* Additional Metrics Grid */}
-        {activeTab === 'metrics' && dashboardStats && (
+        {dashboardStats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Capacity Overview */}
             <div className="bg-white rounded-lg shadow p-6">
@@ -723,7 +721,7 @@ export default function FacilityDashboard() {
           )}
         
         {/* Recent Activity */}
-        {activeTab === 'activity' && dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
+        {dashboardStats && dashboardStats.recent_activity && dashboardStats.recent_activity.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Recent Admissions</h2>
@@ -765,8 +763,6 @@ export default function FacilityDashboard() {
           )}
 
         {/* Facility Management Grid */}
-        {activeTab === 'manage' && (
-        <>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Facility Details */}
           <div className="bg-white rounded-lg shadow p-6">
@@ -1085,8 +1081,6 @@ export default function FacilityDashboard() {
             )}
           </div>
         </div>
-        </>
-        )}
       </div>
     </div>
   );
