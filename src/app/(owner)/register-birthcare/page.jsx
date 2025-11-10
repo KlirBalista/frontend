@@ -270,10 +270,10 @@ export default function RegisterBirthcare() {
 
           {/* Step Progress Indicator */}
           <div className="bg-white px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-center gap-12">
               {steps.map((step, index) => (
-                <div key={step.id} className="flex items-center flex-1">
-                  <div className="flex flex-col items-center flex-1">
+                <div key={step.id} className="flex items-center">
+                  <div className="flex flex-col items-center">
                     <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
                       currentStep > step.id
                         ? 'bg-[#BF3853] border-[#BF3853]'
@@ -293,14 +293,14 @@ export default function RegisterBirthcare() {
                         </span>
                       )}
                     </div>
-                    <span className={`mt-2 text-xs font-medium ${
+                    <span className={`mt-2 text-xs font-medium text-center ${
                       currentStep >= step.id ? 'text-[#BF3853]' : 'text-gray-400'
                     }`}>
                       {step.name}
                     </span>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className={`flex-1 h-0.5 -mt-6 transition-all ${
+                    <div className={`h-0.5 w-24 md:w-40 ml-6 mr-6 -mt-6 transition-all ${
                       currentStep > step.id ? 'bg-[#BF3853]' : 'bg-gray-300'
                     }`} />
                   )}
@@ -551,8 +551,7 @@ export default function RegisterBirthcare() {
         )}
 
         {/* Navigation Buttons */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 border border-gray-200">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
             {/* Previous Button */}
             <div className="flex gap-3">
               {currentStep > 1 && (
@@ -633,7 +632,6 @@ export default function RegisterBirthcare() {
                 </Button>
               )}
             </div>
-          </div>
         </div>
       </form>
           </div>
