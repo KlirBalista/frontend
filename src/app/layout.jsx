@@ -16,8 +16,11 @@ const RootLayout = ({ children }) => {
 };
 
 export const metadata = {
-  title: "Birthcare Management System",
+  title: "BirthCare",
   description: "Register and manage birthcare facilities with ease",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default RootLayout;
