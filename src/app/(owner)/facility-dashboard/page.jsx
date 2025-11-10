@@ -1084,7 +1084,6 @@ export default function FacilityDashboard() {
             )}
           </div>
         </div>
-        )}
       </div>
     </div>
   );
