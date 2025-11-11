@@ -448,7 +448,7 @@ const PatientRegistrationModal = ({
 
                     {/* Indirect PhilHealth Member Additional Fields */}
                     {formData.philhealth_category === 'Indirect' && (
-                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="mt-4 p-4 border border-gray-200 rounded-lg">
                         <h5 className="text-sm font-semibold text-gray-900 mb-3">Principal Member's Information</h5>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -461,7 +461,7 @@ const PatientRegistrationModal = ({
                               name="principal_philhealth_number"
                               value={formData.principal_philhealth_number}
                               onChange={handleInputChange}
-                              placeholder="12 digits"
+                              placeholder=""
                               maxLength="12"
                               className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
                               required
@@ -521,7 +521,7 @@ const PatientRegistrationModal = ({
                               name="patient_philhealth_number"
                               value={formData.patient_philhealth_number}
                               onChange={handleInputChange}
-                              placeholder="12 digits"
+                              placeholder=""
                               maxLength="12"
                               className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
                             />
