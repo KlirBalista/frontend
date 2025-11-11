@@ -27,8 +27,14 @@ const PatientRegistrationModal = ({
     address: '',
     contact_number: '',
     philhealth_number: '',
-    philhealth_category: 'Direct',
-    facility_name: facilityName
+    philhealth_category: 'None',
+    facility_name: facilityName,
+    // Indirect PhilHealth member fields
+    principal_philhealth_number: '',
+    principal_name: '',
+    relationship_to_principal: '',
+    principal_date_of_birth: '',
+    patient_philhealth_number: ''
   });
   const [errors, setErrors] = useState({});
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -44,19 +50,31 @@ const PatientRegistrationModal = ({
   ];
 
   const philhealthCategories = [
+    'None',
     'Direct',
-    'Indirect',
-    'Sponsored',
-    'None'
+    'Indirect'
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Special handling for PhilHealth number fields - allow only 12 digits
+    if (name === 'philhealth_number' || name === 'principal_philhealth_number' || name === 'patient_philhealth_number') {
+      // Remove all non-digit characters
+      const digitsOnly = value.replace(/\D/g, '');
+      // Limit to 12 digits
+      const limitedValue = digitsOnly.slice(0, 12);
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: limitedValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
     
     // Clear error when user types
     if (errors[name]) {
@@ -144,9 +162,14 @@ const PatientRegistrationModal = ({
       civil_status: 'Married',
       address: '123 Main Street, Barangay San Jose, Quezon City',
       contact_number: '09123456789',
-      philhealth_number: '12-345678901-2',
+      philhealth_number: '123456789012',
       philhealth_category: 'Direct',
-      facility_name: facilityName
+      facility_name: facilityName,
+      principal_philhealth_number: '',
+      principal_name: '',
+      relationship_to_principal: '',
+      principal_date_of_birth: '',
+      patient_philhealth_number: ''
     });
     setErrors({});
   };
@@ -167,8 +190,13 @@ const PatientRegistrationModal = ({
       address: '',
       contact_number: '',
       philhealth_number: '',
-      philhealth_category: 'Direct',
-      facility_name: facilityName
+      philhealth_category: 'None',
+      facility_name: facilityName,
+      principal_philhealth_number: '',
+      principal_name: '',
+      relationship_to_principal: '',
+      principal_date_of_birth: '',
+      patient_philhealth_number: ''
     });
     setErrors({});
   };
@@ -392,9 +420,11 @@ const PatientRegistrationModal = ({
                           name="philhealth_number"
                           value={formData.philhealth_number}
                           onChange={handleInputChange}
-                          placeholder=""
+                          placeholder="12 digits"
+                          maxLength="12"
                           className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm"
                         />
+                        <p className="mt-1 text-xs text-gray-500">Enter exactly 12 digits</p>
                       </div>
 
                       <div>
@@ -415,6 +445,91 @@ const PatientRegistrationModal = ({
                         </select>
                       </div>
                     </div>
+
+                    {/* Indirect PhilHealth Member Additional Fields */}
+                    {formData.philhealth_category === 'Indirect' && (
+                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h5 className="text-sm font-semibold text-gray-900 mb-3">Principal Member's Information</h5>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Principal Member's PhilHealth No. <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="principal_philhealth_number"
+                              value={formData.principal_philhealth_number}
+                              onChange={handleInputChange}
+                              placeholder="12 digits"
+                              maxLength="12"
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Principal Member's Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="principal_name"
+                              value={formData.principal_name}
+                              onChange={handleInputChange}
+                              placeholder="Last, First, Middle"
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Relationship to Principal Member <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="relationship_to_principal"
+                              value={formData.relationship_to_principal}
+                              onChange={handleInputChange}
+                              placeholder="e.g., Spouse, Child"
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Principal Member's Date of Birth
+                            </label>
+                            <input
+                              type="date"
+                              name="principal_date_of_birth"
+                              value={formData.principal_date_of_birth}
+                              onChange={handleInputChange}
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
+                            />
+                            <p className="mt-1 text-xs text-gray-500">Optional but recommended</p>
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Patient's PhilHealth No.
+                            </label>
+                            <input
+                              type="text"
+                              name="patient_philhealth_number"
+                              value={formData.patient_philhealth_number}
+                              onChange={handleInputChange}
+                              placeholder="12 digits"
+                              maxLength="12"
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
+                            />
+                            <p className="mt-1 text-xs text-gray-500">Optional</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Action Buttons */}
