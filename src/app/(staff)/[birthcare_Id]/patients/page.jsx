@@ -2,7 +2,7 @@
 import { useAuth } from "@/hooks/auth";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Search, Filter, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, UserPlus, Eye, X } from 'lucide-react';
 import axios from '@/lib/axios';
 import PatientRegistrationModal from '@/components/PatientRegistrationModal';
 
@@ -24,6 +24,8 @@ const PatientListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [registering, setRegistering] = useState(false);
   const [facility, setFacility] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   // Fetch patients from backend
   const fetchPatients = async () => {
@@ -344,8 +346,11 @@ const PatientListPage = () => {
                       <th className="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider border-r border-[#E56D85]/30 min-w-32">
                         Contact
                       </th>
-                      <th className="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider min-w-24">
+                      <th className="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider border-r border-[#E56D85]/30 min-w-24">
                         Status
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider min-w-24">
+                        Action
                       </th>
                     </tr>
                   </thead>
@@ -389,16 +394,29 @@ const PatientListPage = () => {
                             </span>
                           </td>
                           {/* Status */}
-                          <td className="px-4 py-4 whitespace-nowrap text-center text-sm">
+                          <td className="px-4 py-4 whitespace-nowrap text-center text-sm border-r border-white/30">
                             <span className={`inline-flex px-3 py-1.5 text-xs font-bold rounded-full shadow-sm ${getStatusColor(patient.status)}`}>
                               {patient.status}
                             </span>
+                          </td>
+                          {/* Action */}
+                          <td className="px-4 py-4 whitespace-nowrap text-center text-sm">
+                            <button
+                              onClick={() => {
+                                setSelectedPatient(patient);
+                                setIsViewModalOpen(true);
+                              }}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white text-xs font-medium rounded-lg hover:shadow-lg hover:shadow-[#BF3853]/25 transition-all duration-200 hover:scale-105"
+                            >
+                              <Eye size={14} />
+                              View
+                            </button>
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="7" className="px-6 py-16 text-center">
+                        <td colSpan="8" className="px-6 py-16 text-center">
                           <div className="flex flex-col items-center justify-center">
                             <div className="w-20 h-20 bg-gradient-to-br from-[#FDB3C2]/30 to-[#F891A5]/30 rounded-full flex items-center justify-center mb-4">
                               <UserPlus className="w-10 h-10 text-[#BF3853]" />
@@ -471,6 +489,125 @@ const PatientListPage = () => {
         birthcareId={birthcare_Id}
         loading={registering}
       />
+
+      {/* Patient Details Modal */}
+      {isViewModalOpen && selectedPatient && (
+        <div className="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
+          <div className="relative mx-auto w-11/12 max-w-4xl my-6">
+            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-[#BF3853] to-[#A41F39] px-6 py-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Patient Details</h2>
+                <button
+                  onClick={() => {
+                    setIsViewModalOpen(false);
+                    setSelectedPatient(null);
+                  }}
+                  className="text-white/80 hover:text-white transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-6">
+                {/* Basic Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                    Basic Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Full Name</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                        {selectedPatient.first_name} {selectedPatient.middle_name} {selectedPatient.last_name}
+                      </p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Date of Birth</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.date_of_birth || 'N/A'}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Age</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.age}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Civil Status</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.civil_status}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg md:col-span-2">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Address</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.address || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                    Contact Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Contact Number</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.contact_number || 'N/A'}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">Status</label>
+                      <p className="text-sm mt-1">
+                        <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${getStatusColor(selectedPatient.status)}`}>
+                          {selectedPatient.status}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Facility Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                    Facility Information
+                  </h3>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <label className="text-xs font-medium text-gray-500 uppercase">Facility Name</label>
+                    <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.facility_name || 'N/A'}</p>
+                  </div>
+                </div>
+
+                {/* PhilHealth Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                    PhilHealth Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">PhilHealth Number</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_number || 'N/A'}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <label className="text-xs font-medium text-gray-500 uppercase">PhilHealth Category</label>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_category || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="px-6 py-4 bg-gray-50 flex justify-end">
+                <button
+                  onClick={() => {
+                    setIsViewModalOpen(false);
+                    setSelectedPatient(null);
+                  }}
+                  className="px-6 py-2.5 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-300"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
