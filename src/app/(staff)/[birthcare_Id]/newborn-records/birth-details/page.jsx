@@ -248,7 +248,6 @@ export default function BirthDetails() {
       patient_id: patientId
     }));
   };
-  };
 
   const validateForm = () => {
     const newErrors = {};
