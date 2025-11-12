@@ -140,7 +140,10 @@ const PatientListPage = () => {
     const fetchFacility = async () => {
       try {
         const response = await axios.get(`/api/birthcare/${birthcare_Id}`);
-        setFacility(response.data.data);
+        console.log('Facility API Response:', response.data);
+        const facilityData = response.data.data || response.data;
+        console.log('Facility Data:', facilityData);
+        setFacility(facilityData);
       } catch (error) {
         console.error('Error fetching facility:', error);
         setFacility(null);
@@ -484,8 +487,8 @@ const PatientListPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onPatientRegistered={handlePatientRegistration}
-        facilityName={facility?.name || 'Birthing Center'}
-        facilityAddress={facility?.description || ''}
+        facilityName={facility?.facility_name || facility?.name || 'Loading...'}
+        facilityAddress={facility?.address || facility?.description || ''}
         birthcareId={birthcare_Id}
         loading={registering}
       />
