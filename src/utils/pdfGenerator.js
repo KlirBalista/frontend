@@ -2,170 +2,141 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { generateUniqueDocumentTitle } from './documentTitleUtils';
 export const generatePrenatalFormPDF = (formData, patientData, birthCareInfo = null) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 20;
   
-  // Helper function to draw a field with underline (form-style)
-  const drawField = (x, y, label, value, width = 80) => {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(0, 0, 0);
-    doc.text(label + ':', x, y);
-    
-    // Draw underline for value
-    const labelWidth = doc.getTextWidth(label + ': ');
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(x + labelWidth, y + 2, x + width, y + 2);
-    
-    // Add value if exists
-    if (value && value !== 'N/A' && value !== '') {
-      const valueText = String(value);
-      // Ensure value fits in the available space
-      const availableWidth = width - labelWidth - 2;
-      const lines = doc.splitTextToSize(valueText, availableWidth);
-      doc.text(lines[0] || '', x + labelWidth + 2, y - 2); // Position text above the line
+  // Helper function to format date without time
+  const formatDateOnly = (dateString) => {
+    if (!dateString) return null;
+    try {
+      // If it's already in YYYY-MM-DD format, return as is
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        return dateString;
+      }
+      // Parse and extract only the date part
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      return date.toISOString().split('T')[0];
+    } catch (e) {
+      return dateString;
     }
   };
   
-  // Helper function to draw text area field
-  const drawTextArea = (x, y, width, height, label, value) => {
-    doc.setFontSize(10);
+  // Simple helper function to draw fields - matching Birth Details style
+  const drawSimpleField = (x, y, width, label, value, bold = false) => {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${label}:`, x, y);
+    
+    if (value && value !== 'N/A' && value !== '') {
+      const valueText = String(value);
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      // Simple underline for value
+      const labelWidth = doc.getTextWidth(`${label}: `);
+      doc.line(x + labelWidth, y + 1, x + width, y + 1);
+      doc.text(valueText, x + labelWidth + 2, y - 1);
+    } else {
+      // Draw empty line
+      const labelWidth = doc.getTextWidth(`${label}: `);
+      doc.line(x + labelWidth, y + 1, x + width, y + 1);
+    }
+  };
+  
+  const drawSimpleTwoColumns = (yPos, leftLabel, leftValue, rightLabel, rightValue) => {
+    const colWidth = 80;
+    drawSimpleField(margin, yPos, colWidth, leftLabel, leftValue);
+    drawSimpleField(margin + 90, yPos, colWidth, rightLabel, rightValue);
+    return yPos + 8;
+  };
+  
+  const drawSimpleFullWidth = (yPos, label, value) => {
+    drawSimpleField(margin, yPos, pageWidth - (margin * 2), label, value);
+    return yPos + 8;
+  };
+  
+  const drawSimpleHeader = (title, yPos) => {
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(label + ':', x, y);
-    
-    // Draw box for text area
-    doc.setDrawColor(0, 0, 0);
+    doc.text(title, margin, yPos);
+    // Simple underline
     doc.setLineWidth(0.5);
-    doc.rect(x, y + 3, width, height);
-    
-    // Add value if exists
-    if (value && value !== 'N/A' && value !== '') {
-      doc.setFont('helvetica', 'normal');
-      const lines = doc.splitTextToSize(String(value), width - 4);
-      let textY = y + 10;
-      lines.forEach((line, index) => {
-        if (textY < y + height) {
-          doc.text(line, x + 2, textY);
-          textY += 5;
-        }
-      });
-    }
-    
-    return y + height + 8;
+    doc.line(margin, yPos + 2, pageWidth - margin, yPos + 2);
+    return yPos + 10;
   };
   
   // Set font
   doc.setFont('helvetica');
   
-  // Official Header - Republic of the Philippines
-  let yPos = 25;
+  // Simple Header - matching Birth Details style
+  let yPos = 20;
   
-  // Republic of the Philippines
-  doc.setFontSize(11);
+  // Basic government header
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(0, 0, 0);
   doc.text('REPUBLIC OF THE PHILIPPINES', pageWidth / 2, yPos, { align: 'center' });
   yPos += 6;
   
-  // City Government of Davao
   doc.setFontSize(12);
   doc.text('CITY GOVERNMENT OF DAVAO', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 8;
-  
-  // Medical Center Name
-  const facilityName = birthCareInfo?.name?.toUpperCase() || 'BIRTHING CLINIC';
-  doc.setFontSize(11);
-  doc.text(facilityName, pageWidth / 2, yPos, { align: 'center' });
   yPos += 6;
   
-  // Address
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  const address = birthCareInfo?.description || 'Birthing Clinic, 123 Street, Davao City';
-  doc.text(address, pageWidth / 2, yPos, { align: 'center' });
-  yPos += 15;
+  const facilityName = birthCareInfo?.name?.toUpperCase() || 'PAANAKAN CENTER';
+  doc.setFontSize(10);
+  doc.text(facilityName, pageWidth / 2, yPos, { align: 'center' });
+  yPos += 5;
   
-  // Title with border
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.8);
-  doc.line(30, yPos, pageWidth - 30, yPos);
+  const address = birthCareInfo?.description || birthCareInfo?.address || 'Paanakan Center, Sandawa Phase 2, Ecoland Davao City';
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.text(address, pageWidth / 2, yPos, { align: 'center' });
   yPos += 8;
   
+  // Simple form title
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('PRENATAL EXAMINATION FORM', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 6;
+  yPos += 15;
   
-  doc.line(30, yPos, pageWidth - 30, yPos);
-  yPos += 20;
-  
-  // Patient Information Section - Clean Form Style
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Patient Information', margin, yPos);
-  yPos += 12;
+  // MOTHER INFORMATION Section - matching Birth Details style
+  yPos = drawSimpleHeader('MOTHER INFORMATION', yPos);
   
   if (patientData) {
     const fullName = `${patientData.first_name} ${patientData.middle_name || ''} ${patientData.last_name}`.trim();
+    const dateOfBirthFormatted = formatDateOnly(patientData.date_of_birth);
     
-    // Row 1: Name (full width)
-    drawField(margin, yPos, 'Name', fullName, pageWidth - (margin * 2));
-    yPos += 12;
-    
-    // Row 2: Date of Birth and Age (side by side)
-    drawField(margin, yPos, 'Date of Birth', patientData.date_of_birth || '', 90);
-    drawField(margin + 100, yPos, 'Age', patientData.age || '', 70);
-    yPos += 12;
-    
-    // Row 3: Contact Number
-    drawField(margin, yPos, 'Contact Number', patientData.contact_number || '', 120);
-    yPos += 12;
-    
-    // Row 4: Address (full width)
-    drawField(margin, yPos, 'Address', patientData.address || '', pageWidth - (margin * 2));
-    yPos += 18;
+    yPos = drawSimpleFullWidth(yPos, "Mother's Name", fullName);
+    yPos = drawSimpleTwoColumns(yPos, 'Date of Birth', dateOfBirthFormatted, 'Age', patientData.age);
+    yPos = drawSimpleFullWidth(yPos, 'Address', patientData.address);
+    yPos = drawSimpleFullWidth(yPos, 'Contact Number', patientData.contact_number);
+    yPos += 5;
   }
   
-  // Examination Details Section - Clean Form Style
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Examination Details', margin, yPos);
-  yPos += 12;
+  // EXAMINATION DETAILS Section - matching Birth Details style
+  yPos = drawSimpleHeader('EXAMINATION DETAILS', yPos);
   
-  // Row 1: Examination Date and Gestational Age
-  drawField(margin, yPos, 'Examination Date', formData.form_date || '', 90);
-  drawField(margin + 100, yPos, 'Gestational Age', formData.gestational_age || '', 80);
-  yPos += 12;
+  const examDateFormatted = formatDateOnly(formData.form_date);
+  yPos = drawSimpleTwoColumns(yPos, 'Examination Date', examDateFormatted, 'Gestational Age', formData.gestational_age);
+  yPos = drawSimpleTwoColumns(yPos, 'Weight', formData.weight, 'Blood Pressure', formData.blood_pressure);
+  yPos = drawSimpleFullWidth(yPos, 'Next Appointment', formData.next_appointment);
+  yPos = drawSimpleFullWidth(yPos, 'Examined By', formData.examined_by);
+  yPos += 8;
   
-  // Row 2: Weight and Blood Pressure
-  drawField(margin, yPos, 'Weight', formData.weight || '', 80);
-  drawField(margin + 90, yPos, 'Blood Pressure', formData.blood_pressure || '', 90);
-  yPos += 12;
-  
-  // Row 3: Next Appointment
-  drawField(margin, yPos, 'Next Appointment', formData.next_appointment || '', 120);
-  yPos += 12;
-  
-  // Row 4: Examined By
-  drawField(margin, yPos, 'Examined By', formData.examined_by || '', pageWidth - (margin * 2));
-  yPos += 18;
-  
-  // Clinical Notes Section - Text Area Style
+  // Clinical Notes Section
   if (formData.notes) {
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Clinical Notes & Observations', margin, yPos);
-    yPos += 5;
+    yPos = drawSimpleHeader('CLINICAL NOTES & OBSERVATIONS', yPos);
     
-    // Calculate height needed for notes
-    doc.setFontSize(10);
-    const lines = doc.splitTextToSize(String(formData.notes), pageWidth - (margin * 2) - 4);
-    const neededHeight = Math.max(40, lines.length * 5 + 10);
-    
-    yPos = drawTextArea(margin, yPos, pageWidth - (margin * 2), neededHeight, 'Notes', formData.notes);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const lines = doc.splitTextToSize(String(formData.notes), pageWidth - (margin * 2));
+    lines.forEach(line => {
+      doc.text(line, margin, yPos);
+      yPos += 5;
+    });
   }
     
   return doc;
