@@ -518,7 +518,7 @@ const PrenatalFormsPage = () => {
                     <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">PATIENT NAME</th>
                     <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">FORM DATE</th>
                     <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">EXAMINED BY</th>
-                    <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">ACTIONS</th>
+                    <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">FACILITY</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-[#FDB3C2]/30">
@@ -539,22 +539,8 @@ const PrenatalFormsPage = () => {
                           <td className="px-6 py-4 text-center text-sm text-gray-900">
                             {form.examined_by || 'N/A'}
                           </td>
-                          <td className="px-6 py-4 text-center">
-                            <div className="flex justify-center">
-                              <button
-                                onClick={() => {
-                                  const selectedPatient = patients.find(p => p.id == form.patient_id);
-                                  if (selectedPatient) {
-                                    downloadPrenatalFormPDF(form, selectedPatient, birthCareInfo);
-                                  }
-                                }}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-lg hover:shadow-lg hover:shadow-[#BF3853]/25 transition-all duration-200"
-                                title="Download PDF"
-                              >
-                                <Download className="h-4 w-4" />
-                                Download
-                              </button>
-                            </div>
+                          <td className="px-6 py-4 text-center text-sm text-gray-900 font-medium">
+                            {birthCareInfo?.name || 'Unknown Facility'}
                           </td>
                         </tr>
                       );
