@@ -242,7 +242,8 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
       const response = await axios.post(`/api/birthcare/${birthcare_Id}/patient-admissions`, formData);
       
       if (response.status === 201 || response.status === 200) {
-        setSuccessMessage('Patient admission created successfully!');
+        const patientName = selectedPatient ? `${selectedPatient.first_name} ${selectedPatient.middle_name || ''} ${selectedPatient.last_name}`.trim().replace(/\s+/g, ' ') : 'Patient';
+        setSuccessMessage(`${patientName} has been successfully admitted.`);
         setShowSuccess(true);
       }
       
@@ -333,7 +334,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
             onAdmissionCreated();
           }
         }}
-        title="Success!"
+        title="Patient Admitted Successfully!"
         message={successMessage}
         type="success"
         confirmText="OK"
