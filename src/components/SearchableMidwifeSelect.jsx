@@ -179,11 +179,6 @@ const SearchableMidwifeSelect = ({
                   <p className="text-sm font-medium truncate">
                     {midwife.name}
                   </p>
-                  {midwife.email && (
-                    <p className="text-xs text-gray-500 truncate">
-                      {midwife.email}
-                    </p>
-                  )}
                 </div>
               </button>
             ))
