@@ -870,7 +870,7 @@ export default function NewbornScreeningResults() {
                                                     sampleCollector: e.target.value
                                                 }
                                             }))}
-                                            className="w-64 mb-2 h-8 mx-auto border-b border-gray-400 focus:outline-none focus:border-[#BF3853] text-center"
+                                            className="w-full mb-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent text-center"
                                             placeholder="Enter name"
                                         />
                                         <p className="text-xs text-gray-500">Sample Collector</p>
@@ -889,7 +889,7 @@ export default function NewbornScreeningResults() {
                                                     labTechnician: e.target.value
                                                 }
                                             }))}
-                                            className="w-64 mb-2 h-8 mx-auto border-b border-gray-400 focus:outline-none focus:border-[#BF3853] text-center"
+                                            className="w-full mb-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent text-center"
                                             placeholder="Enter name"
                                         />
                                         <p className="text-xs text-gray-500">Laboratory Technician</p>
@@ -902,7 +902,7 @@ export default function NewbornScreeningResults() {
                                             type="text"
                                             value={formData.signatures?.attendingPhysician || ''}
                                             readOnly
-                                            className="w-64 mb-2 h-8 mx-auto border-b border-gray-400 bg-gray-50 text-center text-gray-700 cursor-not-allowed"
+                                            className="w-full mb-2 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-center text-gray-700 cursor-not-allowed"
                                             placeholder="Auto-filled"
                                         />
                                         <p className="text-xs text-gray-500">Attending Physician</p>
