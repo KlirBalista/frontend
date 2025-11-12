@@ -503,17 +503,19 @@ const MapPage = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="grid grid-cols-[24px_1fr] gap-2 items-start">
                     <span className="text-xl">👥</span>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Patient: {patientSearchResults.name}
-                    </h3>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Patient: {patientSearchResults.name}
+                      </h3>
+                      {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && (
+                        <p className="text-gray-600">
+                          Birthdate: {patientSearchResults.birthdate}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && (
-                    <p className="text-gray-600">
-                      Birthdate: {patientSearchResults.birthdate}
-                    </p>
-                  )}
                 </div>
                 <button
                   onClick={() => {
@@ -603,16 +605,30 @@ const MapPage = () => {
                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                               <button
                                 onClick={async () => {
+                                  let patient = null;
                                   try {
-                                    // Fetch full patient details
                                     const response = await axios.get(`/api/patients/${consultation.patient_id}`);
-                                    setSelectedPatientDetails(response.data);
-                                    setShowPatientDetailsModal(true);
+                                    patient = response.data?.data || response.data || null;
                                   } catch (error) {
                                     console.error('Error fetching patient details:', error);
                                   }
+                                  if (!patient) {
+                                    // Fallback: use minimal info from search result
+                                    const parts = (patientSearchResults.name || '').trim().split(/\s+/);
+                                    patient = {
+                                      first_name: parts[0] || '',
+                                      middle_name: parts.length > 2 ? parts.slice(1, -1).join(' ') : '',
+                                      last_name: parts.length > 1 ? parts[parts.length - 1] : '',
+                                      birth_date: patientSearchResults.birthdate || '',
+                                      address: '',
+                                      contact_number: '',
+                                    };
+                                  }
+                                  setSelectedPatientDetails(patient);
+                                  setShowPatientDetailsModal(true);
                                 }}
                                 className="text-blue-600 hover:text-blue-900 font-medium"
+                                type="button"
                               >
                                 View
                               </button>
