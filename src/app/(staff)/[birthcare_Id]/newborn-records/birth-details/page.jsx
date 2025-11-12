@@ -505,55 +505,47 @@ export default function BirthDetails() {
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900">Birth Details & APGAR Score Information</h2>
                 <p className="text-gray-600 mt-1">
-                  Complete the form below to create a new birth details record
+                  Complete the form below to create birth details records
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => {
-                  setBirthDetails({
-                    ...birthDetails,
-                    baby_name: 'Maria Isabella Santos',
+                  // Set sample birth info
+                  setBirthInfo({
+                    ...birthInfo,
                     date_of_birth: '2024-01-15',
                     time_of_birth: '08:30',
                     place_of_birth: 'Buhangin Medical Center',
                     delivery_type: 'normal',
                     delivery_complications: 'None',
+                    presentation: 'vertex',
+                    plurality: 'single',
+                    attendant_name: 'Dr. Sarah Johnson',
+                    attendant_title: 'doctor',
+                    attendant_license: 'MD-2019-001234',
+                  });
+                  // Set sample baby data
+                  setBabies([{
+                    id: 1,
+                    baby_name: 'Maria Isabella Santos',
                     sex: 'female',
                     weight: '3250',
                     length: '50.5',
                     head_circumference: '35.0',
                     chest_circumference: '33.0',
-                    presentation: 'vertex',
-                    plurality: 'single',
                     alive_at_birth: true,
                     condition_at_birth: 'good',
                     resuscitation_required: false,
                     resuscitation_details: '',
-                    attendant_name: 'Dr. Sarah Johnson',
-                    attendant_title: 'doctor',
-                    attendant_license: 'MD-2019-001234',
                     birth_defects: 'None observed',
                     special_conditions: 'None',
-                    notes: 'Normal spontaneous vaginal delivery. Baby born in good condition with strong cry. APGAR scores 8/9. Mother and baby doing well.'
-                  });
-                  // Set sample APGAR scores
-                  setApgarScores({
-                    one_minute: {
-                      activity: 2,    // Active Movements
-                      pulse: 2,       // Above 100bpm
-                      grimace: 1,     // Grimace
-                      appearance: 1,  // Normal except for extremities
-                      respiration: 2  // Good, Crying
-                    },
-                    five_minutes: {
-                      activity: 2,    // Active Movements
-                      pulse: 2,       // Above 100bpm
-                      grimace: 2,     // Sneeze, Cough, Pulls Away
-                      appearance: 2,  // Normal over entire body
-                      respiration: 2  // Good, Crying
+                    notes: 'Normal spontaneous vaginal delivery. Baby born in good condition with strong cry. APGAR scores 8/9. Mother and baby doing well.',
+                    apgar_scores: {
+                      one_minute: { activity: 2, pulse: 2, grimace: 1, appearance: 1, respiration: 2 },
+                      five_minutes: { activity: 2, pulse: 2, grimace: 2, appearance: 2, respiration: 2 }
                     }
-                  });
+                  }]);
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-[#BF3853] to-[#A41F39] border border-transparent rounded-xl text-sm font-medium text-white hover:shadow-lg hover:shadow-[#BF3853]/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BF3853] transition-all duration-300 hover:scale-105"
               >
@@ -561,257 +553,309 @@ export default function BirthDetails() {
               </button>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Common Birth Information Section */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-2">
+                Common Birth Information
+              </h3>
               
-              {/* Left Column - Birth Information */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-2">
-                  Birth Information
-                </h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Baby's Name</label>
-                    <input
-                      type="text"
-                      placeholder="Enter baby's full name"
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      value={birthDetails.baby_name}
-                      onChange={(e) => handleInputChange('baby_name', e.target.value)}
-                    />
-                    {errors.baby_name && <p className="text-red-500 text-xs mt-1">{errors.baby_name}</p>}
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                      <input
-                        type="date"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.date_of_birth}
-                        onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
-                      />
-                      {errors.date_of_birth && <p className="text-red-500 text-xs mt-1">{errors.date_of_birth}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Time of Birth</label>
-                      <input
-                        type="time"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.time_of_birth}
-                        onChange={(e) => handleInputChange('time_of_birth', e.target.value)}
-                      />
-                      {errors.time_of_birth && <p className="text-red-500 text-xs mt-1">{errors.time_of_birth}</p>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Place of Birth</label>
-                    <input
-                      type="text"
-                      placeholder="Facility name or location"
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      value={birthDetails.place_of_birth}
-                      onChange={(e) => handleInputChange('place_of_birth', e.target.value)}
-                    />
-                    {errors.place_of_birth && <p className="text-red-500 text-xs mt-1">{errors.place_of_birth}</p>}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Type</label>
-                      <select
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.delivery_type}
-                        onChange={(e) => handleInputChange('delivery_type', e.target.value)}
-                      >
-                        <option value="normal">Normal/Vaginal</option>
-                        <option value="cesarean">Cesarean Section</option>
-                        <option value="assisted">Assisted Delivery</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Presentation</label>
-                      <select
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.presentation}
-                        onChange={(e) => handleInputChange('presentation', e.target.value)}
-                      >
-                        <option value="vertex">Vertex (Head Down)</option>
-                        <option value="breech">Breech</option>
-                        <option value="transverse">Transverse</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Complications</label>
-                    <textarea
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      rows="3"
-                      placeholder="Any complications during delivery..."
-                      value={birthDetails.delivery_complications}
-                      onChange={(e) => handleInputChange('delivery_complications', e.target.value)}
-                    />
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                  <input
+                    type="date"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.date_of_birth}
+                    onChange={(e) => handleBirthInfoChange('date_of_birth', e.target.value)}
+                  />
+                  {errors.date_of_birth && <p className="text-red-500 text-xs mt-1">{errors.date_of_birth}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Time of Birth</label>
+                  <input
+                    type="time"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.time_of_birth}
+                    onChange={(e) => handleBirthInfoChange('time_of_birth', e.target.value)}
+                  />
+                  {errors.time_of_birth && <p className="text-red-500 text-xs mt-1">{errors.time_of_birth}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Place of Birth</label>
+                  <input
+                    type="text"
+                    placeholder="Facility name or location"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.place_of_birth}
+                    onChange={(e) => handleBirthInfoChange('place_of_birth', e.target.value)}
+                  />
+                  {errors.place_of_birth && <p className="text-red-500 text-xs mt-1">{errors.place_of_birth}</p>}
                 </div>
               </div>
 
-              {/* Right Column - Baby Information */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-2">
-                  Baby Information
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Type</label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.delivery_type}
+                    onChange={(e) => handleBirthInfoChange('delivery_type', e.target.value)}
+                  >
+                    <option value="normal">Normal/Vaginal</option>
+                    <option value="cesarean">Cesarean Section</option>
+                    <option value="assisted">Assisted Delivery</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Presentation</label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.presentation}
+                    onChange={(e) => handleBirthInfoChange('presentation', e.target.value)}
+                  >
+                    <option value="vertex">Vertex (Head Down)</option>
+                    <option value="breech">Breech</option>
+                    <option value="transverse">Transverse</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Plurality</label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    value={birthInfo.plurality}
+                    onChange={(e) => handleBirthInfoChange('plurality', e.target.value)}
+                  >
+                    <option value="single">Single</option>
+                    <option value="twin">Twin</option>
+                    <option value="triplet">Triplet</option>
+                    <option value="multiple">Multiple (Custom)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Complications</label>
+                <textarea
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                  rows="3"
+                  placeholder="Any complications during delivery..."
+                  value={birthInfo.delivery_complications}
+                  onChange={(e) => handleBirthInfoChange('delivery_complications', e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Dynamic Baby Sections */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Baby Information {babies.length > 1 && `(${babies.length} Babies)`}
                 </h3>
-                
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Sex</label>
-                      <select
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.sex}
-                        onChange={(e) => handleInputChange('sex', e.target.value)}
+                {birthInfo.plurality === 'multiple' && (
+                  <button
+                    type="button"
+                    onClick={addBaby}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    + Add Baby
+                  </button>
+                )}
+              </div>
+
+              {babies.map((baby, index) => (
+                <div key={baby.id} className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-md font-semibold text-gray-800">
+                      {babies.length > 1 ? `Baby #${index + 1}` : 'Baby Information'}
+                    </h4>
+                    {babies.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeBaby(baby.id)}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors"
                       >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Plurality</label>
-                      <select
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.plurality}
-                        onChange={(e) => handleInputChange('plurality', e.target.value)}
-                      >
-                        <option value="single">Single</option>
-                        <option value="twin">Twin</option>
-                        <option value="triplet">Triplet</option>
-                        <option value="multiple">Multiple</option>
-                      </select>
-                      {(birthDetails.plurality === 'twin' || birthDetails.plurality === 'triplet' || birthDetails.plurality === 'multiple') && (
-                        <p className="mt-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
-                          <strong>Note:</strong> For multiple births, please fill out and save this form separately for each baby. Use the same birth attendant information for all babies.
-                        </p>
-                      )}
-                    </div>
+                        Remove
+                      </button>
+                    )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Weight (grams)</label>
-                      <input
-                        type="number"
-                        placeholder="e.g. 3250"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.weight}
-                        onChange={(e) => handleInputChange('weight', e.target.value)}
-                      />
-                      {errors.weight && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Length (cm)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        placeholder="e.g. 50.5"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.length}
-                        onChange={(e) => handleInputChange('length', e.target.value)}
-                      />
-                      {errors.length && <p className="text-red-500 text-xs mt-1">{errors.length}</p>}
-                    </div>
-                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Left: Basic Info */}
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Baby's Name</label>
+                        <input
+                          type="text"
+                          placeholder="Enter baby's full name"
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          value={baby.baby_name}
+                          onChange={(e) => handleBabyChange(baby.id, 'baby_name', e.target.value)}
+                        />
+                        {errors[`baby_${baby.id}_baby_name`] && <p className="text-red-500 text-xs mt-1">{errors[`baby_${baby.id}_baby_name`]}</p>}
+                      </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Head Circumference (cm)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        placeholder="e.g. 35.0"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.head_circumference}
-                        onChange={(e) => handleInputChange('head_circumference', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Chest Circumference (cm)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        placeholder="e.g. 33.0"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        value={birthDetails.chest_circumference}
-                        onChange={(e) => handleInputChange('chest_circumference', e.target.value)}
-                      />
-                    </div>
-                  </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Sex</label>
+                          <select
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                            value={baby.sex}
+                            onChange={(e) => handleBabyChange(baby.id, 'sex', e.target.value)}
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Weight (grams)</label>
+                          <input
+                            type="number"
+                            placeholder="e.g. 3250"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                            value={baby.weight}
+                            onChange={(e) => handleBabyChange(baby.id, 'weight', e.target.value)}
+                          />
+                          {errors[`baby_${baby.id}_weight`] && <p className="text-red-500 text-xs mt-1">{errors[`baby_${baby.id}_weight`]}</p>}
+                        </div>
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Health Status at Birth</label>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Length (cm)</label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            placeholder="e.g. 50.5"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                            value={baby.length}
+                            onChange={(e) => handleBabyChange(baby.id, 'length', e.target.value)}
+                          />
+                          {errors[`baby_${baby.id}_length`] && <p className="text-red-500 text-xs mt-1">{errors[`baby_${baby.id}_length`]}</p>}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Head Circumference (cm)</label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            placeholder="e.g. 35.0"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                            value={baby.head_circumference}
+                            onChange={(e) => handleBabyChange(baby.id, 'head_circumference', e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Chest Circumference (cm)</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          placeholder="e.g. 33.0"
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          value={baby.chest_circumference}
+                          onChange={(e) => handleBabyChange(baby.id, 'chest_circumference', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Health Status at Birth</label>
+                        <div className="flex items-center space-x-6">
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              name={`alive_at_birth_${baby.id}`}
+                              value="true"
+                              checked={baby.alive_at_birth === true}
+                              onChange={() => handleBabyChange(baby.id, 'alive_at_birth', true)}
+                              className="mr-2"
+                            />
+                            Alive at Birth
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              name={`alive_at_birth_${baby.id}`}
+                              value="false"
+                              checked={baby.alive_at_birth === false}
+                              onChange={() => handleBabyChange(baby.id, 'alive_at_birth', false)}
+                              className="mr-2"
+                            />
+                            Not Alive at Birth
+                          </label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Condition at Birth</label>
+                        <select
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          value={baby.condition_at_birth}
+                          onChange={(e) => handleBabyChange(baby.id, 'condition_at_birth', e.target.value)}
+                        >
+                          <option value="good">Good</option>
+                          <option value="fair">Fair</option>
+                          <option value="poor">Poor</option>
+                        </select>
+                      </div>
+
+                      <div>
                         <label className="flex items-center">
                           <input
-                            type="radio"
-                            name="alive_at_birth"
-                            value="true"
-                            checked={birthDetails.alive_at_birth === true}
-                            onChange={() => handleInputChange('alive_at_birth', true)}
+                            type="checkbox"
+                            checked={baby.resuscitation_required}
+                            onChange={(e) => handleBabyChange(baby.id, 'resuscitation_required', e.target.checked)}
                             className="mr-2"
                           />
-                          Alive at Birth
+                          Resuscitation Required
                         </label>
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="alive_at_birth"
-                            value="false"
-                            checked={birthDetails.alive_at_birth === false}
-                            onChange={() => handleInputChange('alive_at_birth', false)}
-                            className="mr-2"
+                        {baby.resuscitation_required && (
+                          <textarea
+                            className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                            rows="2"
+                            placeholder="Resuscitation details..."
+                            value={baby.resuscitation_details}
+                            onChange={(e) => handleBabyChange(baby.id, 'resuscitation_details', e.target.value)}
                           />
-                          Not Alive at Birth
-                        </label>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Right: Additional Info */}
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Birth Defects/Abnormalities</label>
+                        <textarea
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          rows="3"
+                          placeholder="Any visible birth defects or abnormalities..."
+                          value={baby.birth_defects}
+                          onChange={(e) => handleBabyChange(baby.id, 'birth_defects', e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Special Conditions</label>
+                        <textarea
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          rows="3"
+                          placeholder="Any special medical conditions..."
+                          value={baby.special_conditions}
+                          onChange={(e) => handleBabyChange(baby.id, 'special_conditions', e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                        <textarea
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          rows="4"
+                          placeholder="Any additional observations..."
+                          value={baby.notes}
+                          onChange={(e) => handleBabyChange(baby.id, 'notes', e.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Condition at Birth</label>
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      value={birthDetails.condition_at_birth}
-                      onChange={(e) => handleInputChange('condition_at_birth', e.target.value)}
-                    >
-                      <option value="good">Good</option>
-                      <option value="fair">Fair</option>
-                      <option value="poor">Poor</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={birthDetails.resuscitation_required}
-                        onChange={(e) => handleInputChange('resuscitation_required', e.target.checked)}
-                        className="mr-2"
-                      />
-                      Resuscitation Required
-                    </label>
-                    {birthDetails.resuscitation_required && (
-                      <textarea
-                        className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                        rows="2"
-                        placeholder="Resuscitation details..."
-                        value={birthDetails.resuscitation_details}
-                        onChange={(e) => handleInputChange('resuscitation_details', e.target.value)}
-                      />
-                    )}
-                  </div>
                 </div>
-              </div>
+              ))}
             </div>
 
             {/* Birth Attendant Section */}
@@ -824,8 +868,8 @@ export default function BirthDetails() {
                     type="text"
                     placeholder="Full name"
                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    value={birthDetails.attendant_name}
-                    onChange={(e) => handleInputChange('attendant_name', e.target.value)}
+                    value={birthInfo.attendant_name}
+                    onChange={(e) => handleBirthInfoChange('attendant_name', e.target.value)}
                   />
                   {errors.attendant_name && <p className="text-red-500 text-xs mt-1">{errors.attendant_name}</p>}
                 </div>
@@ -833,8 +877,8 @@ export default function BirthDetails() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Title/Position</label>
                   <select
                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    value={birthDetails.attendant_title}
-                    onChange={(e) => handleInputChange('attendant_title', e.target.value)}
+                    value={birthInfo.attendant_title}
+                    onChange={(e) => handleBirthInfoChange('attendant_title', e.target.value)}
                   >
                     <option value="doctor">Doctor</option>
                     <option value="midwife">Midwife</option>
@@ -848,57 +892,26 @@ export default function BirthDetails() {
                     type="text"
                     placeholder="Professional license number"
                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    value={birthDetails.attendant_license}
-                    onChange={(e) => handleInputChange('attendant_license', e.target.value)}
+                    value={birthInfo.attendant_license}
+                    onChange={(e) => handleBirthInfoChange('attendant_license', e.target.value)}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Additional Information */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Additional Information</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Birth Defects/Abnormalities</label>
-                  <textarea
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    rows="3"
-                    placeholder="Any visible birth defects or abnormalities..."
-                    value={birthDetails.birth_defects}
-                    onChange={(e) => handleInputChange('birth_defects', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Special Conditions</label>
-                  <textarea
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    rows="3"
-                    placeholder="Any special medical conditions or considerations..."
-                    value={birthDetails.special_conditions}
-                    onChange={(e) => handleInputChange('special_conditions', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
-                  <textarea
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    rows="4"
-                    placeholder="Any additional observations or notes..."
-                    value={birthDetails.notes}
-                    onChange={(e) => handleInputChange('notes', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* APGAR Score Section */}
+            {/* APGAR Score Section - One table per baby */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-6">APGAR Score Assessment</h3>
               <p className="text-gray-600 mb-6">Complete the APGAR score evaluation for both 1-minute and 5-minute intervals after birth.</p>
               
-              {/* APGAR Score Table */}
-              <div className="overflow-x-auto bg-gray-50 p-4 rounded-lg">
+              {babies.map((baby, index) => (
+                <div key={baby.id} className="mb-8">
+                  {babies.length > 1 && (
+                    <h4 className="text-md font-semibold text-gray-800 mb-4">APGAR Score for Baby #{index + 1} - {baby.baby_name || 'Unnamed'}</h4>
+                  )}
+                  
+                  {/* APGAR Score Table */}
+                  <div className="overflow-x-auto bg-gray-50 p-4 rounded-lg">
                 <table className="min-w-full border-collapse border-2 border-gray-300 bg-white">
                   <thead>
                     <tr className="bg-gray-100">
@@ -928,8 +941,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.one_minute.activity}
-                          onChange={(e) => handleScoreChange('one_minute', 'activity', e.target.value)}
+                          value={baby.apgar_scores.one_minute.activity}
+                          onChange={(e) => handleApgarChange(baby.id, 'one_minute', 'activity', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -939,8 +952,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.five_minutes.activity}
-                          onChange={(e) => handleScoreChange('five_minutes', 'activity', e.target.value)}
+                          value={baby.apgar_scores.five_minutes.activity}
+                          onChange={(e) => handleApgarChange(baby.id, 'five_minutes', 'activity', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -961,8 +974,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.one_minute.pulse}
-                          onChange={(e) => handleScoreChange('one_minute', 'pulse', e.target.value)}
+                          value={baby.apgar_scores.one_minute.pulse}
+                          onChange={(e) => handleApgarChange(baby.id, 'one_minute', 'pulse', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -972,8 +985,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.five_minutes.pulse}
-                          onChange={(e) => handleScoreChange('five_minutes', 'pulse', e.target.value)}
+                          value={baby.apgar_scores.five_minutes.pulse}
+                          onChange={(e) => handleApgarChange(baby.id, 'five_minutes', 'pulse', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -995,8 +1008,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.one_minute.grimace}
-                          onChange={(e) => handleScoreChange('one_minute', 'grimace', e.target.value)}
+                          value={baby.apgar_scores.one_minute.grimace}
+                          onChange={(e) => handleApgarChange(baby.id, 'one_minute', 'grimace', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1006,8 +1019,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.five_minutes.grimace}
-                          onChange={(e) => handleScoreChange('five_minutes', 'grimace', e.target.value)}
+                          value={baby.apgar_scores.five_minutes.grimace}
+                          onChange={(e) => handleApgarChange(baby.id, 'five_minutes', 'grimace', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1029,8 +1042,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.one_minute.appearance}
-                          onChange={(e) => handleScoreChange('one_minute', 'appearance', e.target.value)}
+                          value={baby.apgar_scores.one_minute.appearance}
+                          onChange={(e) => handleApgarChange(baby.id, 'one_minute', 'appearance', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1040,8 +1053,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.five_minutes.appearance}
-                          onChange={(e) => handleScoreChange('five_minutes', 'appearance', e.target.value)}
+                          value={baby.apgar_scores.five_minutes.appearance}
+                          onChange={(e) => handleApgarChange(baby.id, 'five_minutes', 'appearance', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1062,8 +1075,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.one_minute.respiration}
-                          onChange={(e) => handleScoreChange('one_minute', 'respiration', e.target.value)}
+                          value={baby.apgar_scores.one_minute.respiration}
+                          onChange={(e) => handleApgarChange(baby.id, 'one_minute', 'respiration', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1073,8 +1086,8 @@ export default function BirthDetails() {
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <select 
                           className="w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#BF3853]"
-                          value={apgarScores.five_minutes.respiration}
-                          onChange={(e) => handleScoreChange('five_minutes', 'respiration', e.target.value)}
+                          value={baby.apgar_scores.five_minutes.respiration}
+                          onChange={(e) => handleApgarChange(baby.id, 'five_minutes', 'respiration', e.target.value)}
                         >
                           <option value={0}>0</option>
                           <option value={1}>1</option>
@@ -1090,12 +1103,12 @@ export default function BirthDetails() {
                       </td>
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <div className="text-2xl font-bold text-blue-600">
-                          {calculateTotal('one_minute')}
+                          {calculateTotal(baby.apgar_scores.one_minute)}
                         </div>
                       </td>
                       <td className="border-2 border-gray-300 px-4 py-3 text-center">
                         <div className="text-2xl font-bold text-blue-600">
-                          {calculateTotal('five_minutes')}
+                          {calculateTotal(baby.apgar_scores.five_minutes)}
                         </div>
                       </td>
                     </tr>
@@ -1129,32 +1142,34 @@ export default function BirthDetails() {
                   <div className="p-4 bg-white rounded-lg border-1 border-black-500">
                     <h5 className="font-semibold text-gray-900 mb-2">1 Minute Score</h5>
                     <div className="text-3xl font-bold text-blue-600 mb-2">
-                      {calculateTotal('one_minute')}
+                      {calculateTotal(baby.apgar_scores.one_minute)}
                     </div>
-                    <div className={`font-medium ${getScoreInterpretation(calculateTotal('one_minute')).color}`}>
-                      {getScoreInterpretation(calculateTotal('one_minute')).text}
+                    <div className={`font-medium ${getScoreInterpretation(calculateTotal(baby.apgar_scores.one_minute)).color}`}>
+                      {getScoreInterpretation(calculateTotal(baby.apgar_scores.one_minute)).text}
                     </div>
                   </div>
                   
                   <div className="p-4 bg-white rounded-lg border-1 border-black-500">
                     <h5 className="font-semibold text-gray-900 mb-2">5 Minutes Score</h5>
                     <div className="text-3xl font-bold text-green-600 mb-2">
-                      {calculateTotal('five_minutes')}
+                      {calculateTotal(baby.apgar_scores.five_minutes)}
                     </div>
-                    <div className={`font-medium ${getScoreInterpretation(calculateTotal('five_minutes')).color}`}>
-                      {getScoreInterpretation(calculateTotal('five_minutes')).text}
+                    <div className={`font-medium ${getScoreInterpretation(calculateTotal(baby.apgar_scores.five_minutes)).color}`}>
+                      {getScoreInterpretation(calculateTotal(baby.apgar_scores.five_minutes)).text}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            ))}
+          </div>
 
             {/* Action Buttons */}
             <div className="mt-8 pt-6 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3">
               <button
                 type="button"
                 onClick={handlePreviewPDF}
-                disabled={!birthDetails.patient_id || saving}
+                disabled={!birthInfo.patient_id || saving}
                 className="px-6 py-3 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="flex items-center">
