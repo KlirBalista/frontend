@@ -135,6 +135,23 @@ export const generatePrenatalFormPDF = (formData, patientData, birthCareInfo = n
   yPos = drawFullWidth(yPos, 'Examined By', formData.examined_by, 100);
   yPos += 6;
   
+  // ADDITIONAL MEDICAL INFORMATION Section
+  if (formData.fetal_heart_rate || formData.fundal_height || formData.urine_test || formData.fetal_position || formData.edema) {
+    yPos = drawSectionHeader('ADDITIONAL MEDICAL INFORMATION', yPos);
+    
+    // Add FHR and Fundal Height together with units
+    const fhrWithUnit = formData.fetal_heart_rate ? `${formData.fetal_heart_rate} bpm` : '';
+    const fundalHeightWithUnit = formData.fundal_height ? `${formData.fundal_height} cm` : '';
+    yPos = drawTwoColumns(yPos, 'Fetal Heart Rate', fhrWithUnit, 'Fundal Height', fundalHeightWithUnit, 60, 50);
+    
+    // Urine Test and Fetal Position
+    yPos = drawTwoColumns(yPos, 'Urine Test Results', formData.urine_test, 'Fetal Position', formData.fetal_position, 60, 50);
+    
+    // Edema Assessment
+    yPos = drawFullWidth(yPos, 'Edema Assessment', formData.edema, 80);
+    yPos += 6;
+  }
+  
   // Clinical Notes Section
   if (formData.notes) {
     yPos = drawSectionHeader('CLINICAL NOTES & OBSERVATIONS', yPos);
