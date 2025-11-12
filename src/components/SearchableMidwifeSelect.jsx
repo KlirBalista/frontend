@@ -109,7 +109,7 @@ const SearchableMidwifeSelect = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className={`w-full p-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent ${
+          className={`w-full p-2 pr-10 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent ${
             disabled ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'
           }`}
           autoComplete="off"
