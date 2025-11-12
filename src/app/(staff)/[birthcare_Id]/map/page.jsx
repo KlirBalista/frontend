@@ -758,22 +758,30 @@ const MapPage = () => {
                         
                         try {
                           // Search for patient using real API
+                          console.log('🔍 Step 1: Searching for patient with query:', searchValue);
                           const response = await axios.get(`/api/patients/search?query=${encodeURIComponent(searchValue)}`);
+                          console.log('✅ Step 1 complete: Search response:', response.data);
                           
                           if (response.data && response.data.length > 0) {
+                            console.log('📋 Found', response.data.length, 'patient(s)');
                             // Find patient that belongs to the selected facility
                             const patientInFacility = response.data.find(patient => 
                               patient.facility_id === selectedFacility?.id
                             );
+                            console.log('🏥 Patient in facility:', patientInFacility ? 'Found' : 'Not found');
                             
                             if (patientInFacility) {
+                              console.log('🔍 Step 2: Fetching full patient details and consultations for ID:', patientInFacility.id);
                               // Patient exists in this facility - fetch full details
                               const [patientDetailsResponse, consultationResponse] = await Promise.all([
                                 axios.get(`/api/patients/${patientInFacility.id}`),
                                 axios.get(`/api/patients/${patientInFacility.id}/consultations`)
                               ]);
+                              console.log('✅ Step 2 complete: Patient details:', patientDetailsResponse.data);
+                              console.log('✅ Step 2 complete: Consultations:', consultationResponse.data);
                               
                               const fullPatientDetails = patientDetailsResponse.data?.data || patientDetailsResponse.data || patientInFacility;
+                              console.log('👤 Full patient details processed:', fullPatientDetails);
                               
                               const patientData = {
                                 id: fullPatientDetails.id || patientInFacility.id,
@@ -785,11 +793,15 @@ const MapPage = () => {
                                   patient_id: fullPatientDetails.id || patientInFacility.id
                                 }))
                               };
+                              console.log('📦 Final patient data package:', patientData);
                               
                               setPatientSearchResults(patientData);
                               setShowSearchResults(true);
                             } else {
                               // Patient exists in system but not in this facility
+                              console.warn('⚠️ Patient found in system but not in this facility');
+                              console.log('Facility ID needed:', selectedFacility?.id);
+                              console.log('Patient facility IDs:', response.data.map(p => ({ id: p.id, facility_id: p.facility_id })));
                               setPatientNotFoundMessage(`Patient doesn't exist in ${selectedFacility?.name || 'this facility'}.`);
                               setShowPatientNotFoundDialog(true);
                               return; // Don't close modal, let user try again
@@ -797,15 +809,22 @@ const MapPage = () => {
                             
                           } else {
                             // No patient found in entire system
+                            console.warn('⚠️ No patient found in entire system');
                             setPatientNotFoundMessage(`Patient doesn't exist in ${selectedFacility?.name || 'this facility'}.`);
                             setShowPatientNotFoundDialog(true);
                             return; // Don't close modal, let user try again
                           }
                           
                         } catch (error) {
-                          console.error('Error searching for patient:', error);
-                          // Show error result
-                          setPatientNotFoundMessage('Error occurred while searching for patient. Please try again.');
+                          console.error('❌ Error searching for patient:', error);
+                          console.error('Error details:', {
+                            message: error.message,
+                            response: error.response?.data,
+                            status: error.response?.status
+                          });
+                          // Show error result with more detail if available
+                          const errorMessage = error.response?.data?.message || error.message || 'Error occurred while searching for patient. Please try again.';
+                          setPatientNotFoundMessage(errorMessage);
                           setShowPatientNotFoundDialog(true);
                           return; // Don't close modal, let user try again
                         } finally {
