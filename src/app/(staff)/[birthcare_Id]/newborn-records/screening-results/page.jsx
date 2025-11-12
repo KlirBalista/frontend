@@ -87,6 +87,7 @@ export default function NewbornScreeningResults() {
     useEffect(() => {
         fetchBirthCareInfo()
         fetchPatients()
+        fetchMidwives()
         // Auto-generate screening ID on component mount
         setFormData(prev => ({
             ...prev,
@@ -879,7 +880,6 @@ export default function NewbornScreeningResults() {
                 {/* Signature Section */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200">
                     <div className="p-6">
-                        <div className="mt-8 pt-6 border-t border-gray-200">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <div>
                                     <div className="text-center">
@@ -937,7 +937,7 @@ export default function NewbornScreeningResults() {
                         </div>
                         
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t border-gray-200">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-6">
                             <button
                                 type="button"
                                 onClick={handlePreviewPDF}
