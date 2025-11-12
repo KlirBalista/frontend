@@ -253,13 +253,25 @@ export default function NewbornScreeningResults() {
     }
 
     const handleSampleCollectionChange = (field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            sampleCollection: {
-                ...prev.sampleCollection,
-                [field]: value
+        setFormData(prev => {
+            const updatedData = {
+                ...prev,
+                sampleCollection: {
+                    ...prev.sampleCollection,
+                    [field]: value
+                }
             }
-        }))
+            
+            // Auto-populate Sample Collector signature when collectorName changes
+            if (field === 'collectorName') {
+                updatedData.signatures = {
+                    ...prev.signatures,
+                    sampleCollector: value
+                }
+            }
+            
+            return updatedData
+        })
     }
 
     const handleFollowUpActionChange = (action, checked) => {
