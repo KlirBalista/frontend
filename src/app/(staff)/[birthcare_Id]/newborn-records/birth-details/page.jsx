@@ -19,60 +19,43 @@ export default function BirthDetails() {
   const [errors, setErrors] = useState({});
   const [dialog, setDialog] = useState({ isOpen: false, type: 'info', title: '', message: '', onConfirm: null, showCancel: false, confirmText: 'OK', cancelText: 'Cancel' });
 
-  // Birth Details Form Data
-  const [birthDetails, setBirthDetails] = useState({
+  // Common Birth Information (shared across all babies)
+  const [birthInfo, setBirthInfo] = useState({
     patient_id: '',
-    // Birth Information
-    baby_name: '',
     date_of_birth: new Date().toISOString().split('T')[0],
     time_of_birth: new Date().toTimeString().slice(0, 5),
     place_of_birth: '',
-    delivery_type: 'normal', // normal, cesarean, assisted
+    delivery_type: 'normal',
     delivery_complications: '',
-    
-    // Baby Information
-    sex: 'male', // male, female
-    weight: '', // in grams
-    length: '', // in centimeters
-    head_circumference: '', // in centimeters
-    chest_circumference: '', // in centimeters
-    presentation: 'vertex', // vertex, breech, transverse
-    plurality: 'single', // single, twin, triplet
-    
-    // Health Status
-    alive_at_birth: true,
-    condition_at_birth: 'good', // good, fair, poor
-    resuscitation_required: false,
-    resuscitation_details: '',
-    
-    // Birth Attendant
+    presentation: 'vertex',
+    plurality: 'single',
+    // Birth Attendant (shared)
     attendant_name: '',
-    attendant_title: 'doctor', // doctor, midwife, nurse
+    attendant_title: 'doctor',
     attendant_license: '',
-    
-    // Additional Notes
-    birth_defects: '',
-    special_conditions: '',
-    notes: ''
   });
 
-  // APGAR Scores - 1 minute and 5 minutes
-  const [apgarScores, setApgarScores] = useState({
-    one_minute: {
-      activity: 0, // A - Activity (Muscle Tone)
-      pulse: 0,    // P - Pulse
-      grimace: 0,  // G - Grimace (Reflex Irritability)
-      appearance: 0, // A - Appearance (Skin Color)
-      respiration: 0 // R - Respiration
-    },
-    five_minutes: {
-      activity: 0,
-      pulse: 0,
-      grimace: 0,
-      appearance: 0,
-      respiration: 0
+  // Individual Baby Information (array of babies)
+  const [babies, setBabies] = useState([{
+    id: 1,
+    baby_name: '',
+    sex: 'male',
+    weight: '',
+    length: '',
+    head_circumference: '',
+    chest_circumference: '',
+    alive_at_birth: true,
+    condition_at_birth: 'good',
+    resuscitation_required: false,
+    resuscitation_details: '',
+    birth_defects: '',
+    special_conditions: '',
+    notes: '',
+    apgar_scores: {
+      one_minute: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 },
+      five_minutes: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 }
     }
-  });
+  }]);
 
   useEffect(() => {
     fetchPatients();
@@ -138,12 +121,56 @@ export default function BirthDetails() {
     }
   };
 
-  const handleInputChange = (field, value) => {
-    setBirthDetails(prev => ({
+  // Handle common birth info changes
+  const handleBirthInfoChange = (field, value) => {
+    setBirthInfo(prev => ({
       ...prev,
       [field]: value
     }));
-    // Clear error when user starts typing
+    
+    // When plurality changes, adjust number of babies
+    if (field === 'plurality') {
+      let targetCount = 1;
+      if (value === 'twin') targetCount = 2;
+      else if (value === 'triplet') targetCount = 3;
+      else if (value === 'single') targetCount = 1;
+      
+      if (value !== 'multiple') {
+        setBabies(prev => {
+          const current = [...prev];
+          if (current.length < targetCount) {
+            // Add babies
+            for (let i = current.length; i < targetCount; i++) {
+              current.push({
+                id: i + 1,
+                baby_name: '',
+                sex: 'male',
+                weight: '',
+                length: '',
+                head_circumference: '',
+                chest_circumference: '',
+                alive_at_birth: true,
+                condition_at_birth: 'good',
+                resuscitation_required: false,
+                resuscitation_details: '',
+                birth_defects: '',
+                special_conditions: '',
+                notes: '',
+                apgar_scores: {
+                  one_minute: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 },
+                  five_minutes: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 }
+                }
+              });
+            }
+          } else if (current.length > targetCount) {
+            // Remove extra babies
+            return current.slice(0, targetCount);
+          }
+          return current;
+        });
+      }
+    }
+    
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -152,29 +179,100 @@ export default function BirthDetails() {
     }
   };
 
+  // Handle individual baby info changes
+  const handleBabyChange = (babyId, field, value) => {
+    setBabies(prev => prev.map(baby => 
+      baby.id === babyId ? { ...baby, [field]: value } : baby
+    ));
+    if (errors[`baby_${babyId}_${field}`]) {
+      setErrors(prev => ({
+        ...prev,
+        [`baby_${babyId}_${field}`]: ''
+      }));
+    }
+  };
+
+  // Handle APGAR score changes for specific baby
+  const handleApgarChange = (babyId, timeframe, category, score) => {
+    setBabies(prev => prev.map(baby => 
+      baby.id === babyId ? {
+        ...baby,
+        apgar_scores: {
+          ...baby.apgar_scores,
+          [timeframe]: {
+            ...baby.apgar_scores[timeframe],
+            [category]: parseInt(score)
+          }
+        }
+      } : baby
+    ));
+  };
+
+  // Add a new baby (for multiple births)
+  const addBaby = () => {
+    const newId = Math.max(...babies.map(b => b.id)) + 1;
+    setBabies(prev => [...prev, {
+      id: newId,
+      baby_name: '',
+      sex: 'male',
+      weight: '',
+      length: '',
+      head_circumference: '',
+      chest_circumference: '',
+      alive_at_birth: true,
+      condition_at_birth: 'good',
+      resuscitation_required: false,
+      resuscitation_details: '',
+      birth_defects: '',
+      special_conditions: '',
+      notes: '',
+      apgar_scores: {
+        one_minute: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 },
+        five_minutes: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 }
+      }
+    }]);
+  };
+
+  // Remove a baby (for multiple births)
+  const removeBaby = (babyId) => {
+    if (babies.length > 1) {
+      setBabies(prev => prev.filter(baby => baby.id !== babyId));
+    }
+  };
+
   const handlePatientSelect = (patientId) => {
     const patient = patients.find(p => p.id === parseInt(patientId));
     setSelectedPatient(patient);
-    setBirthDetails(prev => ({
+    setBirthInfo(prev => ({
       ...prev,
       patient_id: patientId
     }));
+  };
   };
 
   const validateForm = () => {
     const newErrors = {};
     
-    if (!birthDetails.patient_id) newErrors.patient_id = 'Patient is required';
-    if (!birthDetails.baby_name) newErrors.baby_name = 'Baby\'s name is required';
-    if (!birthDetails.date_of_birth) newErrors.date_of_birth = 'Date of birth is required';
-    if (!birthDetails.time_of_birth) newErrors.time_of_birth = 'Time of birth is required';
-    if (!birthDetails.place_of_birth) newErrors.place_of_birth = 'Place of birth is required';
-    if (!birthDetails.weight) newErrors.weight = 'Weight is required';
-    if (!birthDetails.length) newErrors.length = 'Length is required';
-    if (!birthDetails.attendant_name) newErrors.attendant_name = 'Attendant name is required';
+    // Validate common birth info
+    if (!birthInfo.patient_id) newErrors.patient_id = 'Patient is required';
+    if (!birthInfo.date_of_birth) newErrors.date_of_birth = 'Date of birth is required';
+    if (!birthInfo.time_of_birth) newErrors.time_of_birth = 'Time of birth is required';
+    if (!birthInfo.place_of_birth) newErrors.place_of_birth = 'Place of birth is required';
+    if (!birthInfo.attendant_name) newErrors.attendant_name = 'Attendant name is required';
+
+    // Validate each baby
+    babies.forEach((baby, index) => {
+      if (!baby.baby_name) newErrors[`baby_${baby.id}_baby_name`] = `Baby ${index + 1} name is required`;
+      if (!baby.weight) newErrors[`baby_${baby.id}_weight`] = `Baby ${index + 1} weight is required`;
+      if (!baby.length) newErrors[`baby_${baby.id}_length`] = `Baby ${index + 1} length is required`;
+    });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const calculateTotal = (apgarScores) => {
+    return apgarScores.activity + apgarScores.pulse + apgarScores.grimace + apgarScores.appearance + apgarScores.respiration;
   };
 
   const handleSave = async () => {
@@ -182,98 +280,88 @@ export default function BirthDetails() {
 
     setSaving(true);
     try {
-      // Generate PDF and save to patient documents
       if (selectedPatient) {
-        // Combine birth details with APGAR scores
-        const completeData = {
-          ...birthDetails,
-          apgar_scores: {
-            one_minute: {
-              activity: apgarScores.one_minute.activity,
-              pulse: apgarScores.one_minute.pulse,
-              grimace: apgarScores.one_minute.grimace,
-              appearance: apgarScores.one_minute.appearance,
-              respiration: apgarScores.one_minute.respiration,
-              total: calculateTotal('one_minute')
-            },
-            five_minutes: {
-              activity: apgarScores.five_minutes.activity,
-              pulse: apgarScores.five_minutes.pulse,
-              grimace: apgarScores.five_minutes.grimace,
-              appearance: apgarScores.five_minutes.appearance,
-              respiration: apgarScores.five_minutes.respiration,
-              total: calculateTotal('five_minutes')
+        // Save each baby's birth details
+        for (const baby of babies) {
+          // Combine birth info with baby-specific details
+          const completeData = {
+            ...birthInfo,
+            ...baby,
+            apgar_scores: {
+              one_minute: {
+                ...baby.apgar_scores.one_minute,
+                total: calculateTotal(baby.apgar_scores.one_minute)
+              },
+              five_minutes: {
+                ...baby.apgar_scores.five_minutes,
+                total: calculateTotal(baby.apgar_scores.five_minutes)
+              }
             }
-          }
-        };
+          };
+          
+          // Generate PDF for this baby
+          const pdfData = await saveBirthDetailsAsPDF(completeData, selectedPatient, birthcare_Id, birthCareInfo);
+          
+          // Save to patient documents
+          await axios.post(`/api/birthcare/${birthcare_Id}/patient-documents/from-data`, {
+            patient_id: birthInfo.patient_id,
+            title: pdfData.title,
+            document_type: pdfData.document_type,
+            content: pdfData.base64PDF,
+            metadata: pdfData.metadata,
+          });
+        }
         
-        // Generate PDF data with complete information
-        const pdfData = await saveBirthDetailsAsPDF(completeData, selectedPatient, birthcare_Id, birthCareInfo);
-        
-        // Save to patient documents
-        await axios.post(`/api/birthcare/${birthcare_Id}/patient-documents/from-data`, {
-          patient_id: birthDetails.patient_id,
-          title: pdfData.title,
-          document_type: pdfData.document_type,
-          content: pdfData.base64PDF,
-          metadata: pdfData.metadata,
-        });
+        const babyCount = babies.length;
+        const successMsg = babyCount > 1 
+          ? `Birth details for ${babyCount} babies created and saved successfully!`
+          : 'Birth details record created and saved to patient documents successfully!';
         
         setDialog({
           isOpen: true,
           type: 'success',
           title: 'Success!',
-          message: 'Birth details record created and saved to patient documents successfully!',
+          message: successMsg,
           onConfirm: () => setDialog(prev => ({ ...prev, isOpen: false }))
         });
         
         // Reset form
-        setBirthDetails({
+        setBirthInfo({
           patient_id: '',
-          baby_name: '',
           date_of_birth: new Date().toISOString().split('T')[0],
           time_of_birth: new Date().toTimeString().slice(0, 5),
           place_of_birth: '',
           delivery_type: 'normal',
           delivery_complications: '',
+          presentation: 'vertex',
+          plurality: 'single',
+          attendant_name: '',
+          attendant_title: 'doctor',
+          attendant_license: '',
+        });
+        
+        // Reset babies to single baby
+        setBabies([{
+          id: 1,
+          baby_name: '',
           sex: 'male',
           weight: '',
           length: '',
           head_circumference: '',
           chest_circumference: '',
-          presentation: 'vertex',
-          plurality: 'single',
           alive_at_birth: true,
           condition_at_birth: 'good',
           resuscitation_required: false,
           resuscitation_details: '',
-          attendant_name: '',
-          attendant_title: 'doctor',
-          attendant_license: '',
           birth_defects: '',
           special_conditions: '',
-          notes: ''
-        });
-        
-        // Reset APGAR scores
-        setApgarScores({
-          one_minute: {
-            activity: 0,
-            pulse: 0,
-            grimace: 0,
-            appearance: 0,
-            respiration: 0
-          },
-          five_minutes: {
-            activity: 0,
-            pulse: 0,
-            grimace: 0,
-            appearance: 0,
-            respiration: 0
+          notes: '',
+          apgar_scores: {
+            one_minute: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 },
+            five_minutes: { activity: 0, pulse: 0, grimace: 0, appearance: 0, respiration: 0 }
           }
-        });
+        }]);
         
-        // Clear selected patient
         setSelectedPatient(null);
       }
     } catch (error) {
@@ -288,21 +376,6 @@ export default function BirthDetails() {
     }
   };
 
-  // APGAR Score handling functions
-  const handleScoreChange = (timeframe, category, score) => {
-    setApgarScores(prev => ({
-      ...prev,
-      [timeframe]: {
-        ...prev[timeframe],
-        [category]: parseInt(score)
-      }
-    }));
-  };
-
-  const calculateTotal = (timeframe) => {
-    const scores = apgarScores[timeframe];
-    return scores.activity + scores.pulse + scores.grimace + scores.appearance + scores.respiration;
-  };
 
   const getScoreInterpretation = (total) => {
     if (total >= 7) return { text: 'Normal', color: 'text-green-600' };
@@ -339,9 +412,9 @@ export default function BirthDetails() {
     }
   };
 
-  // Handle preview PDF
+  // Handle preview PDF (preview first baby only)
   const handlePreviewPDF = () => {
-    if (!birthDetails.patient_id) {
+    if (!birthInfo.patient_id) {
       setDialog({ isOpen: true, type: 'error', title: 'Missing Patient', message: 'Please select a patient first.', onConfirm: () => setDialog(prev => ({ ...prev, isOpen: false })) });
       return;
     }
@@ -352,25 +425,19 @@ export default function BirthDetails() {
     }
     
     try {
-      // Combine birth details with APGAR scores for preview
+      // Preview first baby's data
+      const firstBaby = babies[0];
       const completeData = {
-        ...birthDetails,
+        ...birthInfo,
+        ...firstBaby,
         apgar_scores: {
           one_minute: {
-            activity: apgarScores.one_minute.activity,
-            pulse: apgarScores.one_minute.pulse,
-            grimace: apgarScores.one_minute.grimace,
-            appearance: apgarScores.one_minute.appearance,
-            respiration: apgarScores.one_minute.respiration,
-            total: calculateTotal('one_minute')
+            ...firstBaby.apgar_scores.one_minute,
+            total: calculateTotal(firstBaby.apgar_scores.one_minute)
           },
           five_minutes: {
-            activity: apgarScores.five_minutes.activity,
-            pulse: apgarScores.five_minutes.pulse,
-            grimace: apgarScores.five_minutes.grimace,
-            appearance: apgarScores.five_minutes.appearance,
-            respiration: apgarScores.five_minutes.respiration,
-            total: calculateTotal('five_minutes')
+            ...firstBaby.apgar_scores.five_minutes,
+            total: calculateTotal(firstBaby.apgar_scores.five_minutes)
           }
         }
       };
@@ -420,7 +487,7 @@ export default function BirthDetails() {
               <label className="block text-sm font-medium text-gray-900 mb-2">Select Patient Name</label>
               <SearchablePatientSelect
                 patients={patients}
-                value={birthDetails.patient_id}
+                value={birthInfo.patient_id}
                 onChange={(patientId) => handlePatientSelect(patientId)}
                 placeholder="Search and select the mother/patient..."
                 onOpen={fetchPatients}
@@ -622,6 +689,11 @@ export default function BirthDetails() {
                         <option value="triplet">Triplet</option>
                         <option value="multiple">Multiple</option>
                       </select>
+                      {(birthDetails.plurality === 'twin' || birthDetails.plurality === 'triplet' || birthDetails.plurality === 'multiple') && (
+                        <p className="mt-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                          <strong>Note:</strong> For multiple births, please fill out and save this form separately for each baby. Use the same birth attendant information for all babies.
+                        </p>
+                      )}
                     </div>
                   </div>
 
