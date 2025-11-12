@@ -240,6 +240,21 @@ const PrenatalFormsPage = () => {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     
+    // Validate numeric fields - only allow numbers, decimal points, and slash for blood pressure
+    if (['weight', 'fetal_heart_rate', 'fundal_height'].includes(name)) {
+      // Only allow numbers and decimal point
+      if (value !== '' && !/^\d*\.?\d*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+    
+    if (name === 'blood_pressure') {
+      // Only allow numbers and slash for blood pressure (e.g., 120/80)
+      if (value !== '' && !/^\d*\/?\d*$/.test(value)) {
+        return; // Don't update if invalid
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
