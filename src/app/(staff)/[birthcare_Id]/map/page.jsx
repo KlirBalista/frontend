@@ -767,17 +767,22 @@ const MapPage = () => {
                             );
                             
                             if (patientInFacility) {
-                              // Patient exists in this facility
-                              const consultationResponse = await axios.get(`/api/patients/${patientInFacility.id}/consultations`);
+                              // Patient exists in this facility - fetch full details
+                              const [patientDetailsResponse, consultationResponse] = await Promise.all([
+                                axios.get(`/api/patients/${patientInFacility.id}`),
+                                axios.get(`/api/patients/${patientInFacility.id}/consultations`)
+                              ]);
+                              
+                              const fullPatientDetails = patientDetailsResponse.data?.data || patientDetailsResponse.data || patientInFacility;
                               
                               const patientData = {
-                                id: patientInFacility.id,
-                                name: patientInFacility.name,
-                                birthdate: patientInFacility.birth_date || patientInFacility.date_of_birth || 'Not provided',
-                                fullPatientData: patientInFacility,
+                                id: fullPatientDetails.id || patientInFacility.id,
+                                name: `${fullPatientDetails.first_name || ''} ${fullPatientDetails.middle_name || ''} ${fullPatientDetails.last_name || ''}`.trim() || patientInFacility.name,
+                                birthdate: fullPatientDetails.date_of_birth || fullPatientDetails.birth_date || 'Not provided',
+                                fullPatientData: fullPatientDetails,
                                 consultationHistory: (consultationResponse.data.consultations || []).map(c => ({
                                   ...c,
-                                  patient_id: patientInFacility.id
+                                  patient_id: fullPatientDetails.id || patientInFacility.id
                                 }))
                               };
                               
