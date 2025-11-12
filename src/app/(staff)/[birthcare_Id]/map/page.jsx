@@ -510,7 +510,7 @@ const MapPage = () => {
                     </h3>
                   </div>
                   {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && (
-                    <p className="text-gray-600 ml-7">
+                    <p className="text-gray-600">
                       Birthdate: {patientSearchResults.birthdate}
                     </p>
                   )}
@@ -732,13 +732,17 @@ const MapPage = () => {
                               const consultationResponse = await axios.get(`/api/patients/${patientInFacility.id}/consultations`);
                               
                               const patientData = {
+                                id: patientInFacility.id,
                                 name: patientInFacility.name,
                                 birthdate: patientInFacility.birth_date ? new Date(patientInFacility.birth_date).toLocaleDateString('en-US', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric'
                                 }) : 'Not provided',
-                                consultationHistory: consultationResponse.data.consultations || []
+                                consultationHistory: (consultationResponse.data.consultations || []).map(c => ({
+                                  ...c,
+                                  patient_id: patientInFacility.id
+                                }))
                               };
                               
                               setPatientSearchResults(patientData);
