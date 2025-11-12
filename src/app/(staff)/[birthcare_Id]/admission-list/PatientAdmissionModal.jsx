@@ -321,13 +321,41 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
-        {/* Backdrop */}
-        <div 
-          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"
-          onClick={onClose}
-        ></div>
+    <>
+      {/* Success Dialog */}
+      <CustomDialog
+        isOpen={showSuccess}
+        onClose={() => {
+          setShowSuccess(false);
+          resetForm();
+          onClose();
+          if (onAdmissionCreated) {
+            onAdmissionCreated();
+          }
+        }}
+        title="Success!"
+        message={successMessage}
+        type="success"
+        confirmText="OK"
+      />
+
+      {/* Error Dialog */}
+      <CustomDialog
+        isOpen={showError}
+        onClose={() => setShowError(false)}
+        title="Error"
+        message={errorMessage}
+        type="error"
+        confirmText="OK"
+      />
+
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"
+            onClick={onClose}
+          ></div>
 
         {/* Modal */}
         <div className="relative bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden transform transition-all">
@@ -673,7 +701,8 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
