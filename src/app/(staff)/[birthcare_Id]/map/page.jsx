@@ -511,11 +511,16 @@ const MapPage = () => {
                       </h3>
                       {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && patientSearchResults.birthdate !== 'Not provided' && (
                         <p className="text-gray-600">
-                          Birthdate: {patientSearchResults.birthdate ? new Date(patientSearchResults.birthdate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          }) : 'Not provided'}
+                          Birthdate: {patientSearchResults.birthdate ? (() => {
+                            // Parse date without timezone issues
+                            const [year, month, day] = patientSearchResults.birthdate.split('-');
+                            const date = new Date(year, month - 1, day);
+                            return date.toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            });
+                          })() : 'Not provided'}
                         </p>
                       )}
                     </div>
