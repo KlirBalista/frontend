@@ -12,6 +12,25 @@ import CustomDialog from "@/components/CustomDialog";
 export default function LaborMonitoring() {
   const { birthcare_Id } = useParams();
   const router = useRouter();
+
+  // Back button handler: clear patient selection and reset form to initial state
+  const handleBackToBlank = () => {
+    setSelectedPatient(null);
+    setMonitoringEntries([]);
+    setAdditionalInfo({
+      case_no: '',
+      room_no: '',
+      bed_no: '',
+      admission_date: new Date().toISOString().split('T')[0],
+      attending_physician: ''
+    });
+    // Ensure we are on the labor monitoring base route, not browser back stack
+    try {
+      router.push(`/${birthcare_Id}/labor-monitoring`);
+    } catch (_) {
+      // noop – if push fails, the cleared state is enough
+    }
+  };
   const { user } = useAuth({ middleware: "auth" });
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -413,17 +432,19 @@ export default function LaborMonitoring() {
                 <h1 className="text-3xl font-bold text-gray-900 tracking-tight">LABOR MONITORING</h1>
                 <p className="text-sm text-gray-900 mt-1">Manage and view Patien Labor Monitoring Data</p>
               </div>
-              <div className="mt-2 sm:mt-0">
-                <button
-                  type="button"
-                  onClick={() => router.back()}
-                  className="inline-flex items-center gap-2 px-4 py-2 border-2 border-gray-500 rounded-xl text-sm font-semibold text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
-                  aria-label="Go back"
-                  title="Go back"
-                >
-                  ← Back
-                </button>
-              </div>
+              {selectedPatient && (
+                <div className="mt-2 sm:mt-0">
+                  <button
+                    type="button"
+                    onClick={handleBackToBlank}
+                    className="inline-flex items-center gap-2 px-4 py-2 border-2 border-gray-500 rounded-xl text-sm font-semibold text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+                    aria-label="Go back"
+                    title="Go back"
+                  >
+                    ← Back
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
