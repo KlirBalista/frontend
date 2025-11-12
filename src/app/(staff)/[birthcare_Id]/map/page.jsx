@@ -134,6 +134,8 @@ const MapPage = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showPatientNotFoundDialog, setShowPatientNotFoundDialog] = useState(false);
   const [patientNotFoundMessage, setPatientNotFoundMessage] = useState('');
+  const [showPatientDetailsModal, setShowPatientDetailsModal] = useState(false);
+  const [selectedPatientDetails, setSelectedPatientDetails] = useState(null);
   
   // Davao City center coordinates for initial map view
   const davaoCityCoords = {
@@ -567,6 +569,9 @@ const MapPage = () => {
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Provider
                           </th>
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
@@ -594,6 +599,23 @@ const MapPage = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                               {consultation.provider || 'N/A'}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    // Fetch full patient details
+                                    const response = await axios.get(`/api/patients/${consultation.patient_id}`);
+                                    setSelectedPatientDetails(response.data);
+                                    setShowPatientDetailsModal(true);
+                                  } catch (error) {
+                                    console.error('Error fetching patient details:', error);
+                                  }
+                                }}
+                                className="text-blue-600 hover:text-blue-900 font-medium"
+                              >
+                                View
+                              </button>
                             </td>
                           </tr>
                         ))}
@@ -967,6 +989,203 @@ const MapPage = () => {
                 type="button"
               >
                 OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Patient Details Modal */}
+      {showPatientDetailsModal && selectedPatientDetails && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10001,
+            padding: '16px'
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              width: '100%',
+              maxWidth: '600px',
+              maxHeight: '90vh',
+              overflow: 'auto'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ padding: '24px', borderBottom: '1px solid #e5e7eb', background: 'linear-gradient(to right, #fce7f3, #fef2f2)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#111827', margin: 0 }}>Patient Details</h3>
+                <button
+                  onClick={() => {
+                    setShowPatientDetailsModal(false);
+                    setSelectedPatientDetails(null);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '20px',
+                    color: '#9ca3af',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    lineHeight: 1
+                  }}
+                  type="button"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{ padding: '24px' }}>
+              <div style={{ display: 'grid', gap: '16px' }}>
+                {/* Basic Information */}
+                <div style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '16px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '12px' }}>Basic Information</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>First Name</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.first_name || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Last Name</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.last_name || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Middle Name</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.middle_name || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Birth Date</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                        {selectedPatientDetails.birth_date ? new Date(selectedPatientDetails.birth_date).toLocaleDateString() : 'N/A'}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Age</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.age || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Sex</p>
+                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500', textTransform: 'capitalize' }}>
+                        {selectedPatientDetails.sex || 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '16px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '12px' }}>Contact Information</h4>
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    <div>
+                      <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Address</p>
+                      <p style={{ fontSize: '14px', color: '#111827' }}>{selectedPatientDetails.address || 'N/A'}</p>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Contact Number</p>
+                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                          {selectedPatientDetails.contact_number || 'N/A'}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Email</p>
+                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.email || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Emergency Contact */}
+                {(selectedPatientDetails.emergency_contact_name || selectedPatientDetails.emergency_contact_number) && (
+                  <div style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '16px' }}>
+                    <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '12px' }}>Emergency Contact</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Name</p>
+                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                          {selectedPatientDetails.emergency_contact_name || 'N/A'}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Contact Number</p>
+                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                          {selectedPatientDetails.emergency_contact_number || 'N/A'}
+                        </p>
+                      </div>
+                      {selectedPatientDetails.emergency_contact_relationship && (
+                        <div>
+                          <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Relationship</p>
+                          <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>
+                            {selectedPatientDetails.emergency_contact_relationship}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Medical Information */}
+                <div>
+                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', marginBottom: '12px' }}>Medical Information</h4>
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    {selectedPatientDetails.blood_type && (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Blood Type</p>
+                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>{selectedPatientDetails.blood_type}</p>
+                      </div>
+                    )}
+                    {selectedPatientDetails.allergies && (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Allergies</p>
+                        <p style={{ fontSize: '14px', color: '#111827' }}>{selectedPatientDetails.allergies}</p>
+                      </div>
+                    )}
+                    {selectedPatientDetails.medical_history && (
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>Medical History</p>
+                        <p style={{ fontSize: '14px', color: '#111827' }}>{selectedPatientDetails.medical_history}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div style={{ padding: '16px 24px', borderTop: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
+              <button
+                onClick={() => {
+                  setShowPatientDetailsModal(false);
+                  setSelectedPatientDetails(null);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '10px 24px',
+                  backgroundColor: '#ec4899',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+                type="button"
+              >
+                Close
               </button>
             </div>
           </div>
