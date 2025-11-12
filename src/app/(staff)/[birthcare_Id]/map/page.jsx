@@ -512,14 +512,16 @@ const MapPage = () => {
                       {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && patientSearchResults.birthdate !== 'Not provided' && (
                         <p className="text-gray-600">
                           Birthdate: {patientSearchResults.birthdate ? (() => {
-                            // Parse date without timezone issues
-                            const [year, month, day] = patientSearchResults.birthdate.split('-');
-                            const date = new Date(year, month - 1, day);
-                            return date.toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            });
+                            // Robustly parse YYYY-MM-DD from various formats (e.g., 'YYYY-MM-DD', 'YYYY-MM-DDTHH:mm:ss', etc.)
+                            const raw = String(patientSearchResults.birthdate);
+                            const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+                            if (!m) return 'Not provided';
+                            const year = Number(m[1]);
+                            const month = Number(m[2]);
+                            const day = Number(m[3]);
+                            const date = new Date(year, month - 1, day); // local date, no TZ shift
+                            if (isNaN(date.getTime())) return 'Not provided';
+                            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                           })() : 'Not provided'}
                         </p>
                       )}
