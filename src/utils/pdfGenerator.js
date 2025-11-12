@@ -24,48 +24,57 @@ export const generatePrenatalFormPDF = (formData, patientData, birthCareInfo = n
     }
   };
   
-  // Simple helper function to draw fields - matching Birth Details style
-  const drawSimpleField = (x, y, width, label, value, bold = false) => {
+  // Compact field drawing with appropriate line lengths
+  const drawCompactField = (x, y, label, value, lineWidth = 60) => {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
     doc.text(`${label}:`, x, y);
     
+    const labelWidth = doc.getTextWidth(`${label}: `);
+    const lineStartX = x + labelWidth;
+    const lineEndX = lineStartX + lineWidth;
+    
+    // Draw underline
+    doc.line(lineStartX, y + 1, lineEndX, y + 1);
+    
+    // Add value if exists
     if (value && value !== 'N/A' && value !== '') {
       const valueText = String(value);
-      doc.setFont('helvetica', bold ? 'bold' : 'normal');
-      // Simple underline for value
-      const labelWidth = doc.getTextWidth(`${label}: `);
-      doc.line(x + labelWidth, y + 1, x + width, y + 1);
-      doc.text(valueText, x + labelWidth + 2, y - 1);
-    } else {
-      // Draw empty line
-      const labelWidth = doc.getTextWidth(`${label}: `);
-      doc.line(x + labelWidth, y + 1, x + width, y + 1);
+      doc.setFont('helvetica', 'normal');
+      // Truncate if too long
+      const availableWidth = lineWidth - 2;
+      const textWidth = doc.getTextWidth(valueText);
+      let displayText = valueText;
+      if (textWidth > availableWidth) {
+        // Split into multiple lines if necessary
+        displayText = valueText.substring(0, Math.floor(valueText.length * availableWidth / textWidth));
+      }
+      doc.text(displayText, lineStartX + 1, y - 1);
     }
   };
   
-  const drawSimpleTwoColumns = (yPos, leftLabel, leftValue, rightLabel, rightValue) => {
-    const colWidth = 80;
-    drawSimpleField(margin, yPos, colWidth, leftLabel, leftValue);
-    drawSimpleField(margin + 90, yPos, colWidth, rightLabel, rightValue);
-    return yPos + 8;
+  const drawTwoColumns = (yPos, leftLabel, leftValue, rightLabel, rightValue, leftWidth = 50, rightWidth = 50) => {
+    const midPoint = pageWidth / 2;
+    drawCompactField(margin, yPos, leftLabel, leftValue, leftWidth);
+    drawCompactField(midPoint, yPos, rightLabel, rightValue, rightWidth);
+    return yPos + 6; // Reduced spacing
   };
   
-  const drawSimpleFullWidth = (yPos, label, value) => {
-    drawSimpleField(margin, yPos, pageWidth - (margin * 2), label, value);
-    return yPos + 8;
+  const drawFullWidth = (yPos, label, value, lineWidth = 120) => {
+    drawCompactField(margin, yPos, label, value, lineWidth);
+    return yPos + 6; // Reduced spacing
   };
   
-  const drawSimpleHeader = (title, yPos) => {
-    doc.setFontSize(11);
+  const drawSectionHeader = (title, yPos) => {
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
     doc.text(title, margin, yPos);
     // Simple underline
     doc.setLineWidth(0.5);
     doc.line(margin, yPos + 2, pageWidth - margin, yPos + 2);
-    return yPos + 10;
+    return yPos + 8; // Reduced spacing
   };
   
   // Set font
@@ -102,40 +111,40 @@ export const generatePrenatalFormPDF = (formData, patientData, birthCareInfo = n
   doc.text('PRENATAL EXAMINATION FORM', pageWidth / 2, yPos, { align: 'center' });
   yPos += 15;
   
-  // MOTHER INFORMATION Section - matching Birth Details style
-  yPos = drawSimpleHeader('MOTHER INFORMATION', yPos);
+  // MOTHER INFORMATION Section
+  yPos = drawSectionHeader('MOTHER INFORMATION', yPos);
   
   if (patientData) {
     const fullName = `${patientData.first_name} ${patientData.middle_name || ''} ${patientData.last_name}`.trim();
     const dateOfBirthFormatted = formatDateOnly(patientData.date_of_birth);
     
-    yPos = drawSimpleFullWidth(yPos, "Mother's Name", fullName);
-    yPos = drawSimpleTwoColumns(yPos, 'Date of Birth', dateOfBirthFormatted, 'Age', patientData.age);
-    yPos = drawSimpleFullWidth(yPos, 'Address', patientData.address);
-    yPos = drawSimpleFullWidth(yPos, 'Contact Number', patientData.contact_number);
-    yPos += 5;
+    yPos = drawFullWidth(yPos, "Mother's Name", fullName, 120);
+    yPos = drawTwoColumns(yPos, 'Date of Birth', dateOfBirthFormatted, 'Age', patientData.age, 50, 30);
+    yPos = drawFullWidth(yPos, 'Address', patientData.address, 120);
+    yPos = drawFullWidth(yPos, 'Contact Number', patientData.contact_number, 60);
+    yPos += 4;
   }
   
-  // EXAMINATION DETAILS Section - matching Birth Details style
-  yPos = drawSimpleHeader('EXAMINATION DETAILS', yPos);
+  // EXAMINATION DETAILS Section
+  yPos = drawSectionHeader('EXAMINATION DETAILS', yPos);
   
   const examDateFormatted = formatDateOnly(formData.form_date);
-  yPos = drawSimpleTwoColumns(yPos, 'Examination Date', examDateFormatted, 'Gestational Age', formData.gestational_age);
-  yPos = drawSimpleTwoColumns(yPos, 'Weight', formData.weight, 'Blood Pressure', formData.blood_pressure);
-  yPos = drawSimpleFullWidth(yPos, 'Next Appointment', formData.next_appointment);
-  yPos = drawSimpleFullWidth(yPos, 'Examined By', formData.examined_by);
-  yPos += 8;
+  yPos = drawTwoColumns(yPos, 'Examination Date', examDateFormatted, 'Gestational Age', formData.gestational_age, 50, 50);
+  yPos = drawTwoColumns(yPos, 'Weight', formData.weight, 'Blood Pressure', formData.blood_pressure, 50, 50);
+  yPos = drawFullWidth(yPos, 'Next Appointment', formData.next_appointment, 80);
+  yPos = drawFullWidth(yPos, 'Examined By', formData.examined_by, 100);
+  yPos += 6;
   
   // Clinical Notes Section
   if (formData.notes) {
-    yPos = drawSimpleHeader('CLINICAL NOTES & OBSERVATIONS', yPos);
+    yPos = drawSectionHeader('CLINICAL NOTES & OBSERVATIONS', yPos);
     
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     const lines = doc.splitTextToSize(String(formData.notes), pageWidth - (margin * 2));
     lines.forEach(line => {
       doc.text(line, margin, yPos);
-      yPos += 5;
+      yPos += 4.5;
     });
   }
     
