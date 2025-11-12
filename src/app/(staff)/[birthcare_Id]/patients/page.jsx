@@ -24,6 +24,7 @@ const PatientListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [registering, setRegistering] = useState(false);
   const [facility, setFacility] = useState(null);
+  const [facilityLoading, setFacilityLoading] = useState(true);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
@@ -139,6 +140,7 @@ const PatientListPage = () => {
   useEffect(() => {
     const fetchFacility = async () => {
       try {
+        setFacilityLoading(true);
         const response = await axios.get(`/api/birthcare/${birthcare_Id}`);
         console.log('Facility API Response:', response.data);
         const facilityData = response.data.data || response.data;
@@ -147,6 +149,8 @@ const PatientListPage = () => {
       } catch (error) {
         console.error('Error fetching facility:', error);
         setFacility(null);
+      } finally {
+        setFacilityLoading(false);
       }
     };
 
@@ -246,11 +250,12 @@ const PatientListPage = () => {
                   <p className="text-sm text-gray-900 mt-1 font-medium">Manage and view all registered patients</p>
                 </div>
                 <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:shadow-lg hover:shadow-[#BF3853]/25 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
+                  onClick={() => !facilityLoading && setIsModalOpen(true)}
+                  disabled={facilityLoading}
+                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:shadow-lg hover:shadow-[#BF3853]/25 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <UserPlus size={20} />
-                  <span>Register Patient</span>
+                  <span>{facilityLoading ? 'Loading...' : 'Register Patient'}</span>
                 </button>
               </div>
             </div>
@@ -434,11 +439,12 @@ const PatientListPage = () => {
                                 <p className="text-xl font-bold text-gray-700 mb-2">No patients yet</p>
                                 <p className="text-gray-500 mb-4">Get started by adding your first patient.</p>
                                 <button
-                                  onClick={() => setIsModalOpen(true)}
-                                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:shadow-lg hover:shadow-[#BF3853]/25 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
+                                  onClick={() => !facilityLoading && setIsModalOpen(true)}
+                                  disabled={facilityLoading}
+                                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:shadow-lg hover:shadow-[#BF3853]/25 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                                 >
                                   <UserPlus size={18} />
-                                  <span>Register Patient</span>
+                                  <span>{facilityLoading ? 'Loading...' : 'Register Patient'}</span>
                                 </button>
                               </>
                             )}
