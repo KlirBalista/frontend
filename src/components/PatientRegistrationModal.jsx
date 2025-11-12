@@ -40,6 +40,7 @@ const PatientRegistrationModal = ({
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [registeredPatientName, setRegisteredPatientName] = useState('');
 
   const civilStatusOptions = [
     'Single',
@@ -171,7 +172,11 @@ const PatientRegistrationModal = ({
       // Call the parent callback to handle registration
       await onPatientRegistered?.(payload);
       
-      // Reset form first
+      // Save patient name for success dialog before resetting form
+      const patientFullName = `${formData.first_name} ${formData.middle_name} ${formData.last_name}`.trim().replace(/\s+/g, ' ');
+      setRegisteredPatientName(patientFullName);
+      
+      // Reset form
       setFormData({
         first_name: '',
         middle_name: '',
@@ -579,7 +584,7 @@ const PatientRegistrationModal = ({
         isOpen={showSuccessDialog}
         onClose={handleSuccessDialogClose}
         title="Patient Registered Successfully!"
-        message={`${formData.first_name} ${formData.middle_name} ${formData.last_name} has been successfully registered to ${facilityName}.`}
+        message={`${registeredPatientName} has been successfully registered to ${facilityName}.`}
         type="success"
         confirmText="OK"
       />

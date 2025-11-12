@@ -600,6 +600,27 @@ const PatientListPage = () => {
                       <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_category || 'N/A'}</p>
                     </div>
                   </div>
+
+                  {/* Principal Member Information - Show only for Indirect members */}
+                  {selectedPatient.philhealth_category === 'Indirect' && (
+                    <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Principal Member's Information</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-xs font-medium text-gray-500 uppercase">Principal Member's PhilHealth No.</label>
+                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_id || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-500 uppercase">Principal Member's Name</label>
+                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_name || 'N/A'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-xs font-medium text-gray-500 uppercase">Relationship to Principal Member</label>
+                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_relation || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
