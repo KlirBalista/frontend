@@ -248,17 +248,23 @@ export default function LaborMonitoring() {
     try {
       const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`);
       const allStaff = response.data || [];
+      console.log('All staff fetched:', allStaff);
+      
       const midwivesOnly = allStaff
-        .filter(staff =>
-          staff.role?.toLowerCase().includes('midwife') ||
-          staff.role_name?.toLowerCase().includes('midwife')
-        )
+        .filter(staff => {
+          const roleName = staff.role?.name?.toLowerCase() || '';
+          const isMidwife = roleName.includes('midwife');
+          console.log('Staff:', staff.name, 'Role:', roleName, 'Is Midwife:', isMidwife);
+          return isMidwife;
+        })
         .map(staff => ({
           id: staff.id,
           user_id: staff.user_id,
           name: staff.name,
           email: staff.email,
         }));
+      
+      console.log('Filtered midwives:', midwivesOnly);
       setMidwives(midwivesOnly);
     } catch (error) {
       console.error('Error fetching midwives:', error);
@@ -450,7 +456,7 @@ export default function LaborMonitoring() {
         {/* Printable Content */}
         <div ref={printRef}>
         {/* Official Header */}
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 mb-6 print:shadow-none print:border-black print:rounded-none overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 mb-6 print:shadow-none print:border-black print:rounded-none overflow-visible print:overflow-hidden">
           <div className="px-6 py-5 border-b border-white/20 bg-white print:bg-white print:border-b print:border-black text-left">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div>

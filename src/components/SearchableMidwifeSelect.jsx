@@ -145,7 +145,7 @@ const SearchableMidwifeSelect = ({
 
       {/* Dropdown */}
       {isOpen && !disabled && (
-        <div className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-[9999] mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
           {/* Search header when dropdown is open */}
           {searchTerm && (
             <div className="p-2 border-b border-gray-100 bg-gray-50">
