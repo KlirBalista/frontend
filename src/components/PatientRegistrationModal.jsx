@@ -141,8 +141,35 @@ const PatientRegistrationModal = ({
     }
 
     try {
+      // Prepare payload to match backend schema without requiring DB changes
+      const payload = { ...formData };
+
+      // If "None" is selected, send null so DB enum (Direct/Indirect) accepts it
+      if (payload.philhealth_category === 'None') {
+        payload.philhealth_category = null;
+        // philhealth number is optional; keep as-is or empty string -> set to null
+        if (!payload.philhealth_number) payload.philhealth_number = null;
+        // Remove any indirect-only fields if present
+        delete payload.principal_philhealth_number;
+        delete payload.principal_name;
+        delete payload.relationship_to_principal;
+        delete payload.principal_date_of_birth;
+      }
+
+      // If Indirect, map principal_* to backend's philhealth_dependent_* fields
+      if (payload.philhealth_category === 'Indirect') {
+        if (payload.principal_philhealth_number)
+          payload.philhealth_dependent_id = payload.principal_philhealth_number;
+        if (payload.principal_name)
+          payload.philhealth_dependent_name = payload.principal_name;
+        if (payload.relationship_to_principal)
+          payload.philhealth_dependent_relation = payload.relationship_to_principal;
+        // Backend doesn't store principal_date_of_birth in current schema
+        delete payload.principal_date_of_birth;
+      }
+
       // Call the parent callback to handle registration
-      await onPatientRegistered?.(formData);
+      await onPatientRegistered?.(payload);
       
       setShowSuccessDialog(true);
     } catch (error) {
