@@ -167,17 +167,35 @@ export default function NewbornScreeningResults() {
         try {
             const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`)
             const allStaff = response.data || []
-            const midwivesOnly = allStaff.filter(staff =>
-                staff.role?.toLowerCase().includes('midwife') ||
-                staff.role_name?.toLowerCase().includes('midwife')
-            )
+            console.log('All staff response:', allStaff)
+            
+            const midwivesOnly = allStaff.filter(staff => {
+                const roleName = staff.role?.role_name || staff.role_name || ''
+                return roleName.toLowerCase().includes('midwife')
+            })
+            
+            console.log('Filtered midwives:', midwivesOnly)
+            
             // Map to expected shape: id and name
-            const mapped = midwivesOnly.map(m => ({
-                id: m.id || m.user_id || m.staff_id,
-                user_id: m.user_id || m.id,
-                name: m.name || `${m.firstname || m.first_name || ''} ${m.lastname || m.last_name || ''}`.trim(),
-                email: m.email || ''
-            }))
+            const mapped = midwivesOnly.map(m => {
+                // Try to get name from various possible locations
+                let name = m.name
+                if (!name && m.user) {
+                    name = `${m.user.firstname || ''} ${m.user.lastname || ''}`.trim()
+                }
+                if (!name) {
+                    name = `${m.firstname || m.first_name || ''} ${m.lastname || m.last_name || ''}`.trim()
+                }
+                
+                return {
+                    id: m.id || m.user_id || m.staff_id,
+                    user_id: m.user_id || m.id,
+                    name: name,
+                    email: m.email || m.user?.email || ''
+                }
+            })
+            
+            console.log('Mapped midwives:', mapped)
             setMidwives(mapped)
         } catch (error) {
             console.error('Error fetching midwives:', error)
