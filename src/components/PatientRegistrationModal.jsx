@@ -511,22 +511,6 @@ const PatientRegistrationModal = ({
                             />
                             <p className="mt-1 text-xs text-gray-500">Optional but recommended</p>
                           </div>
-
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Patient's PhilHealth No.
-                            </label>
-                            <input
-                              type="text"
-                              name="patient_philhealth_number"
-                              value={formData.patient_philhealth_number}
-                              onChange={handleInputChange}
-                              placeholder=""
-                              maxLength="12"
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#BF3853] focus:border-[#BF3853] text-sm bg-white"
-                            />
-                            <p className="mt-1 text-xs text-gray-500">Optional</p>
-                          </div>
                         </div>
                       </div>
                     )}
