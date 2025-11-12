@@ -179,15 +179,15 @@ export default function NewbornScreeningResults() {
         const patient = patients.find(p => p.id === parseInt(patientId))
         setSelectedPatient(patient)
         
-        // Auto-populate form with patient data
+        // Auto-populate form with patient data (patient is the mother)
         if (patient) {
             setFormData(prev => ({
                 ...prev,
-                childName: `${patient.first_name} ${patient.last_name}`,
-                dateOfBirth: patient.date_of_birth || '',
-                sex: patient.gender || '',
-                motherName: patient.mother_name || '',
-                motherAge: patient.mother_age || '',
+                childName: '', // Keep child's name empty - patient is the mother
+                dateOfBirth: '',
+                sex: '',
+                motherName: `${patient.first_name} ${patient.last_name}`,
+                motherAge: patient.age || '',
                 address: patient.address || '',
                 phoneNumber: patient.contact_number || ''
             }))
