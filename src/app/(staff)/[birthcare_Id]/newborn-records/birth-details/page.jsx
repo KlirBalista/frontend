@@ -6,6 +6,7 @@ import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
 import { saveBirthDetailsAsPDF, downloadBirthDetailsPDF } from "@/utils/pdfGenerator";
 import SearchablePatientSelect from "@/components/SearchablePatientSelect";
+import SearchableMidwifeSelect from "@/components/SearchableMidwifeSelect";
 import CustomDialog from "@/components/CustomDialog";
 
 export default function BirthDetails() {
@@ -14,6 +15,7 @@ export default function BirthDetails() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [birthCareInfo, setBirthCareInfo] = useState(null);
+  const [midwives, setMidwives] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
@@ -60,6 +62,7 @@ export default function BirthDetails() {
   useEffect(() => {
     fetchPatients();
     fetchBirthCareInfo();
+    fetchMidwives();
   }, []);
 
   if (!user) {
@@ -126,6 +129,21 @@ export default function BirthDetails() {
       }));
     } catch (error) {
       console.error('Error fetching birth care info:', error);
+    }
+  };
+
+  const fetchMidwives = async () => {
+    try {
+      const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`);
+      // Filter only midwives (those with role that contains "midwife" or role_id for midwife)
+      const allStaff = response.data || [];
+      const midwivesOnly = allStaff.filter(staff => 
+        staff.role?.toLowerCase().includes('midwife') || 
+        staff.role_name?.toLowerCase().includes('midwife')
+      );
+      setMidwives(midwivesOnly);
+    } catch (error) {
+      console.error('Error fetching midwives:', error);
     }
   };
 
@@ -529,9 +547,9 @@ export default function BirthDetails() {
                     delivery_complications: 'None',
                     presentation: 'vertex',
                     plurality: 'single',
-                    attendant_name: 'Dr. Sarah Johnson',
-                    attendant_title: 'doctor',
-                    attendant_license: 'MD-2019-001234',
+                    attendant_name: midwives.length > 0 ? midwives[0].name : 'Sample Midwife',
+                    attendant_title: 'midwife',
+                    attendant_license: 'MW-2019-001234',
                   });
                   // Set sample baby data
                   setBabies([{
@@ -870,26 +888,25 @@ export default function BirthDetails() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Attendant Name</label>
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                  <SearchableMidwifeSelect
+                    midwives={midwives}
                     value={birthInfo.attendant_name}
-                    onChange={(e) => handleBirthInfoChange('attendant_name', e.target.value)}
+                    onChange={(id, name) => {
+                      handleBirthInfoChange('attendant_name', name);
+                    }}
+                    placeholder="Search and select midwife..."
+                    onOpen={fetchMidwives}
                   />
                   {errors.attendant_name && <p className="text-red-500 text-xs mt-1">{errors.attendant_name}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Title/Position</label>
                   <select
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
                     value={birthInfo.attendant_title}
-                    onChange={(e) => handleBirthInfoChange('attendant_title', e.target.value)}
+                    disabled
                   >
-                    <option value="doctor">Doctor</option>
                     <option value="midwife">Midwife</option>
-                    <option value="nurse">Nurse</option>
-                    <option value="other">Other</option>
                   </select>
                 </div>
                 <div>
