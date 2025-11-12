@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
 import { useReactToPrint } from 'react-to-print';
@@ -11,6 +11,7 @@ import CustomDialog from "@/components/CustomDialog";
 
 export default function LaborMonitoring() {
   const { birthcare_Id } = useParams();
+  const router = useRouter();
   const { user } = useAuth({ middleware: "auth" });
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -411,6 +412,17 @@ export default function LaborMonitoring() {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 tracking-tight">LABOR MONITORING</h1>
                 <p className="text-sm text-gray-900 mt-1">Manage and view Patien Labor Monitoring Data</p>
+              </div>
+              <div className="mt-2 sm:mt-0">
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="inline-flex items-center gap-2 px-4 py-2 border-2 border-gray-500 rounded-xl text-sm font-semibold text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+                  aria-label="Go back"
+                  title="Go back"
+                >
+                  ← Back
+                </button>
               </div>
             </div>
           </div>
