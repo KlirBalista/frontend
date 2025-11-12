@@ -534,7 +534,9 @@ const PatientListPage = () => {
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <label className="text-xs font-medium text-gray-500 uppercase">Date of Birth</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.date_of_birth || 'N/A'}</p>
+                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                        {selectedPatient.date_of_birth ? selectedPatient.date_of_birth.split('T')[0] : 'N/A'}
+                      </p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <label className="text-xs font-medium text-gray-500 uppercase">Age</label>

@@ -171,6 +171,27 @@ const PatientRegistrationModal = ({
       // Call the parent callback to handle registration
       await onPatientRegistered?.(payload);
       
+      // Reset form first
+      setFormData({
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        date_of_birth: '',
+        age: '',
+        civil_status: 'Single',
+        address: '',
+        contact_number: '',
+        philhealth_number: '',
+        philhealth_category: 'None',
+        facility_name: facilityName,
+        principal_philhealth_number: '',
+        principal_name: '',
+        relationship_to_principal: '',
+        principal_date_of_birth: '',
+        patient_philhealth_number: ''
+      });
+      setErrors({});
+      
       setShowSuccessDialog(true);
     } catch (error) {
       console.error('Patient registration error:', error);
@@ -206,26 +227,6 @@ const PatientRegistrationModal = ({
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
     onClose();
-    // Reset form
-    setFormData({
-      first_name: '',
-      middle_name: '',
-      last_name: '',
-      date_of_birth: '',
-      age: '',
-      civil_status: 'Single',
-      address: '',
-      contact_number: '',
-      philhealth_number: '',
-      philhealth_category: 'None',
-      facility_name: facilityName,
-      principal_philhealth_number: '',
-      principal_name: '',
-      relationship_to_principal: '',
-      principal_date_of_birth: '',
-      patient_philhealth_number: ''
-    });
-    setErrors({});
   };
 
   return (
