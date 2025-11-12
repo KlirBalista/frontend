@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/auth'
 import { useReactToPrint } from 'react-to-print'
 import { saveNewbornScreeningAsPDF, downloadNewbornScreeningPDF } from '@/utils/pdfGenerator'
 import SearchablePatientSelect from '@/components/SearchablePatientSelect'
+import SearchableMidwifeSelect from '@/components/SearchableMidwifeSelect'
 import CustomDialog from '@/components/CustomDialog'
 
 export default function NewbornScreeningResults() {
@@ -18,6 +19,7 @@ export default function NewbornScreeningResults() {
     const [loading, setLoading] = useState(true)
     const [patients, setPatients] = useState([])
     const [selectedPatient, setSelectedPatient] = useState(null)
+    const [midwives, setMidwives] = useState([])
     const [dialog, setDialog] = useState({ isOpen: false, type: 'info', title: '', message: '', onConfirm: null })
     const printRef = useRef()
     
@@ -157,6 +159,27 @@ export default function NewbornScreeningResults() {
             setPatients(allPatients)
         } catch (error) {
             console.error('Error fetching patients:', error)
+        }
+    }
+
+    const fetchMidwives = async () => {
+        try {
+            const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`)
+            const allStaff = response.data || []
+            const midwivesOnly = allStaff.filter(staff =>
+                staff.role?.toLowerCase().includes('midwife') ||
+                staff.role_name?.toLowerCase().includes('midwife')
+            )
+            // Map to expected shape: id and name
+            const mapped = midwivesOnly.map(m => ({
+                id: m.id || m.user_id || m.staff_id,
+                user_id: m.user_id || m.id,
+                name: m.name || `${m.firstname || m.first_name || ''} ${m.lastname || m.last_name || ''}`.trim(),
+                email: m.email || ''
+            }))
+            setMidwives(mapped)
+        } catch (error) {
+            console.error('Error fetching midwives:', error)
         }
     }
 
@@ -874,7 +897,6 @@ export default function NewbornScreeningResults() {
                                             placeholder="Enter name"
                                         />
                                         <p className="text-xs text-gray-500">Sample Collector</p>
-                                        <p className="text-xs text-gray-500">Name and Signature</p>
                                     </div>
                                 </div>
                                 <div>
@@ -893,20 +915,22 @@ export default function NewbornScreeningResults() {
                                             placeholder="Enter name"
                                         />
                                         <p className="text-xs text-gray-500">Laboratory Technician</p>
-                                        <p className="text-xs text-gray-500">Name and Signature</p>
                                     </div>
                                 </div>
                                 <div>
                                     <div className="text-center">
-                                        <input
-                                            type="text"
+                                        <SearchableMidwifeSelect
+                                            midwives={midwives}
                                             value={formData.signatures?.attendingPhysician || ''}
-                                            readOnly
-                                            className="w-full mb-2 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-center text-gray-700 cursor-not-allowed"
-                                            placeholder="Auto-filled"
+                                            onChange={(id, name) => setFormData(prev => ({
+                                                ...prev,
+                                                signatures: { ...prev.signatures, attendingPhysician: name || '' }
+                                            }))}
+                                            placeholder="Select attending physician..."
+                                            onOpen={fetchMidwives}
+                                            className="w-full mb-2"
                                         />
                                         <p className="text-xs text-gray-500">Attending Physician</p>
-                                        <p className="text-xs text-gray-500">Name and Signature</p>
                                     </div>
                                 </div>
                             </div>
