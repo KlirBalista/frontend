@@ -569,7 +569,7 @@ const PrenatalFormsPage = () => {
       {/* Form Creation Modal */}
       {showFormModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl border border-[#FDB3C2]/30 w-full max-w-4xl max-h-[90vh] overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
             <div className="bg-gradient-to-r from-[#BF3853] to-[#A41F39] px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <h2 className="text-xl font-bold text-white">Create Prenatal Examination Form</h2>
               <button
@@ -639,28 +639,34 @@ const PrenatalFormsPage = () => {
                       <label className="block text-sm font-medium text-gray-900 mb-2">
                         Weight
                       </label>
-                      <input
-                        type="text"
-                        name="weight"
-                        value={formData.weight}
-                        onChange={handleFormChange}
-                        placeholder="e.g., 65.5 kg"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="weight"
+                          value={formData.weight}
+                          onChange={handleFormChange}
+                          placeholder="65"
+                          className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">kg</span>
+                      </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
                         Blood Pressure
                       </label>
-                      <input
-                        type="text"
-                        name="blood_pressure"
-                        value={formData.blood_pressure}
-                        onChange={handleFormChange}
-                        placeholder="e.g., 120/80 mmHg"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="blood_pressure"
+                          value={formData.blood_pressure}
+                          onChange={handleFormChange}
+                          placeholder="120/80"
+                          className="w-full px-4 py-3 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">mmHg</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -687,30 +693,36 @@ const PrenatalFormsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Fetal Heart Rate (bpm)
+                        Fetal Heart Rate
                       </label>
-                      <input
-                        type="text"
-                        name="fetal_heart_rate"
-                        value={formData.fetal_heart_rate || ''}
-                        onChange={handleFormChange}
-                        placeholder="e.g., 140 bpm"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="fetal_heart_rate"
+                          value={formData.fetal_heart_rate || ''}
+                          onChange={handleFormChange}
+                          placeholder="140"
+                          className="w-full px-4 py-3 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">bpm</span>
+                      </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Fundal Height (cm)
+                        Fundal Height
                       </label>
-                      <input
-                        type="text"
-                        name="fundal_height"
-                        value={formData.fundal_height || ''}
-                        onChange={handleFormChange}
-                        placeholder="e.g., 24 cm"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="fundal_height"
+                          value={formData.fundal_height || ''}
+                          onChange={handleFormChange}
+                          placeholder="24"
+                          className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">cm</span>
+                      </div>
                     </div>
                   </div>
 
