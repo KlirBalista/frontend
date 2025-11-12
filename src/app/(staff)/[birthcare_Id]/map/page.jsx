@@ -618,7 +618,7 @@ const MapPage = () => {
                                   } else {
                                     // If not available, fetch from API
                                     try {
-                                      const response = await axios.get(`/api/patients/${consultation.patient_id}`);
+                                      const response = await axios.get(`/api/birthcare/${birthcare_id}/patients/${consultation.patient_id}`);
                                       patient = response.data?.data || response.data || null;
                                     } catch (error) {
                                       console.error('Error fetching patient details:', error);
@@ -772,9 +772,10 @@ const MapPage = () => {
                             
                             if (patientInFacility) {
                               console.log('🔍 Step 2: Fetching full patient details and consultations for ID:', patientInFacility.id);
+                              console.log('Using birthcare_id:', birthcare_id);
                               // Patient exists in this facility - fetch full details
                               const [patientDetailsResponse, consultationResponse] = await Promise.all([
-                                axios.get(`/api/patients/${patientInFacility.id}`),
+                                axios.get(`/api/birthcare/${birthcare_id}/patients/${patientInFacility.id}`),
                                 axios.get(`/api/patients/${patientInFacility.id}/consultations`)
                               ]);
                               console.log('✅ Step 2 complete: Patient details:', patientDetailsResponse.data);
