@@ -1025,11 +1025,13 @@ const MapPage = () => {
             right: 0,
             bottom: 0,
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10001,
-            padding: '16px'
+            padding: '16px',
+            overflowY: 'auto'
           }}
         >
           <div 
@@ -1038,162 +1040,155 @@ const MapPage = () => {
               borderRadius: '12px',
               boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               width: '100%',
-              maxWidth: '600px',
-              maxHeight: '90vh',
-              overflow: 'auto'
+              maxWidth: '768px',
+              margin: '16px auto',
+              overflow: 'hidden'
             }}
           >
             {/* Modal Header */}
-            <div style={{ padding: '20px 24px', background: 'linear-gradient(to right, #BF3853, #A41F39)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ fontSize: '20px', fontWeight: '700', color: 'white', margin: 0 }}>Patient Details</h3>
-                <button
-                  onClick={() => {
-                    setShowPatientDetailsModal(false);
-                    setSelectedPatientDetails(null);
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '20px',
-                    color: 'rgba(255,255,255,0.8)',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    lineHeight: 1
-                  }}
-                  type="button"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div style={{ padding: '24px' }}>
-              <div style={{ display: 'grid', gap: '24px' }}>
-                {/* Basic Information */}
-                <div>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid #BF3853' }}>Basic Information</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Name</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>
-                        {selectedPatientDetails.first_name} {selectedPatientDetails.middle_name} {selectedPatientDetails.last_name}
-                      </p>
-                    </div>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date of Birth</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>
-                        {selectedPatientDetails.date_of_birth ? selectedPatientDetails.date_of_birth.split('T')[0] : (selectedPatientDetails.birth_date ? selectedPatientDetails.birth_date.split('T')[0] : 'N/A')}
-                      </p>
-                    </div>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Age</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.age || 'N/A'}</p>
-                    </div>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Civil Status</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.civil_status || 'N/A'}</p>
-                    </div>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px', gridColumn: '1 / -1' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Address</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.address || 'N/A'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Information */}
-                <div>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid #BF3853' }}>Contact Information</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Number</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.contact_number || 'N/A'}</p>
-                    </div>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>
-                        <span style={{
-                          display: 'inline-flex',
-                          padding: '4px 12px',
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          borderRadius: '9999px',
-                          backgroundColor: selectedPatientDetails.status === 'Active' ? '#dcfce7' : '#dbeafe',
-                          color: selectedPatientDetails.status === 'Active' ? '#166534' : '#1e40af'
-                        }}>
-                          {selectedPatientDetails.status || 'N/A'}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Facility Information */}
-                {selectedPatientDetails.facility_name && (
-                  <div>
-                    <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid #BF3853' }}>Facility Information</h4>
-                    <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                      <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Facility Name</p>
-                      <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.facility_name}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* PhilHealth Information */}
-                {(selectedPatientDetails.philhealth_number || selectedPatientDetails.philhealth_category) && (
-                  <div>
-                    <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '16px', paddingBottom: '8px', borderBottom: '2px solid #BF3853' }}>PhilHealth Information</h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                      <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                        <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>PhilHealth Number</p>
-                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_number || 'N/A'}</p>
-                      </div>
-                      <div style={{ backgroundColor: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                        <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>PhilHealth Category</p>
-                        <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_category || 'N/A'}</p>
-                      </div>
-                    </div>
-                    {selectedPatientDetails.philhealth_category === 'Indirect' && (
-                      <div style={{ marginTop: '16px', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px', backgroundColor: '#f9fafb' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '12px' }}>Principal Member's Information</h5>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                          <div>
-                            <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Principal Member's PhilHealth No.</p>
-                            <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_id || 'N/A'}</p>
-                          </div>
-                          <div>
-                            <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Principal Member's Name</p>
-                            <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_name || 'N/A'}</p>
-                          </div>
-                          <div style={{ gridColumn: '1 / -1' }}>
-                            <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '6px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relationship to Principal Member</p>
-                            <p style={{ fontSize: '14px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_relation || 'N/A'}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div style={{ padding: '16px 24px', backgroundColor: '#f9fafb', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ padding: '10px 16px', background: 'linear-gradient(to right, #BF3853, #A41F39)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'white', margin: 0 }}>Patient Details</h3>
               <button
                 onClick={() => {
                   setShowPatientDetailsModal(false);
                   setSelectedPatientDetails(null);
                 }}
                 style={{
-                  width: '100%',
-                  padding: '10px 24px',
-                  backgroundColor: '#ec4899',
-                  color: 'white',
+                  background: 'none',
                   border: 'none',
+                  fontSize: '20px',
+                  color: 'rgba(255,255,255,0.8)',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  lineHeight: 1
+                }}
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{ padding: '16px', display: 'grid', gap: '12px' }}>
+              {/* Basic Information */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px solid #BF3853' }}>Basic Information</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Name</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>
+                      {selectedPatientDetails.first_name} {selectedPatientDetails.middle_name} {selectedPatientDetails.last_name}
+                    </p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date of Birth</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>
+                      {selectedPatientDetails.date_of_birth ? selectedPatientDetails.date_of_birth.split('T')[0] : (selectedPatientDetails.birth_date ? selectedPatientDetails.birth_date.split('T')[0] : 'N/A')}
+                    </p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Age</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.age || 'N/A'}</p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Civil Status</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.civil_status || 'N/A'}</p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px', gridColumn: '1 / -1' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Address</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.address || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px solid #BF3853' }}>Contact Information</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Number</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.contact_number || 'N/A'}</p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</p>
+                    <p style={{ fontSize: '12px', margin: 0 }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        padding: '2px 8px',
+                        fontSize: '10px',
+                        fontWeight: '700',
+                        borderRadius: '9999px',
+                        backgroundColor: selectedPatientDetails.status === 'Active' ? '#dcfce7' : '#dbeafe',
+                        color: selectedPatientDetails.status === 'Active' ? '#166534' : '#1e40af'
+                      }}>
+                        {selectedPatientDetails.status || 'N/A'}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Facility Information */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px solid #BF3853' }}>Facility Information</h4>
+                <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                  <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Facility Name</p>
+                  <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.facility_name || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* PhilHealth Information */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px solid #BF3853' }}>PhilHealth Information</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>PhilHealth Number</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_number || 'N/A'}</p>
+                  </div>
+                  <div style={{ backgroundColor: '#f9fafb', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>PhilHealth Category</p>
+                    <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_category || 'N/A'}</p>
+                  </div>
+                </div>
+
+                {/* Principal Member Information - Show only for Indirect members */}
+                {selectedPatientDetails.philhealth_category === 'Indirect' && (
+                  <div style={{ marginTop: '8px', padding: '8px', border: '1px solid #e5e7eb', borderRadius: '4px', backgroundColor: '#f9fafb' }}>
+                    <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#111827', marginBottom: '8px' }}>Principal Member's Information</h5>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                      <div>
+                        <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Principal Member's PhilHealth No.</p>
+                        <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_id || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Principal Member's Name</p>
+                        <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_name || 'N/A'}</p>
+                      </div>
+                      <div style={{ gridColumn: '1 / -1' }}>
+                        <p style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Relationship to Principal Member</p>
+                        <p style={{ fontSize: '12px', color: '#111827', fontWeight: '600' }}>{selectedPatientDetails.philhealth_dependent_relation || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div style={{ padding: '10px 16px', backgroundColor: '#f9fafb', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setShowPatientDetailsModal(false);
+                  setSelectedPatientDetails(null);
+                }}
+                style={{
+                  padding: '6px 16px',
+                  backgroundColor: 'white',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontWeight: '500'
                 }}
                 type="button"

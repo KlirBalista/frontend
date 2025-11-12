@@ -502,11 +502,11 @@ const PatientListPage = () => {
       {/* Patient Details Modal */}
       {isViewModalOpen && selectedPatient && (
         <div className="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
-          <div className="relative mx-auto w-11/12 max-w-4xl my-6">
-            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative mx-auto w-11/12 max-w-3xl my-4">
+            <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden">
               {/* Header */}
-              <div className="bg-gradient-to-r from-[#BF3853] to-[#A41F39] px-6 py-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Patient Details</h2>
+              <div className="bg-gradient-to-r from-[#BF3853] to-[#A41F39] px-4 py-2.5 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-white">Patient Details</h2>
                 <button
                   onClick={() => {
                     setIsViewModalOpen(false);
@@ -514,59 +514,59 @@ const PatientListPage = () => {
                   }}
                   className="text-white/80 hover:text-white transition-colors"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Content */}
-              <div className="p-6 space-y-6">
+              <div className="p-4 space-y-3">
                 {/* Basic Information */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 pb-1 border-b border-[#BF3853]">
                     Basic Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Full Name</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Full Name</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">
                         {selectedPatient.first_name} {selectedPatient.middle_name} {selectedPatient.last_name}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Date of Birth</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Date of Birth</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">
                         {selectedPatient.date_of_birth ? selectedPatient.date_of_birth.split('T')[0] : 'N/A'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Age</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.age}</p>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Age</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.age}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Civil Status</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.civil_status}</p>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Civil Status</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.civil_status}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg md:col-span-2">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Address</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.address || 'N/A'}</p>
+                    <div className="bg-gray-50 p-2 rounded md:col-span-2">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Address</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.address || 'N/A'}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Contact Information */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 pb-1 border-b border-[#BF3853]">
                     Contact Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Contact Number</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.contact_number || 'N/A'}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Contact Number</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.contact_number || 'N/A'}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">Status</label>
-                      <p className="text-sm mt-1">
-                        <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${getStatusColor(selectedPatient.status)}`}>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">Status</label>
+                      <p className="text-xs mt-0.5">
+                        <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full ${getStatusColor(selectedPatient.status)}`}>
                           {selectedPatient.status}
                         </span>
                       </p>
@@ -576,47 +576,47 @@ const PatientListPage = () => {
 
                 {/* Facility Information */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 pb-1 border-b border-[#BF3853]">
                     Facility Information
                   </h3>
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Facility Name</label>
-                    <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.facility_name || 'N/A'}</p>
+                  <div className="bg-gray-50 p-2 rounded">
+                    <label className="text-[10px] font-medium text-gray-500 uppercase">Facility Name</label>
+                    <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.facility_name || 'N/A'}</p>
                   </div>
                 </div>
 
                 {/* PhilHealth Information */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#BF3853]">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2 pb-1 border-b border-[#BF3853]">
                     PhilHealth Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">PhilHealth Number</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_number || 'N/A'}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">PhilHealth Number</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.philhealth_number || 'N/A'}</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <label className="text-xs font-medium text-gray-500 uppercase">PhilHealth Category</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_category || 'N/A'}</p>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">PhilHealth Category</label>
+                      <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.philhealth_category || 'N/A'}</p>
                     </div>
                   </div>
 
                   {/* Principal Member Information - Show only for Indirect members */}
                   {selectedPatient.philhealth_category === 'Indirect' && (
-                    <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Principal Member's Information</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="mt-2 p-2 border border-gray-200 rounded bg-gray-50">
+                      <h4 className="text-xs font-semibold text-gray-900 mb-2">Principal Member's Information</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div>
-                          <label className="text-xs font-medium text-gray-500 uppercase">Principal Member's PhilHealth No.</label>
-                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_id || 'N/A'}</p>
+                          <label className="text-[10px] font-medium text-gray-500 uppercase">Principal Member's PhilHealth No.</label>
+                          <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.philhealth_dependent_id || 'N/A'}</p>
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-gray-500 uppercase">Principal Member's Name</label>
-                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_name || 'N/A'}</p>
+                          <label className="text-[10px] font-medium text-gray-500 uppercase">Principal Member's Name</label>
+                          <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.philhealth_dependent_name || 'N/A'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-xs font-medium text-gray-500 uppercase">Relationship to Principal Member</label>
-                          <p className="text-sm font-semibold text-gray-900 mt-1">{selectedPatient.philhealth_dependent_relation || 'N/A'}</p>
+                          <label className="text-[10px] font-medium text-gray-500 uppercase">Relationship to Principal Member</label>
+                          <p className="text-xs font-semibold text-gray-900 mt-0.5">{selectedPatient.philhealth_dependent_relation || 'N/A'}</p>
                         </div>
                       </div>
                     </div>
@@ -625,13 +625,13 @@ const PatientListPage = () => {
               </div>
 
               {/* Footer */}
-              <div className="px-6 py-4 bg-gray-50 flex justify-end">
+              <div className="px-4 py-2.5 bg-gray-50 flex justify-end">
                 <button
                   onClick={() => {
                     setIsViewModalOpen(false);
                     setSelectedPatient(null);
                   }}
-                  className="px-6 py-2.5 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-300"
+                  className="px-4 py-1.5 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-300"
                 >
                   Close
                 </button>
