@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/auth";
 import { useReactToPrint } from 'react-to-print';
 import { saveLaborMonitoringAsPDF, downloadLaborMonitoringPDF } from '@/utils/pdfGenerator';
 import SearchablePatientSelect from "@/components/SearchablePatientSelect";
+import SearchableMidwifeSelect from "@/components/SearchableMidwifeSelect";
 import CustomDialog from "@/components/CustomDialog";
 
 export default function LaborMonitoring() {
@@ -35,6 +36,7 @@ export default function LaborMonitoring() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [monitoringEntries, setMonitoringEntries] = useState([]);
+  const [midwives, setMidwives] = useState([]);
   const [birthCareInfo, setBirthCareInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -161,6 +163,7 @@ export default function LaborMonitoring() {
   useEffect(() => {
     fetchBirthCareInfo();
     fetchPatients();
+    fetchMidwives();
   }, []);
 
   useEffect(() => {
@@ -238,6 +241,28 @@ export default function LaborMonitoring() {
       setMonitoringEntries(response.data.data || []);
     } catch (error) {
       console.error('Error fetching monitoring entries:', error);
+    }
+  };
+
+  const fetchMidwives = async () => {
+    try {
+      const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`);
+      const allStaff = response.data || [];
+      const midwivesOnly = allStaff
+        .filter(staff =>
+          staff.role?.toLowerCase().includes('midwife') ||
+          staff.role_name?.toLowerCase().includes('midwife')
+        )
+        .map(staff => ({
+          id: staff.id,
+          user_id: staff.user_id,
+          name: staff.name,
+          email: staff.email,
+        }));
+      setMidwives(midwivesOnly);
+    } catch (error) {
+      console.error('Error fetching midwives:', error);
+      setMidwives([]);
     }
   };
 
@@ -594,12 +619,20 @@ export default function LaborMonitoring() {
               <div className="flex items-center space-x-4">
                 <label className="w-32 text-sm font-semibold text-gray-900 print:text-black">Attending Physician:</label>
                 <div className="flex-1">
+                  <SearchableMidwifeSelect
+                    midwives={midwives}
+                    value={additionalInfo.attending_physician}
+                    onChange={(id, name) => setAdditionalInfo({ ...additionalInfo, attending_physician: name || '' })}
+                    placeholder="Search and select a midwife..."
+                    onOpen={fetchMidwives}
+                    className="print:hidden"
+                  />
+                  {/* Print-friendly display */}
                   <input
                     type="text"
                     value={additionalInfo.attending_physician}
-                    onChange={(e) => setAdditionalInfo({...additionalInfo, attending_physician: e.target.value})}
-                    className="w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all print:border-black print:rounded-none"
-                    placeholder="Enter attending physician name"
+                    readOnly
+                    className="hidden print:block w-full p-2 border-2 border-black rounded-none"
                   />
                 </div>
               </div>
