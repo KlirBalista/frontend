@@ -116,6 +116,14 @@ export default function BirthDetails() {
       // Handle multiple possible response shapes
       const facilityData = response.data.data || response.data;
       setBirthCareInfo(facilityData);
+
+      // Auto-fill place of birth from the registered facility name and enforce normal delivery type
+      const facilityName = facilityData?.facility_name || facilityData?.name || facilityData?.clinic_name || '';
+      setBirthInfo(prev => ({
+        ...prev,
+        place_of_birth: facilityName || prev.place_of_birth,
+        delivery_type: 'normal',
+      }));
     } catch (error) {
       console.error('Error fetching birth care info:', error);
     }
@@ -516,7 +524,7 @@ export default function BirthDetails() {
                     ...birthInfo,
                     date_of_birth: '2024-01-15',
                     time_of_birth: '08:30',
-                    place_of_birth: 'Buhangin Medical Center',
+                    place_of_birth: (birthCareInfo?.facility_name || birthCareInfo?.name || birthCareInfo?.clinic_name || birthInfo.place_of_birth),
                     delivery_type: 'normal',
                     delivery_complications: 'None',
                     presentation: 'vertex',
@@ -585,9 +593,9 @@ export default function BirthDetails() {
                   <input
                     type="text"
                     placeholder="Facility name or location"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
                     value={birthInfo.place_of_birth}
-                    onChange={(e) => handleBirthInfoChange('place_of_birth', e.target.value)}
+                    readOnly
                   />
                   {errors.place_of_birth && <p className="text-red-500 text-xs mt-1">{errors.place_of_birth}</p>}
                 </div>
@@ -597,13 +605,11 @@ export default function BirthDetails() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Type</label>
                   <select
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
                     value={birthInfo.delivery_type}
-                    onChange={(e) => handleBirthInfoChange('delivery_type', e.target.value)}
+                    disabled
                   >
-                    <option value="normal">Normal/Vaginal</option>
-                    <option value="cesarean">Cesarean Section</option>
-                    <option value="assisted">Assisted Delivery</option>
+                    <option value="normal">Normal</option>
                   </select>
                 </div>
                 <div>
