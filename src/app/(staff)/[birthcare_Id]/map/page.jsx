@@ -509,9 +509,13 @@ const MapPage = () => {
                       <h3 className="text-lg font-semibold text-gray-900">
                         Patient: {patientSearchResults.name}
                       </h3>
-                      {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && (
+                      {patientSearchResults.birthdate !== 'Patient not found' && patientSearchResults.birthdate !== 'Error searching patient' && patientSearchResults.birthdate !== 'Not provided' && (
                         <p className="text-gray-600">
-                          Birthdate: {patientSearchResults.birthdate}
+                          Birthdate: {patientSearchResults.birthdate ? new Date(patientSearchResults.birthdate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          }) : 'Not provided'}
                         </p>
                       )}
                     </div>
@@ -606,24 +610,43 @@ const MapPage = () => {
                               <button
                                 onClick={async () => {
                                   let patient = null;
-                                  try {
-                                    const response = await axios.get(`/api/patients/${consultation.patient_id}`);
-                                    patient = response.data?.data || response.data || null;
-                                  } catch (error) {
-                                    console.error('Error fetching patient details:', error);
+                                  
+                                  // First, try to use the full patient data from search results
+                                  if (patientSearchResults.fullPatientData && 
+                                      patientSearchResults.fullPatientData.id === consultation.patient_id) {
+                                    patient = patientSearchResults.fullPatientData;
+                                  } else {
+                                    // If not available, fetch from API
+                                    try {
+                                      const response = await axios.get(`/api/patients/${consultation.patient_id}`);
+                                      patient = response.data?.data || response.data || null;
+                                    } catch (error) {
+                                      console.error('Error fetching patient details:', error);
+                                    }
                                   }
+                                  
                                   if (!patient) {
-                                    // Fallback: use minimal info from search result
+                                    // Last resort fallback: use minimal info from search result
                                     const parts = (patientSearchResults.name || '').trim().split(/\s+/);
                                     patient = {
                                       first_name: parts[0] || '',
                                       middle_name: parts.length > 2 ? parts.slice(1, -1).join(' ') : '',
                                       last_name: parts.length > 1 ? parts[parts.length - 1] : '',
-                                      birth_date: patientSearchResults.birthdate || '',
+                                      date_of_birth: patientSearchResults.birthdate || '',
+                                      age: '',
+                                      civil_status: '',
                                       address: '',
                                       contact_number: '',
+                                      status: '',
+                                      facility_name: '',
+                                      philhealth_number: '',
+                                      philhealth_category: '',
+                                      philhealth_dependent_id: '',
+                                      philhealth_dependent_name: '',
+                                      philhealth_dependent_relation: ''
                                     };
                                   }
+                                  
                                   setSelectedPatientDetails(patient);
                                   setShowPatientDetailsModal(true);
                                 }}
@@ -750,11 +773,8 @@ const MapPage = () => {
                               const patientData = {
                                 id: patientInFacility.id,
                                 name: patientInFacility.name,
-                                birthdate: patientInFacility.birth_date ? new Date(patientInFacility.birth_date).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric'
-                                }) : 'Not provided',
+                                birthdate: patientInFacility.birth_date || patientInFacility.date_of_birth || 'Not provided',
+                                fullPatientData: patientInFacility,
                                 consultationHistory: (consultationResponse.data.consultations || []).map(c => ({
                                   ...c,
                                   patient_id: patientInFacility.id
