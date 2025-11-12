@@ -934,7 +934,6 @@ export default function NewbornScreeningResults() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-6">
