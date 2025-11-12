@@ -16,10 +16,11 @@ const SearchableMidwifeSelect = ({
   const containerRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Find selected midwife
+  // Find selected midwife by ID, user_id, or name
   const selectedMidwife = midwives.find(midwife => 
     String(midwife.id) === String(value) || 
-    String(midwife.user_id) === String(value)
+    String(midwife.user_id) === String(value) ||
+    String(midwife.name) === String(value)
   );
 
   // Filter midwives based on search term
