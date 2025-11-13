@@ -481,7 +481,7 @@ const MapPage = () => {
             </div>
 
             {/* Leaflet Map Container */}
-            <div className={`${styles.mapSection} bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden`}>
+            <div className={`${styles.mapSection} bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6`}>
               {/* Map Header */}
               <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-pink-50 to-red-50 flex-shrink-0">
                 <div className="flex items-center">
