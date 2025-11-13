@@ -771,41 +771,41 @@ const MapPage = () => {
                           
                           if (response.data && response.data.length > 0) {
                             console.log('📋 Found', response.data.length, 'patient(s)');
-                            // Allow cross-facility search: pick the first matching patient
-                            const foundPatient = response.data[0];
-                            console.log('👤 Patient found:', foundPatient);
+                            // Restrict to selected facility only
+                            const patientInFacility = response.data.find(p => p.facility_id === selectedFacility?.id);
+                            if (!patientInFacility) {
+                              console.warn('⚠️ Patient not registered in this facility');
+                              setPatientNotFoundMessage(`Patient doesn't exist in ${selectedFacility?.name || 'this facility'}.`);
+                              setShowPatientNotFoundDialog(true);
+                              return; // stay on modal
+                            }
                             
-                            console.log('🔍 Step 2: Fetching full patient details and consultations for ID:', foundPatient.id);
-                            // Fetch details from patient's own facility when available
-                            const patientFacilityId = foundPatient.facility_id || birthcare_id;
+                            console.log('🔍 Step 2: Fetching full patient details and consultations for ID:', patientInFacility.id);
                             const [patientDetailsResponse, consultationResponse] = await Promise.all([
-                              axios.get(`/api/birthcare/${patientFacilityId}/patients/${foundPatient.id}`),
-                              axios.get(`/api/patients/${foundPatient.id}/consultations`)
+                              axios.get(`/api/birthcare/${birthcare_id}/patients/${patientInFacility.id}`),
+                              axios.get(`/api/patients/${patientInFacility.id}/consultations`)
                             ]);
                             console.log('✅ Step 2 complete: Patient details:', patientDetailsResponse.data);
                             console.log('✅ Step 2 complete: Consultations:', consultationResponse.data);
                             
-                            const fullPatientDetails = patientDetailsResponse.data?.data || patientDetailsResponse.data || foundPatient;
-                            console.log('👤 Full patient details processed:', fullPatientDetails);
-                            
+                            const fullPatientDetails = patientDetailsResponse.data?.data || patientDetailsResponse.data || patientInFacility;
                             const patientData = {
-                              id: fullPatientDetails.id || foundPatient.id,
-                              name: `${fullPatientDetails.first_name || ''} ${fullPatientDetails.middle_name || ''} ${fullPatientDetails.last_name || ''}`.trim() || foundPatient.name,
+                              id: fullPatientDetails.id || patientInFacility.id,
+                              name: `${fullPatientDetails.first_name || ''} ${fullPatientDetails.middle_name || ''} ${fullPatientDetails.last_name || ''}`.trim() || patientInFacility.name,
                               birthdate: fullPatientDetails.date_of_birth || fullPatientDetails.birth_date || 'Not provided',
                               fullPatientData: fullPatientDetails,
                               consultationHistory: (consultationResponse.data.consultations || []).map(c => ({
                                 ...c,
-                                patient_id: fullPatientDetails.id || foundPatient.id
+                                patient_id: fullPatientDetails.id || patientInFacility.id
                               }))
                             };
-                            console.log('📦 Final patient data package:', patientData);
                             
                             setPatientSearchResults(patientData);
                             setShowSearchResults(true);
                           } else {
                             // No patient found anywhere in the system
                             console.warn('⚠️ No patient found in entire system');
-                            setPatientNotFoundMessage('Patient not found.');
+                            setPatientNotFoundMessage(`Patient doesn't exist in ${selectedFacility?.name || 'this facility'}.`);
                             setShowPatientNotFoundDialog(true);
                             return; // Don't close modal, let user try again
                           }
