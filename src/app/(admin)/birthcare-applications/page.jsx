@@ -774,11 +774,7 @@ export default function BirthcareApplications() {
                     <Button
                       type="button"
                       onClick={handleApplicationAction}
-                      className={`flex-1 py-3 px-6 font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ${
-                        actionType === "approve"
-                          ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
-                          : "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white"
-                      } ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
+                      className={`flex-1 py-3 px-6 font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
                       disabled={
                         isSubmitting ||
                         (actionType === "reject" && !rejectionReason.trim())
@@ -817,7 +813,7 @@ export default function BirthcareApplications() {
                     <Button
                       type="button"
                       onClick={closeActionModal}
-                      className="flex-1 py-3 px-6 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 font-semibold rounded-lg shadow-lg hover:from-gray-300 hover:to-gray-400 transform hover:scale-105 transition-all duration-300"
+                      className="flex-1 py-3 px-6 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
                       disabled={isSubmitting}
                     >
                       Cancel
@@ -1176,11 +1172,7 @@ export default function BirthcareApplications() {
                             setSelectedApplication(reviewApplication);
                             await handleApplicationAction();
                           }}
-                          className={`flex-1 py-3 px-6 font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ${
-                            actionType === "approve"
-                              ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
-                              : "bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white"
-                          } ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
+                          className={`flex-1 py-3 px-6 font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
                           disabled={
                             isSubmitting ||
                             (actionType === "reject" && !rejectionReason.trim())
@@ -1222,7 +1214,7 @@ export default function BirthcareApplications() {
                             setRejectionReason("");
                             setActionMessage({ type: "", text: "" });
                           }}
-                          className="flex-1 py-3 px-6 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 font-semibold rounded-lg shadow-lg hover:from-gray-300 hover:to-gray-400 transform hover:scale-105 transition-all duration-300"
+                          className="flex-1 py-3 px-6 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
                           disabled={isSubmitting}
                         >
                           Cancel
