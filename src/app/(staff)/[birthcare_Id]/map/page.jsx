@@ -771,8 +771,8 @@ const MapPage = () => {
                           
                           if (response.data && response.data.length > 0) {
                             console.log('📋 Found', response.data.length, 'patient(s)');
-                            // Restrict to selected facility only
-                            const patientInFacility = response.data.find(p => p.facility_id === selectedFacility?.id);
+                            // Restrict to selected facility only (coerce IDs to same type)
+                            const patientInFacility = (Array.isArray(response.data) ? response.data : []).find(p => String(p.facility_id ?? p.birthcare_id) === String(selectedFacility?.id));
                             if (!patientInFacility) {
                               console.warn('⚠️ Patient not registered in this facility');
                               setPatientNotFoundMessage(`Patient doesn't exist in ${selectedFacility?.name || 'this facility'}.`);
@@ -781,8 +781,9 @@ const MapPage = () => {
                             }
                             
                             console.log('🔍 Step 2: Fetching full patient details and consultations for ID:', patientInFacility.id);
+                            const patientFacilityId = patientInFacility.facility_id ?? selectedFacility?.id;
                             const [patientDetailsResponse, consultationResponse] = await Promise.all([
-                              axios.get(`/api/birthcare/${birthcare_id}/patients/${patientInFacility.id}`),
+                              axios.get(`/api/birthcare/${patientFacilityId}/patients/${patientInFacility.id}`),
                               axios.get(`/api/patients/${patientInFacility.id}/consultations`)
                             ]);
                             console.log('✅ Step 2 complete: Patient details:', patientDetailsResponse.data);
