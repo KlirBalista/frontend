@@ -958,36 +958,36 @@ export default function BirthcareApplications() {
               onClick={closeReviewModal}
             ></div>
             <div className="relative bg-white rounded-xl shadow-2xl transform transition-all max-w-6xl w-full max-h-[95vh] overflow-hidden">
-              <div className="p-8">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-8 pb-6 border-b border-gray-200">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      {reviewApplication.name}
-                    </h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <span className="flex items-center">
-                        <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v6h6v-6M8 11V8a2 2 0 012-2h4a2 2 0 012 2v3M8 19h8" />
-                        </svg>
-                        Submitted {formatDate(reviewApplication.created_at)}
-                      </span>
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(reviewApplication.status)}`}>
-                        {reviewApplication.status.charAt(0).toUpperCase() + reviewApplication.status.slice(1)}
-                      </span>
-                    </div>
+              {/* Header */}
+              <div className="px-6 py-4 bg-[#A41F39] flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">
+                    {reviewApplication.name}
+                  </h3>
+                  <div className="flex items-center space-x-3 text-sm">
+                    <span className="flex items-center text-white/90">
+                      <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v6h6v-6M8 11V8a2 2 0 012-2h4a2 2 0 012 2v3M8 19h8" />
+                      </svg>
+                      Submitted {formatDate(reviewApplication.created_at)}
+                    </span>
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(reviewApplication.status)}`}>
+                      {reviewApplication.status.charAt(0).toUpperCase() + reviewApplication.status.slice(1)}
+                    </span>
                   </div>
-                  <button
-                    type="button"
-                    className="p-2 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-colors"
-                    onClick={closeReviewModal}
-                  >
-                    <span className="sr-only">Close</span>
-                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
                 </div>
+                <button
+                  type="button"
+                  className="p-2 rounded-lg text-white hover:bg-white/20 transition-colors"
+                  onClick={closeReviewModal}
+                >
+                  <span className="sr-only">Close</span>
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-8">
 
                 <div className="overflow-y-auto max-h-[calc(95vh-200px)]">
                   {/* Application Details Grid */}
