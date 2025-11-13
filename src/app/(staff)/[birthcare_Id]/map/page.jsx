@@ -61,7 +61,7 @@ const createFacilityPinIcon = (facility) => {
     return LeafletLib.divIcon({
       className: 'custom-facility-pin',
       html: `
-        <div style="position: relative; width: 35px; height: 45px; display: flex; align-items: center; justify-content: center;">
+        <div class="facility-pin" data-facility-id="${facility.id}" style="position: relative; width: 35px; height: 45px; display: flex; align-items: center; justify-content: center;">
           <!-- Pin shadow -->
           <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 12px; height: 4px; background: ${shadowColor}; border-radius: 50%; blur: 2px;"></div>
           <!-- Pin body -->
@@ -436,17 +436,13 @@ const MapPage = () => {
                             duration: 1.5
                           });
                           
-                          // Bounce the marker
-                          const marker = markerRefs.current[facility.id];
-                          if (marker) {
-                            // Use Leaflet's bounceAnimation if available, otherwise use CSS
-                            const element = marker._icon;
-                            if (element) {
-                              element.classList.add('bounce-animation');
-                              setTimeout(() => {
-                                element.classList.remove('bounce-animation');
-                              }, 1000);
-                            }
+                          // Bounce the marker (target inner facility pin element)
+                          const pinEl = document.querySelector(`.facility-pin[data-facility-id="${facility.id}"]`);
+                          if (pinEl) {
+                            pinEl.classList.add('bounce-animation');
+                            setTimeout(() => {
+                              pinEl.classList.remove('bounce-animation');
+                            }, 1000);
                           }
                           
                           setSelectedFacility(facility);
