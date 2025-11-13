@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/auth';
 import axios from '@/lib/axios';
@@ -150,7 +150,7 @@ const MapPage = () => {
   const [facilitySearchQuery, setFacilitySearchQuery] = useState('');
   const [mapInstance, setMapInstance] = useState(null);
   const [showFacilityNotFoundDialog, setShowFacilityNotFoundDialog] = useState(false);
-  const [markerRefs, setMarkerRefs] = useState({});
+  const markerRefs = useRef({});
   
   // Davao City center coordinates for initial map view
   const davaoCityCoords = {
@@ -437,7 +437,7 @@ const MapPage = () => {
                           });
                           
                           // Bounce the marker
-                          const marker = markerRefs[facility.id];
+                          const marker = markerRefs.current[facility.id];
                           if (marker) {
                             // Use Leaflet's bounceAnimation if available, otherwise use CSS
                             const element = marker._icon;
@@ -519,7 +519,7 @@ const MapPage = () => {
                         icon={customIcon}
                         ref={(ref) => {
                           if (ref) {
-                            setMarkerRefs(prev => ({ ...prev, [facility.id]: ref }));
+                            markerRefs.current[facility.id] = ref;
                           }
                         }}
                         eventHandlers={{
