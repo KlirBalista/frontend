@@ -410,7 +410,7 @@ const MapPage = () => {
             </div>
 
             {/* Controls Panel */}
-            <div className={`${styles.controlsSection} flex items-center gap-3 justify-between`}>
+            <div className={`${styles.controlsSection} flex items-center gap-3 justify-between mt-6`}>
               {/* Facility Search Bar */}
               <div className="flex-1 max-w-md">
                 <div className="relative">
