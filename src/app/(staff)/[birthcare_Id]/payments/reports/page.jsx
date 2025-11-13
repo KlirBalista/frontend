@@ -118,11 +118,6 @@ export default function PaymentsReportsPage() {
       setLoading(true);
       setError(null);
       
-      console.log('=== FETCHING PAYMENT ANALYTICS ===');
-      console.log('birthcare_Id:', birthcare_Id);
-      console.log('dateRange:', dateRange);
-      console.log('selectedPeriod:', selectedPeriod);
-      
       // Fetch multiple data sources in parallel
       const [dashboardResponse, reportsResponse, analyticsResponse] = await Promise.allSettled([
         axios.get(`/api/birthcare/${birthcare_Id}/payments/dashboard`),
@@ -140,24 +135,15 @@ export default function PaymentsReportsPage() {
         })
       ]);
 
-      console.log('=== API RESPONSES ===');
-      console.log('Dashboard Response:', dashboardResponse);
-      console.log('Reports Response:', reportsResponse);
-      console.log('Analytics Response:', analyticsResponse);
-
       // Handle dashboard data
       if (dashboardResponse.status === 'fulfilled' && dashboardResponse.value.data.success) {
         const apiData = dashboardResponse.value.data.data || {};
-        console.log('✅ Dashboard Data Received:', apiData);
-        console.log('Summary:', apiData.summary);
-        console.log('Monthly Revenue:', apiData.monthly_revenue);
-        console.log('Recent Bills:', apiData.recent_bills);
+        console.log('Real monthly revenue data from API:', apiData.monthly_revenue);
         setDashboardData(apiData);
       } else {
-        console.error('❌ Dashboard API failed:', {
+        console.warn('Dashboard API failed, using empty data', {
           status: dashboardResponse.status,
-          error: dashboardResponse.reason || dashboardResponse.value?.data,
-          response: dashboardResponse.value
+          error: dashboardResponse.reason || dashboardResponse.value?.data
         });
         setDashboardData({
           summary: {
@@ -176,15 +162,9 @@ export default function PaymentsReportsPage() {
 
       // Handle reports data
       if (reportsResponse.status === 'fulfilled' && reportsResponse.value.data.success) {
-        const reportsData = reportsResponse.value.data.data || {};
-        console.log('✅ Reports Data Received:', reportsData);
-        setReportsData(reportsData);
+        setReportsData(reportsResponse.value.data.data || {});
       } else {
-        console.error('❌ Reports API failed:', {
-          status: reportsResponse.status,
-          error: reportsResponse.reason || reportsResponse.value?.data,
-          response: reportsResponse.value
-        });
+        console.warn('Reports API failed, using empty data');
         setReportsData({
           payment_methods: {},
           daily_collections: [],
@@ -194,16 +174,9 @@ export default function PaymentsReportsPage() {
 
       // Handle analytics data
       if (analyticsResponse.status === 'fulfilled' && analyticsResponse.value.data.success) {
-        const analyticsData = analyticsResponse.value.data.data || {};
-        console.log('✅ Analytics Data Received:', analyticsData);
-        setAnalyticsData(analyticsData);
+        setAnalyticsData(analyticsResponse.value.data.data || {});
       } else {
-        console.error('❌ Analytics API failed:', {
-          status: analyticsResponse.status,
-          error: analyticsResponse.reason || analyticsResponse.value?.data,
-          response: analyticsResponse.value
-        });
-        console.log('Calculating analytics from dashboard data...');
+        console.warn('Analytics API failed, calculating from available data');
         setAnalyticsData(calculateRealAnalyticsData(dashboardData));
       }
 
