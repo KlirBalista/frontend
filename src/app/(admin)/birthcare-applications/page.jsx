@@ -384,7 +384,7 @@ export default function BirthcareApplications() {
                   placeholder="Search by facility name or owner"
                   value={searchInput}
                   onChange={handleFilterChange}
-                  className="block w-full rounded-lg border-0 focus:ring-0 focus:border-transparent shadow-sm"
+                  className="block w-full rounded-lg border-0 focus:ring-0 focus:border-transparent"
                 />
               </div>
             </div>
@@ -413,7 +413,7 @@ export default function BirthcareApplications() {
             <div className="sm:col-span-1 flex items-end">
               <Button
                 type="button"
-                className="w-full bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+                className="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                 onClick={() => {
                   setSearchInput("");
                   setDebouncedSearch("");
@@ -1191,7 +1191,7 @@ export default function BirthcareApplications() {
                             setSelectedApplication(reviewApplication);
                             await handleApplicationAction();
                           }}
-                          className={`flex-1 py-3 px-6 font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
+                          className={`flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl ${isSubmitting || (actionType === "reject" && !rejectionReason.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
                           disabled={
                             isSubmitting ||
                             (actionType === "reject" && !rejectionReason.trim())
@@ -1233,7 +1233,7 @@ export default function BirthcareApplications() {
                             setRejectionReason("");
                             setActionMessage({ type: "", text: "" });
                           }}
-                          className="flex-1 py-3 px-6 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#923649] text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
+                          className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                           disabled={isSubmitting}
                         >
                           Cancel
