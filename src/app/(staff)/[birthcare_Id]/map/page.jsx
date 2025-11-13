@@ -29,13 +29,11 @@ const pinStyles = `
   
   @keyframes bounceMarker {
     0%, 100% { transform: translateY(0); }
-    25% { transform: translateY(-20px); }
-    50% { transform: translateY(-10px); }
-    75% { transform: translateY(-15px); }
+    50% { transform: translateY(-25px); }
   }
   
   .bounce-animation {
-    animation: bounceMarker 0.6s ease-in-out 2;
+    animation: bounceMarker 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 5;
   }
 `;
 
@@ -446,7 +444,7 @@ const MapPage = () => {
                               pinEl.classList.add('bounce-animation');
                               setTimeout(() => {
                                 pinEl.classList.remove('bounce-animation');
-                              }, 1000);
+                              }, 2500);
                             }
                           }, 300);
                           
