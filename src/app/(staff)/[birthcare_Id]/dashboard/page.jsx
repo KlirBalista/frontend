@@ -301,16 +301,16 @@ const Dashboard = () => {
 const StatCard = ({ title, value, icon, color }) => {
   const palette = {
     pink1: {
-      bg: 'bg-[#FDB3C2]/10', border: 'border-[#FDB3C2]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#FDB3C2]/20', icon: 'text-[#BF3853]'
+      iconBg: 'bg-green-100', icon: 'text-green-600'
     },
     pink2: {
-      bg: 'bg-[#F891A5]/10', border: 'border-[#F891A5]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#F891A5]/20', icon: 'text-[#BF3853]'
+      iconBg: 'bg-green-100', icon: 'text-green-600'
     },
     pink3: {
-      bg: 'bg-[#E56D85]/10', border: 'border-[#E56D85]/30', title: 'text-[#BF3853]', value: 'text-[#A41F39]', iconBg: 'bg-[#E56D85]/20', icon: 'text-[#BF3853]'
+      iconBg: 'bg-yellow-100', icon: 'text-yellow-600'
     },
     pink4: {
-      bg: 'bg-[#BF3853]/10', border: 'border-[#BF3853]/30', title: 'text-[#A41F39]', value: 'text-[#A41F39]', iconBg: 'bg-[#BF3853]/20', icon: 'text-[#A41F39]'
+      iconBg: 'bg-blue-100', icon: 'text-blue-600'
     }
   };
 
@@ -326,17 +326,17 @@ const StatCard = ({ title, value, icon, color }) => {
   };
 
   return (
-    <div className={`rounded-xl border border-gray-200 ${c.bg} shadow-sm hover:shadow-md transition-all duration-300 p-6 flex flex-col justify-between h-36`}>
-      <div className="flex items-start justify-between">
-        <p className={`text-sm font-medium ${c.title}`}>{title}</p>
-        <div className={`rounded-xl ${c.iconBg} p-2.5`}>
-          <svg className={`h-5 w-5 ${c.icon}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-600 font-medium mb-2">{title}</p>
+          <p className="text-2xl font-bold text-gray-900">{value}</p>
+        </div>
+        <div className={`p-3 ${c.iconBg} rounded-full`}>
+          <svg className={`h-6 w-6 ${c.icon}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {iconComponents[icon] || iconComponents.users}
           </svg>
         </div>
-      </div>
-      <div>
-        <p className={`text-3xl font-bold ${c.value}`}>{value}</p>
       </div>
     </div>
   );
