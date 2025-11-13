@@ -548,7 +548,7 @@ export default function BirthcareApplications() {
                   ) : (
                     <button
                       onClick={() => openReviewModal(application)}
-                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                     >
                       <svg
                         className="h-5 w-5 mr-2"
