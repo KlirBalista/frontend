@@ -432,18 +432,23 @@ const MapPage = () => {
                         
                         if (facility && mapInstance) {
                           // Fly to facility
-                          mapInstance.flyTo([facility.lat, facility.lng], 16, {
-                            duration: 1.5
-                          });
+                          mapInstance.flyTo([facility.lat, facility.lng], 16, { duration: 1.5 });
                           
-                          // Bounce the marker (target inner facility pin element)
-                          const pinEl = document.querySelector(`.facility-pin[data-facility-id="${facility.id}"]`);
-                          if (pinEl) {
-                            pinEl.classList.add('bounce-animation');
-                            setTimeout(() => {
+                          // After the flyTo animation begins, wait a tick to ensure the marker DOM exists
+                          setTimeout(() => {
+                            const marker = markerRefs.current[facility.id];
+                            const host = marker && marker._icon ? marker._icon : null;
+                            const pinEl = host ? host.querySelector('.facility-pin') : null;
+                            if (pinEl) {
+                              // Restart animation if class was left on
                               pinEl.classList.remove('bounce-animation');
-                            }, 1000);
-                          }
+                              void pinEl.offsetWidth; // force reflow
+                              pinEl.classList.add('bounce-animation');
+                              setTimeout(() => {
+                                pinEl.classList.remove('bounce-animation');
+                              }, 1000);
+                            }
+                          }, 300);
                           
                           setSelectedFacility(facility);
                           setFacilitySearchQuery('');
