@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "@/lib/axios";
 import Button from "@/components/Button";
 import LocationPicker from "@/components/LocationPicker";
-import CustomDialog from "@/components/CustomDialog";
 import Link from "next/link";
 import {
   ChartBarIcon,
@@ -51,10 +50,6 @@ export default function FacilityDashboard() {
   const [uploadError, setUploadError] = useState(null);
   const [isResubmitting, setIsResubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('summary');
-  const [showStatusDialog, setShowStatusDialog] = useState(false);
-  const [statusChangeType, setStatusChangeType] = useState(null); // 'approved' or 'rejected'
-  const [rejectionReason, setRejectionReason] = useState('');
-  const previousStatusRef = useRef(null);
   const tabs = [
     { key: 'summary', label: 'Summary' },
     { key: 'facility', label: 'Facility' },
@@ -144,44 +139,6 @@ export default function FacilityDashboard() {
 
     fetchData();
   }, []);
-
-  // Polling effect to check for status changes
-  useEffect(() => {
-    if (!approvalStatus) return;
-
-    // Store initial status
-    if (previousStatusRef.current === null) {
-      previousStatusRef.current = approvalStatus.status;
-      return;
-    }
-
-    // Poll for status changes every 5 seconds
-    const pollInterval = setInterval(async () => {
-      try {
-        const approvalRes = await axios.get("/api/owner/birthcare/approval-status");
-        const newStatus = approvalRes.data.status;
-
-        // Check if status changed from pending to approved/rejected
-        if (previousStatusRef.current === 'pending' && newStatus !== 'pending') {
-          console.log('🎉 Status changed from pending to', newStatus);
-          setStatusChangeType(newStatus);
-          setRejectionReason(approvalRes.data.rejection_reason || '');
-          setShowStatusDialog(true);
-          setApprovalStatus(approvalRes.data);
-          
-          // Refresh birthcare data
-          const birthcareRes = await axios.get("/api/owner/birthcare");
-          setBirthcare(birthcareRes.data);
-        }
-
-        previousStatusRef.current = newStatus;
-      } catch (error) {
-        console.error('Error polling status:', error);
-      }
-    }, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(pollInterval);
-  }, [approvalStatus]);
 
   const handleEditName = () => {
     setEditName(birthcare.name);
@@ -1153,28 +1110,6 @@ export default function FacilityDashboard() {
           </div>
         )}
       </div>
-
-      {/* Status Change Notification Dialog */}
-      <CustomDialog
-        isOpen={showStatusDialog}
-        onClose={() => setShowStatusDialog(false)}
-        type={statusChangeType === 'approved' ? 'success' : 'error'}
-        title={statusChangeType === 'approved' ? '🎉 Congratulations!' : '❌ Application Rejected'}
-        message={
-          statusChangeType === 'approved'
-            ? 'Your facility application has been approved! You can now access all features and start managing your facility.'
-            : rejectionReason
-              ? `Your facility application has been rejected. Reason: ${rejectionReason}`
-              : 'Your facility application has been rejected. Please review the requirements and resubmit.'
-        }
-        confirmText={statusChangeType === 'approved' ? 'Get Started!' : 'Update & Resubmit'}
-        onConfirm={() => {
-          setShowStatusDialog(false);
-          if (statusChangeType === 'rejected') {
-            window.location.href = '/register-birthcare';
-          }
-        }}
-      />
     </div>
   );
 }
