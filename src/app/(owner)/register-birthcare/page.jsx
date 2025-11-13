@@ -11,6 +11,7 @@ import DocumentUpload from "../../../components/DocumentUpload";
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
 import InputError from "../../../components/InputError";
+import CustomDialog from "../../../components/CustomDialog";
 
 export default function RegisterBirthcare() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function RegisterBirthcare() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   // Form setup with react-hook-form
   const {
@@ -137,14 +138,7 @@ export default function RegisterBirthcare() {
         }
       );
 
-      setSuccessMessage(
-        "Your birthcare facility has been registered successfully and is pending approval."
-      );
-
-      // Redirect after a delay to allow the user to see the success message
-      setTimeout(() => {
-        router.push("/facility-dashboard");
-      }, 3000);
+      setShowSuccessDialog(true);
     } catch (error) {
       console.error("Registration error:", error);
       if (error.response?.data?.message) {
@@ -348,19 +342,6 @@ export default function RegisterBirthcare() {
         </div>
       )}
 
-      {/* Success message */}
-      {successMessage && (
-        <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-400 rounded-lg p-4 mb-6 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <svg className="h-5 w-5 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-sm text-emerald-700 font-medium">{successMessage}</p>
-          </div>
-        </div>
-      )}
 
       {/* Server error message */}
       {serverError && (
@@ -637,6 +618,16 @@ export default function RegisterBirthcare() {
           </div>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <CustomDialog
+        isOpen={showSuccessDialog}
+        onClose={() => router.push("/facility-dashboard")}
+        title="Registration Successful"
+        message="Your birthcare facility has been registered successfully and is pending approval."
+        type="success"
+        confirmText="OK"
+      />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import AuthCard from "@/app/(auth)/AuthCard.jsx";
 import ApplicationLogo from "@/components/ApplicationLogo.jsx";
 
 export const metadata = {
-  title: "Laravel",
+  title: "BirthCare",
 };
 
 const Layout = ({ children }) => {

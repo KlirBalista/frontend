@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
+import Loading from "@/components/Loading";
 import { useAuth } from "@/hooks/auth";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -27,14 +28,7 @@ const VerifyEmailContent = () => {
   }, [searchParams]);
 
   if (isVerifying) {
-    return (
-      <AuthCard>
-        <div className="mb-4 text-sm text-gray-600 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          Verifying your email address...
-        </div>
-      </AuthCard>
-    );
+    return <Loading />;
   }
 
   return (
@@ -71,14 +65,7 @@ const VerifyEmailContent = () => {
 
 const Page = () => {
   return (
-    <Suspense fallback={
-      <AuthCard>
-        <div className="mb-4 text-sm text-gray-600 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          Loading...
-        </div>
-      </AuthCard>
-    }>
+    <Suspense fallback={<Loading />}>
       <VerifyEmailContent />
     </Suspense>
   );
