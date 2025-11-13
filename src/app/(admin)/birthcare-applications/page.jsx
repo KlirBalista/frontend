@@ -22,6 +22,8 @@ export default function BirthcareApplications() {
     status: "", // Will be set from URL or default to empty
     search: "",
   });
+  const [searchInput, setSearchInput] = useState(""); // Separate state for input
+  const [debouncedSearch, setDebouncedSearch] = useState(""); // Debounced search value
 
   // Check URL parameters for status filter
   useEffect(() => {
@@ -34,6 +36,17 @@ export default function BirthcareApplications() {
       setFilters(prev => ({ ...prev, status: 'pending' }));
     }
   }, []);
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setFilters(prev => ({ ...prev, search: searchInput }));
+      setCurrentPage(1); // Reset to first page on search
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   // State for application actions
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -86,8 +99,12 @@ export default function BirthcareApplications() {
   // Handle filter change
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-    setCurrentPage(1); // Reset to first page on filter change
+    if (name === "search") {
+      setSearchInput(value); // Update input state immediately
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+      setCurrentPage(1); // Reset to first page on filter change
+    }
   };
 
   // Handle pagination
@@ -365,7 +382,7 @@ export default function BirthcareApplications() {
                   name="search"
                   id="search"
                   placeholder="Search by facility name or owner"
-                  value={filters.search}
+                  value={searchInput}
                   onChange={handleFilterChange}
                   className="block w-full rounded-lg border-gray-300 focus:ring-[#BF3853] focus:border-[#BF3853] shadow-sm"
                 />
@@ -398,6 +415,8 @@ export default function BirthcareApplications() {
                 type="button"
                 className="w-full bg-gradient-to-r from-[#FDB3C2] to-[#F891A5] hover:from-[#BF3853] hover:to-[#A41F39] text-white font-semibold py-3 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
                 onClick={() => {
+                  setSearchInput("");
+                  setDebouncedSearch("");
                   setFilters({ status: "pending", search: "" });
                   setCurrentPage(1);
                 }}
