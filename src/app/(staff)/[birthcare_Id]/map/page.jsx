@@ -26,6 +26,17 @@ const pinStyles = `
     50% { transform: translateX(-50%) scale(1.3); opacity: 0.3; }
     100% { transform: translateX(-50%) scale(1.6); opacity: 0; }
   }
+  
+  @keyframes bounceMarker {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    50% { transform: translateY(-10px); }
+    75% { transform: translateY(-15px); }
+  }
+  
+  .bounce-animation {
+    animation: bounceMarker 0.6s ease-in-out 2;
+  }
 `;
 
 // Dynamically import map components to avoid SSR issues
@@ -139,6 +150,7 @@ const MapPage = () => {
   const [facilitySearchQuery, setFacilitySearchQuery] = useState('');
   const [mapInstance, setMapInstance] = useState(null);
   const [showFacilityNotFoundDialog, setShowFacilityNotFoundDialog] = useState(false);
+  const [markerRefs, setMarkerRefs] = useState({});
   
   // Davao City center coordinates for initial map view
   const davaoCityCoords = {
@@ -419,9 +431,24 @@ const MapPage = () => {
                         );
                         
                         if (facility && mapInstance) {
+                          // Fly to facility
                           mapInstance.flyTo([facility.lat, facility.lng], 16, {
                             duration: 1.5
                           });
+                          
+                          // Bounce the marker
+                          const marker = markerRefs[facility.id];
+                          if (marker) {
+                            // Use Leaflet's bounceAnimation if available, otherwise use CSS
+                            const element = marker._icon;
+                            if (element) {
+                              element.classList.add('bounce-animation');
+                              setTimeout(() => {
+                                element.classList.remove('bounce-animation');
+                              }, 1000);
+                            }
+                          }
+                          
                           setSelectedFacility(facility);
                           setFacilitySearchQuery('');
                         } else {
@@ -490,6 +517,11 @@ const MapPage = () => {
                         key={facility.id} 
                         position={[facility.lat, facility.lng]}
                         icon={customIcon}
+                        ref={(ref) => {
+                          if (ref) {
+                            setMarkerRefs(prev => ({ ...prev, [facility.id]: ref }));
+                          }
+                        }}
                         eventHandlers={{
                           click: () => setSelectedFacility(facility)
                         }}
