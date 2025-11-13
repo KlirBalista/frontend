@@ -368,8 +368,8 @@ export default function BirthcareApplications() {
               Search & Filter Applications
             </h2>
           </div>
-          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-3">
+          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-3">
+            <div className="sm:col-span-1">
               <label
                 htmlFor="search"
                 className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider"
@@ -384,11 +384,11 @@ export default function BirthcareApplications() {
                   placeholder="Search by facility name or owner"
                   value={searchInput}
                   onChange={handleFilterChange}
-                  className="block w-full rounded-lg border-gray-300 focus:ring-[#BF3853] focus:border-[#BF3853] shadow-sm"
+                  className="block w-full rounded-lg border-0 focus:ring-0 focus:border-transparent shadow-sm"
                 />
               </div>
             </div>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-1">
               <label
                 htmlFor="status"
                 className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider"
@@ -413,7 +413,7 @@ export default function BirthcareApplications() {
             <div className="sm:col-span-1 flex items-end">
               <Button
                 type="button"
-                className="w-full bg-gradient-to-r from-[#FDB3C2] to-[#F891A5] hover:from-[#BF3853] hover:to-[#A41F39] text-white font-semibold py-3 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                 onClick={() => {
                   setSearchInput("");
                   setDebouncedSearch("");
