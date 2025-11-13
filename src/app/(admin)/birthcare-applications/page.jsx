@@ -345,7 +345,7 @@ export default function BirthcareApplications() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-lg border-0 p-6 mb-8 transform hover:shadow-xl transition-all duration-300">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8 transform hover:shadow-xl transition-all duration-300">
           <div className="px-6 py-4 bg-gradient-to-r from-[#BF3853] to-[#A41F39] -mx-6 -mt-6 mb-6 rounded-t-xl">
             <h2 className="text-xl font-bold text-white">
               Search & Filter Applications
@@ -411,7 +411,7 @@ export default function BirthcareApplications() {
         {/* Applications Cards */}
         <div className="space-y-6">
           {data.applications.map((application) => (
-            <div key={application.id} className="bg-white rounded-xl shadow-lg border-0 p-6 transform hover:scale-[1.02] transition-all duration-300 hover:shadow-xl">
+            <div key={application.id} className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 transform hover:scale-[1.02] transition-all duration-300 hover:shadow-xl">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 {/* Main Application Info */}
                 <div className="flex-1">
