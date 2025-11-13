@@ -1076,18 +1076,18 @@ export default function BirthcareApplications() {
                       <div className="flex justify-center space-x-4">
                         <button
                           onClick={() => handleReviewDecision("approve")}
-                          className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                         >
-                          <svg className="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                           </svg>
                           Approve Application
                         </button>
                         <button
                           onClick={() => handleReviewDecision("reject")}
-                          className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white font-semibold rounded-lg shadow-lg hover:from-[#A41F39] hover:to-[#923649] transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
                         >
-                          <svg className="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                           Reject Application
