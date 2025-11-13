@@ -136,6 +136,9 @@ const MapPage = () => {
   const [patientNotFoundMessage, setPatientNotFoundMessage] = useState('');
   const [showPatientDetailsModal, setShowPatientDetailsModal] = useState(false);
   const [selectedPatientDetails, setSelectedPatientDetails] = useState(null);
+  const [facilitySearchQuery, setFacilitySearchQuery] = useState('');
+  const [mapInstance, setMapInstance] = useState(null);
+  const [showFacilityNotFoundDialog, setShowFacilityNotFoundDialog] = useState(false);
   
   // Davao City center coordinates for initial map view
   const davaoCityCoords = {
@@ -397,20 +400,58 @@ const MapPage = () => {
             </div>
 
             {/* Controls Panel */}
-            <div className={`${styles.controlsSection} flex items-center gap-2 justify-end`}>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-                <span className="text-xs text-gray-600">Active Facilities ({facilities.length})</span>
+            <div className={`${styles.controlsSection} flex items-center gap-3 justify-between`}>
+              {/* Facility Search Bar */}
+              <div className="flex-1 max-w-md">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search facility by name..."
+                    value={facilitySearchQuery}
+                    onChange={(e) => setFacilitySearchQuery(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        const query = facilitySearchQuery.trim().toLowerCase();
+                        if (!query) return;
+                        
+                        const facility = facilities.find(f => 
+                          f.name.toLowerCase().includes(query)
+                        );
+                        
+                        if (facility && mapInstance) {
+                          mapInstance.flyTo([facility.lat, facility.lng], 16, {
+                            duration: 1.5
+                          });
+                          setSelectedFacility(facility);
+                          setFacilitySearchQuery('');
+                        } else {
+                          setShowFacilityNotFoundDialog(true);
+                        }
+                      }
+                    }}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm"
+                  />
+                  <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
               </div>
-              <button
-                onClick={fetchRegisteredFacilities}
-                className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span className="text-xs">Refresh</span>
-              </button>
+              
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Active Facilities ({facilities.length})</span>
+                </div>
+                <button
+                  onClick={fetchRegisteredFacilities}
+                  className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span className="text-xs">Refresh</span>
+                </button>
+              </div>
             </div>
 
             {/* Leaflet Map Container */}
@@ -433,6 +474,8 @@ const MapPage = () => {
                   center={[davaoCityCoords.lat, davaoCityCoords.lng]}
                   zoom={davaoCityCoords.zoom}
                   className={styles.leafletContainer}
+                  whenCreated={setMapInstance}
+                  ref={(map) => map && setMapInstance(map)}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -1234,6 +1277,81 @@ const MapPage = () => {
                 type="button"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Facility Not Found Dialog */}
+      {showFacilityNotFoundDialog && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            padding: '16px'
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              width: '100%',
+              maxWidth: '400px',
+              margin: '0 16px'
+            }}
+          >
+            <div style={{ padding: '24px 24px 16px 24px', borderBottom: '1px solid #e5e7eb', textAlign: 'center' }}>
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fef3cd',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px'
+                }}>
+                  <svg width="24" height="24" fill="#f59e0b" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: '0 0 8px 0' }}>Facility Doesn't Exist</h3>
+              <p style={{ fontSize: '14px', color: '#6b7280', margin: 0, lineHeight: '1.5' }}>
+                The facility you searched for was not found on the map.
+              </p>
+            </div>
+            <div style={{ padding: '16px 24px 24px 24px', display: 'flex', justifyContent: 'center' }}>
+              <button
+                onClick={() => {
+                  setShowFacilityNotFoundDialog(false);
+                  setFacilitySearchQuery('');
+                }}
+                style={{
+                  padding: '8px 24px',
+                  backgroundColor: '#ec4899',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  minWidth: '80px'
+                }}
+                type="button"
+              >
+                OK
               </button>
             </div>
           </div>
