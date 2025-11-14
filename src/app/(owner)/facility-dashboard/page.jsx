@@ -330,13 +330,16 @@ export default function FacilityDashboard() {
 
           {/* Hero Section */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            {/* Compact Header with exact color */}
-            <div className="bg-[#A41F39] px-6 py-5 text-center">
-              <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-lg">
-                <BuildingOffice2Icon className="h-6 w-6 text-white" />
+            {/* More compact header with enhanced icon */}
+            <div className="bg-[#A41F39] px-6 py-4 text-center">
+              <div className="relative mx-auto mb-2 h-10 w-10 rounded-full bg-gradient-to-br from-white/30 via-white/10 to-transparent backdrop-blur-lg flex items-center justify-center shadow-lg">
+                <BuildingOffice2Icon className="h-5 w-5 text-white" />
+                <div className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-rose-500 flex items-center justify-center shadow-md">
+                  <SparklesIcon className="h-3 w-3 text-white" />
+                </div>
               </div>
-              <h1 className="text-2xl font-bold text-white">Get started with your facility</h1>
-              <p className="text-sm text-white/90 mt-1">Complete your registration in just 2 minutes</p>
+              <h1 className="text-xl font-semibold tracking-wide text-white">Get started with your facility</h1>
+              <p className="text-xs text-white/90 mt-1">Complete your registration in just 2 minutes</p>
             </div>
 
             {/* CTA Section */}
@@ -358,93 +361,7 @@ export default function FacilityDashboard() {
                 </p>
               </div>
 
-              {/* Features Grid */}
-              <div className="max-w-5xl mx-auto">
-                <div className="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 rounded-xl border border-emerald-200 p-6 shadow-md">
-                  <div className="flex items-center gap-2 mb-5">
-                    <div className="p-2 bg-emerald-500 rounded-lg shadow-sm">
-                      <SparklesIcon className="h-5 w-5 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-emerald-900">What you'll get</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-300 border border-emerald-100">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2.5 bg-emerald-100 rounded-lg flex-shrink-0">
-                          <UserGroupIcon className="h-6 w-6 text-emerald-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 text-base mb-1.5">Staff & Role Management</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">Add staff members, assign roles, and manage permissions with ease. Control access levels and track staff activities.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-300 border border-blue-100">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2.5 bg-blue-100 rounded-lg flex-shrink-0">
-                          <CalendarIcon className="h-6 w-6 text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 text-base mb-1.5">Appointment Management</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">Efficiently schedule, track, and manage patient appointments. Automated reminders and calendar integration included.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-100">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2.5 bg-purple-100 rounded-lg flex-shrink-0">
-                          <ChartBarIcon className="h-6 w-6 text-purple-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 text-base mb-1.5">Analytics & Reporting</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">Gain insights into your facility's performance with comprehensive analytics, charts, and detailed reports on births, admissions, and more.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-300 border border-rose-100">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2.5 bg-rose-100 rounded-lg flex-shrink-0">
-                          <StarIcon className="h-6 w-6 text-rose-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 text-base mb-1.5">Public Visibility</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">Showcase your services to potential clients. Make your facility visible on the public map for patients seeking care in your area.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Additional Info Section */}
-                  <div className="mt-6 pt-6 border-t border-emerald-200">
-                    <div className="flex items-start gap-3 text-sm text-gray-700">
-                      <div className="p-2 bg-emerald-100 rounded-lg flex-shrink-0">
-                        <CheckCircleIcon className="h-5 w-5 text-emerald-600" />
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-semibold text-emerald-900">Getting started is easy:</p>
-                        <ul className="space-y-1.5 text-gray-600">
-                          <li className="flex items-start gap-2">
-                            <span className="text-emerald-600 font-bold mt-0.5">1.</span>
-                            <span>Fill out your facility information and upload required documents</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <span className="text-emerald-600 font-bold mt-0.5">2.</span>
-                            <span>Wait for admin approval (usually within 24-48 hours)</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <span className="text-emerald-600 font-bold mt-0.5">3.</span>
-                            <span>Start managing your facility with full access to all features</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Features panel intentionally removed for a cleaner, more minimal first-time view */}
             </div>
           </div>
         </div>
