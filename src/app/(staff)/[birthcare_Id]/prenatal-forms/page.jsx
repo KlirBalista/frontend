@@ -437,6 +437,29 @@ const PrenatalFormsPage = () => {
     }
   };
 
+  // Validate that all required fields in the create-form modal are filled
+  const isFormValid = () => {
+    const requiredFields = [
+      'patient_id',
+      'form_date',
+      'gestational_age',
+      'weight',
+      'blood_pressure',
+      'notes',
+      'fetal_heart_rate',
+      'fundal_height',
+      'urine_test',
+      'fetal_position',
+      'edema',
+      'examined_by',
+    ];
+
+    return requiredFields.every((field) => {
+      const value = formData[field];
+      return value !== null && value !== undefined && String(value).trim() !== '';
+    });
+  };
+
   // Filter forms based on search
   const filteredForms = prenatalForms.filter(form => {
     const patientName = form.patient_name || `${form.patient?.first_name || ''} ${form.patient?.last_name || ''}`.trim();
@@ -619,7 +642,7 @@ const PrenatalFormsPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
-                      Gestational Age
+                      Gestational Age *
                     </label>
                     <input
                       type="text"
@@ -627,6 +650,7 @@ const PrenatalFormsPage = () => {
                       value={formData.gestational_age}
                       onChange={handleFormChange}
                       placeholder="e.g., 20 weeks, 3 days"
+                      required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                     />
                   </div>
@@ -638,7 +662,7 @@ const PrenatalFormsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Weight
+                        Weight *
                       </label>
                       <div className="relative">
                         <input
@@ -647,6 +671,7 @@ const PrenatalFormsPage = () => {
                           value={formData.weight}
                           onChange={handleFormChange}
                           placeholder="65"
+                          required
                           className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">kg</span>
@@ -655,7 +680,7 @@ const PrenatalFormsPage = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Blood Pressure
+                        Blood Pressure *
                       </label>
                       <div className="relative">
                         <input
@@ -664,6 +689,7 @@ const PrenatalFormsPage = () => {
                           value={formData.blood_pressure}
                           onChange={handleFormChange}
                           placeholder="120/80"
+                          required
                           className="w-full px-4 py-3 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">mmHg</span>
@@ -675,7 +701,7 @@ const PrenatalFormsPage = () => {
                 {/* Clinical Notes */}
                 <div>
                   <label className="block text-sm font-medium text-gray-900 mb-2">
-                    Clinical Notes & Observations
+                    Clinical Notes & Observations *
                   </label>
                   <textarea
                     name="notes"
@@ -683,6 +709,7 @@ const PrenatalFormsPage = () => {
                     onChange={handleFormChange}
                     rows={4}
                     placeholder="Enter detailed clinical observations, findings, and notes..."
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                   ></textarea>
                 </div>
@@ -694,7 +721,7 @@ const PrenatalFormsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Fetal Heart Rate
+                        Fetal Heart Rate *
                       </label>
                       <div className="relative">
                         <input
@@ -703,6 +730,7 @@ const PrenatalFormsPage = () => {
                           value={formData.fetal_heart_rate || ''}
                           onChange={handleFormChange}
                           placeholder="140"
+                          required
                           className="w-full px-4 py-3 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">bpm</span>
@@ -711,7 +739,7 @@ const PrenatalFormsPage = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Fundal Height
+                        Fundal Height *
                       </label>
                       <div className="relative">
                         <input
@@ -720,6 +748,7 @@ const PrenatalFormsPage = () => {
                           value={formData.fundal_height || ''}
                           onChange={handleFormChange}
                           placeholder="24"
+                          required
                           className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">cm</span>
@@ -730,12 +759,13 @@ const PrenatalFormsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Urine Test Results
+                        Urine Test Results *
                       </label>
                       <select
                         name="urine_test"
                         value={formData.urine_test || ''}
                         onChange={handleFormChange}
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                       >
                         <option value="">-- Select result --</option>
@@ -749,12 +779,13 @@ const PrenatalFormsPage = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Fetal Position
+                        Fetal Position *
                       </label>
                       <select
                         name="fetal_position"
                         value={formData.fetal_position || ''}
                         onChange={handleFormChange}
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                       >
                         <option value="">-- Select position --</option>
@@ -770,12 +801,13 @@ const PrenatalFormsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Edema Assessment
+                        Edema Assessment *
                       </label>
                       <select
                         name="edema"
                         value={formData.edema || ''}
                         onChange={handleFormChange}
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                       >
                         <option value="">-- Select assessment --</option>
@@ -788,7 +820,7 @@ const PrenatalFormsPage = () => {
 
                     <div className="relative staff-dropdown-container">
                       <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Examined By
+                        Examined By *
                       </label>
                       <div className="relative">
                         <input
@@ -800,6 +832,7 @@ const PrenatalFormsPage = () => {
                           }}
                           onFocus={() => setShowStaffDropdown(true)}
                           placeholder="Search midwife/staff..."
+                          required
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
                         />
                         {showStaffDropdown && (
@@ -854,7 +887,7 @@ const PrenatalFormsPage = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || !isFormValid()}
                     className="px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-[#BF3853]/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
                   >
                     {submitting ? (
