@@ -25,68 +25,110 @@ export default function PaymentsReportsPage() {
 
   // Print function that optimizes layout
   const handlePrint = () => {
-    // Add print styles
+    // Add print styles for a cleaner, A4-friendly PDF layout
     const printStyles = `
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+
       @media print {
         /* Hide sidebar and navigation */
         aside, nav, .sidebar, [class*="sidebar"] {
           display: none !important;
         }
-        
-        /* Full width for main content */
-        .lg\\:ml-72 {
-          margin-left: 0 !important;
-        }
-        
-        /* Hide non-essential elements */
+
+        /* Hide interactive controls */
         button, input, select, .no-print {
           display: none !important;
         }
-        
-        /* Optimize page layout */
-        body {
-          margin: 0;
-          padding: 20px;
-          font-size: 12pt;
-        }
-        
-        /* Ensure content fits on page */
+
+        /* Main container full-width */
         .max-w-7xl {
           max-width: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
         }
-        
-        /* Print-friendly colors */
-        .bg-gray-50, .bg-white {
-          background: white !important;
+
+        /* Reset body for printing */
+        body {
+          margin: 0 !important;
+          padding: 0 !important;
+          font-size: 11pt !important;
+          background: #ffffff !important;
         }
-        
-        /* Better table formatting */
+
+        /* Typography adjustments */
+        h1, .text-3xl {
+          font-size: 18pt !important;
+          margin-bottom: 6px !important;
+        }
+        h2, .text-2xl, .text-xl {
+          font-size: 14pt !important;
+          margin-bottom: 4px !important;
+        }
+        h3, .text-lg {
+          font-size: 12pt !important;
+        }
+
+        /* Remove excessive card shadows and colors */
+        .bg-gray-50, .bg-white, [class*="bg-"] {
+          background: #ffffff !important;
+          box-shadow: none !important;
+        }
+        [class*="shadow"] {
+          box-shadow: none !important;
+        }
+
+        /* Use single-column layout for grids so sections stack nicely */
+        .grid {
+          display: block !important;
+        }
+        .grid > * {
+          width: 100% !important;
+        }
+
+        /* Tables */
         table {
           width: 100% !important;
           border-collapse: collapse !important;
+          font-size: 10pt !important;
         }
-        
+        thead {
+          background: #f3f4f6 !important;
+        }
         th, td {
-          border: 1px solid #ddd !important;
-          padding: 8px !important;
+          border: 1px solid #d1d5db !important;
+          padding: 6px 8px !important;
         }
-        
-        /* Page breaks */
+
+        /* Ensure charts don't overflow page */
+        svg {
+          max-height: 300px !important;
+        }
+
+        /* Add some spacing between major sections */
+        section, .mb-8, .mt-8 {
+          page-break-inside: avoid;
+          margin-bottom: 12px !important;
+        }
+
+        /* Manual page break helper */
         .page-break {
           page-break-after: always;
         }
       }
     `;
-    
+
     // Add styles to head
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
     styleSheet.innerText = printStyles;
     document.head.appendChild(styleSheet);
-    
+
     // Trigger print
     window.print();
-    
+
     // Clean up styles after printing
     setTimeout(() => {
       document.head.removeChild(styleSheet);
