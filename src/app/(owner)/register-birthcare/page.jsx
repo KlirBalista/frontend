@@ -245,8 +245,8 @@ export default function RegisterBirthcare() {
   */
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 py-6">
-      <div className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <div className="min-h-screen w-full bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 flex items-center justify-center py-10">
+      <div className="px-4 sm:px-6 lg:px-8 w-full max-w-5xl">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           {/* Header Section */}
           <div className="bg-[#A41F39] px-6 py-6">
