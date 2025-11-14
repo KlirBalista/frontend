@@ -94,7 +94,6 @@ export default function RegisterBirthcare() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setServerError("");
-    setSuccessMessage("");
 
     try {
       // Validate location
