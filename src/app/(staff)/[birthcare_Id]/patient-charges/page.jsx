@@ -106,78 +106,75 @@ export default function PatientChargesPage() {
     return <div>Unauthorized</div>;
   }
 
-  // Fetch admitted patients
+  // Fetch admitted patients + all patients so that search can show both admitted and non-admitted
   const fetchAdmittedPatients = async () => {
     if (!user) return;
-    
+
     try {
-      console.log('Fetching admitted patients from patient charges API...');
-      
-      // Use the correct patient-charges endpoint
-      const response = await axios.get(`/api/birthcare/${birthcare_Id}/patient-charges/admitted-patients`);
-      
-      if (response.data.success && response.data.data) {
-        const admittedPatients = response.data.data;
-        console.log('Successfully fetched', admittedPatients.length, 'admitted patients from patient charges API');
-        setAdmittedPatients(admittedPatients);
-        return;
+      console.log('Fetching admitted patients and all patients for patient charges...');
+
+      // Fetch admitted patients and all patients in parallel
+      const [admittedRes, allPatientsRes] = await Promise.all([
+        axios.get(`/api/birthcare/${birthcare_Id}/patient-charges/admitted-patients`),
+        axios.get(`/api/birthcare/${birthcare_Id}/patients`)
+      ]);
+
+      const admitted = admittedRes.data?.data || [];
+      const allPatients = allPatientsRes.data?.data || allPatientsRes.data || [];
+
+      // Index admitted records by patient_id so we can avoid duplicates
+      const admittedByPatientId = new Map();
+      admitted.forEach(adm => {
+        const pid = adm.patient_id || adm.patient?.id || adm.id;
+        if (!pid) return;
+        if (!admittedByPatientId.has(pid)) {
+          admittedByPatientId.set(pid, adm);
+        }
+      });
+
+      const combined = [];
+
+      // 1) Add admitted patients (with full admission details)
+      combined.push(...admittedByPatientId.values());
+
+      // 2) Add non-admitted patients (from /patients) that are not in the admitted list
+      allPatients.forEach(p => {
+        const pid = p.id;
+        if (!pid) return;
+
+        if (!admittedByPatientId.has(pid)) {
+          combined.push({
+            ...p,
+            // Normalize some fields so the rest of the page can work consistently
+            patient_id: p.id,
+            status: p.status || 'Outpatient',
+            room_number: p.room_number || null,
+            room_price: p.room_price || null,
+          });
+        }
+      });
+
+      if (combined.length === 0) {
+        console.log('No patients found in any endpoint, using sample data');
+        setAdmittedPatients(samplePatients);
+        setError('⚠️ No patients found in system. Showing sample data for demonstration. Please check if there are any actual patients.');
       } else {
-        throw new Error(response.data.message || 'Failed to fetch admitted patients');
+        console.log('Loaded', combined.length, 'patients (admitted + non-admitted) for charges');
+        setAdmittedPatients(combined);
+        setError(null);
       }
-      
     } catch (err) {
-      console.error('Error fetching admitted patients from API:', err);
+      console.error('Error fetching patients for charges page:', err);
       console.error('Error details:', {
         status: err.response?.status,
         statusText: err.response?.statusText,
         data: err.response?.data
       });
-      
-      // If the admission API fails, try alternative endpoints
-      try {
-        console.log('Trying alternative approach: fetching from patient-admission endpoint...');
-        
-        // Try the patient-admission endpoint
-        let alternativeResponse;
-        try {
-          alternativeResponse = await axios.get(`/api/birthcare/${birthcare_Id}/patient-admission`);
-        } catch (admissionErr) {
-          console.log('Patient-admission endpoint failed, trying patients endpoint...');
-          alternativeResponse = await axios.get(`/api/birthcare/${birthcare_Id}/patients`);
-        }
-        
-        const allData = alternativeResponse.data.data || alternativeResponse.data || [];
-        
-        // Filter for patients who can be charged (admitted, in-labor, delivered)
-        const admittedPatients = allData.filter(item => {
-          // Check various possible status fields for chargeable statuses
-          const status = item.status || item.admission_status || '';
-          const lowerStatus = status.toLowerCase();
-          
-          return lowerStatus === 'admitted' || 
-                 lowerStatus === 'active' ||
-                 lowerStatus === 'in-labor' ||
-                 lowerStatus === 'delivered' ||
-                 // Fallback: if no discharge date and has admission date
-                 ((item.discharge_date === null || item.discharge_date === undefined) &&
-                  (item.admission_date !== null && item.admission_date !== undefined))
-        });
-        
-        if (admittedPatients.length > 0) {
-          console.log('Found', admittedPatients.length, 'admitted patients from alternative endpoint');
-          setAdmittedPatients(admittedPatients);
-        } else {
-          console.log('No admitted patients found in any endpoint, using sample data');
-          setAdmittedPatients(samplePatients);
-          setError('⚠️ No currently admitted patients found in system. Showing sample data for demonstration. Please check if there are any actual admitted patients in the admission list.');
-        }
-        
-      } catch (fallbackErr) {
-        console.error('Fallback patient fetch also failed:', fallbackErr);
-        console.log('Using sample patients data for demonstration');
-        setAdmittedPatients(samplePatients);
-        setError('⚠️ Unable to fetch patient data from API. Using sample data for demonstration. Please check your network connection and server status.');
-      }
+
+      // Fallback to sample data
+      console.log('Using sample patients data for demonstration');
+      setAdmittedPatients(samplePatients);
+      setError('⚠️ Unable to fetch patient data from API. Using sample data for demonstration. Please check your network connection and server status.');
     }
   };
 
@@ -544,12 +541,16 @@ export default function PatientChargesPage() {
       // - id: admission id (patient_admissions.id)
       // - patient_id: actual patient id (patients.id)
       // - admission_id: also the admission id
-      const patientId = selectedPatient.patient_id;
-      const admissionId = selectedPatient.admission_id || selectedPatient.id;
+      // For non-admitted (prenatal/outpatient) patients we may only have the patient id.
+      const patientId = getPatientId(selectedPatient);
+
+      // Admission ID may not exist for prenatal / non-admitted patients.
+      let admissionId = selectedPatient.admission_id || selectedPatient.id || null;
 
       const chargeData = {
         patient_id: parseInt(patientId),
-        admission_id: parseInt(admissionId),
+        // If there is no admission, send null so backend can treat this as an outpatient/prenatal charge
+        admission_id: admissionId ? parseInt(admissionId) : null,
         services: servicesPayload
       };
 
