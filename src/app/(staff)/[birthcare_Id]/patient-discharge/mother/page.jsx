@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import axios from "@/lib/axios";
 import { useAuth } from "@/hooks/auth";
-import { CheckCircle, X, ChevronDown, Search, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, Search, Plus, Trash2 } from "lucide-react";
+import CustomDialog from "@/components/CustomDialog";
 import { saveMotherDischargeAsPDF, downloadMotherDischargePDF } from "@/utils/pdfGenerator";
 
 
@@ -586,40 +587,25 @@ const MotherDischargePage = () => {
 
   return (
     <div className="min-h-screen bg-[#F891A5]/20 rounded-2xl py-8 text-gray-900 print:bg-white print:py-0">
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="fixed top-4 right-4 z-50">
-          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg p-4 flex items-center space-x-3 max-w-md">
-            <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-            <div className="flex-1">
-              <p className="text-green-800 font-medium">{successMessage}</p>
-            </div>
-            <button onClick={() => setShowSuccess(false)} className="text-green-400 hover:text-green-600">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Success Dialog */}
+      <CustomDialog
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Success"
+        message={successMessage}
+        type="success"
+        confirmText="OK"
+      />
 
-      {/* Error Message */}
-      {showError && (
-        <div className="fixed top-4 right-4 z-50">
-          <div className="bg-red-50 border border-red-200 rounded-lg shadow-lg p-4 flex items-start space-x-3 max-w-md">
-            <div className="flex-shrink-0 mt-0.5">
-              <div className="h-6 w-6 bg-red-100 rounded-full flex items-center justify-center">
-                <X className="h-4 w-4 text-red-600" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <p className="text-red-800 font-medium">Error</p>
-              <p className="text-red-700 text-sm mt-1 whitespace-pre-line">{errorMessage}</p>
-            </div>
-            <button onClick={() => setShowError(false)} className="text-red-400 hover:text-red-600 flex-shrink-0">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Error Dialog */}
+      <CustomDialog
+        isOpen={showError}
+        onClose={() => setShowError(false)}
+        title="Error"
+        message={errorMessage}
+        type="error"
+        confirmText="Close"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 print:px-0">
         {/* Official Header */}
