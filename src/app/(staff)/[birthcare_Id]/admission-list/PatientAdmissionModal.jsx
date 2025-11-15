@@ -237,6 +237,14 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
       setSubmitting(false);
       return;
     }
+
+    // Require attending midwife and nurse
+    if (!formData.attending_physician || !formData.primary_nurse) {
+      setErrorMessage('Please select both an attending midwife and an attending nurse.');
+      setShowError(true);
+      setSubmitting(false);
+      return;
+    }
     
     try {
       const response = await axios.post(`/api/birthcare/${birthcare_Id}/patient-admissions`, formData);
@@ -487,7 +495,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Attending Midwife
+                      Attending Midwife <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -498,6 +506,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
                       }}
                       onFocus={() => setShowPhysicianDropdown(true)}
                       placeholder="Search midwife..."
+                      required={!formData.attending_physician}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853]"
                     />
                     
@@ -586,7 +595,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
               {/* Primary Nurse */}
               <div className="relative">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Attending Nurse
+                  Attending Nurse <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -597,6 +606,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
                   }}
                   onFocus={() => setShowNurseDropdown(true)}
                   placeholder="Search nurse..."
+                  required={!formData.primary_nurse}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853]"
                 />
                 
@@ -692,7 +702,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting || !formData.room_id || !formData.bed_id}
+                  disabled={submitting || !formData.room_id || !formData.bed_id || !formData.attending_physician || !formData.primary_nurse}
                   className="flex-1 max-w-[200px] px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-[#BF3853] to-[#A41F39] rounded-xl hover:shadow-lg hover:shadow-[#BF3853]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
                 >
                   {submitting ? 'Creating Admission...' : 'Admit Patient'}
