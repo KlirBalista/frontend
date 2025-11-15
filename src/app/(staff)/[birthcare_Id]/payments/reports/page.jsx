@@ -591,7 +591,6 @@ export default function PaymentsReportsPage() {
             {monthlyData.map((data, index) => {
               const currentMonthIndex = new Date().getMonth();
               const isCurrentMonth = index === currentMonthIndex;
-              const percentage = ((data.revenue / maxRevenue) * 100).toFixed(1);
               
               return (
                 <div key={index} className="flex items-center space-x-4">
@@ -607,17 +606,12 @@ export default function PaymentsReportsPage() {
                         style={{ width: `${(data.revenue / maxRevenue) * 100}%` }}
                       >
                         <div className="absolute inset-0 flex items-center justify-start pl-3">
-                          <span className={`text-xs font-medium ${
-                            percentage > 20 ? 'text-white' : 'text-gray-900 ml-2'
-                          }`}>
+                          <span className="text-xs font-medium text-white">
                             ₱{data.revenue.toLocaleString()}
                           </span>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="w-12 text-sm text-gray-900 text-right">
-                    {percentage}%
                   </div>
                 </div>
               );
