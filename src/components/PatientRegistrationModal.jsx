@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   XMarkIcon,
   UserPlusIcon,
@@ -36,6 +36,14 @@ const PatientRegistrationModal = ({
     principal_date_of_birth: '',
     patient_philhealth_number: ''
   });
+
+  // Keep facility name in sync when it loads/changes
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      facility_name: facilityName,
+    }));
+  }, [facilityName]);
   const [errors, setErrors] = useState({});
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
