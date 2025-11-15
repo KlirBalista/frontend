@@ -803,7 +803,7 @@ export default function PaymentsReportsPage() {
                   textAnchor="end"
                   className="text-xs font-medium fill-gray-500"
                 >
-                  {value > 0 ? `₱${Math.round(value / 1000)}k` : '₱0'}
+                  {value > 0 ? `₱${Math.round(value).toLocaleString()}` : '₱0'}
                 </text>
               );
             })}
