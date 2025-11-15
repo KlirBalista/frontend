@@ -352,6 +352,90 @@ export default function PaymentsReportsPage() {
     }));
   };
 
+  // Build CSV content for reports & analytics data
+  const buildReportsCSV = () => {
+    const rows = [];
+
+    const addRow = (cols) => {
+      rows.push(
+        cols
+          .map((col) => {
+            const value = col ?? '';
+            const str = String(value);
+            const escaped = str.replace(/"/g, '""');
+            return `"${escaped}"`;
+          })
+          .join(',')
+      );
+    };
+
+    // Summary section
+    addRow(['Section', 'Metric', 'Value']);
+    addRow(['Summary', 'Total Payments', summary.total_payments || 0]);
+    addRow(['Summary', 'Total Revenue', summary.total_revenue || 0]);
+    addRow(['Summary', 'Total Paid (Profit)', summary.total_paid || 0]);
+    addRow(['Summary', 'Outstanding', summary.total_outstanding || 0]);
+    const totalRevenue = Number(summary.total_revenue || 0);
+    const totalPaid = Number(summary.total_paid || 0);
+    const collectionRate = totalRevenue > 0 ? ((totalPaid / totalRevenue) * 100).toFixed(1) + '%' : '0%';
+    addRow(['Summary', 'Collection Rate', collectionRate]);
+    rows.push('');
+
+    // Monthly revenue
+    addRow(['Monthly Revenue', 'Month', 'Amount (PHP)']);
+    const monthlyDataForCsv = generateMonthlyChart();
+    monthlyDataForCsv.forEach((d) => {
+      addRow(['Monthly Revenue', d.month, d.revenue]);
+    });
+    rows.push('');
+
+    // Revenue trend
+    const growthRateNum = Number(analyticsData.revenue_trends?.growth_rate ?? 0);
+    const growthRateFormatted = `${growthRateNum > 0 ? '+' : ''}${growthRateNum.toFixed(1)}%`;
+    const trendLabelCsv = (analyticsData.revenue_trends?.trend || 'stable') === 'up'
+      ? 'Increasing'
+      : (analyticsData.revenue_trends?.trend || 'stable') === 'down'
+      ? 'Decreasing'
+      : 'Stable';
+    addRow(['Revenue Trend', 'Trend', trendLabelCsv]);
+    addRow(['Revenue Trend', 'Growth vs last month', growthRateFormatted]);
+    rows.push('');
+
+    // Recent payments
+    addRow(['Recent Payments']);
+    addRow(['Payment #', 'Patient', 'Date', 'Amount (PHP)', 'Status']);
+    (dashboardData.recent_bills || []).forEach((bill) => {
+      const patient = bill.patient || {};
+      const patientName = `${patient.first_name || ''} ${patient.last_name || ''}`.trim();
+      const date = bill.bill_date ? new Date(bill.bill_date).toLocaleDateString() : '';
+      addRow([
+        bill.bill_number || '',
+        patientName,
+        date,
+        bill.total_amount || 0,
+        bill.status || '',
+      ]);
+    });
+
+    return rows.join('\r\n');
+  };
+
+  const handleExportCSV = () => {
+    try {
+      const csvContent = buildReportsCSV();
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `payments-reports-${dateRange.start}-to-${dateRange.end}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to export reports CSV', err);
+    }
+  };
 
   const generateMonthlyChart = () => {
     // Use real monthly revenue data from API or fallback to 0
@@ -948,13 +1032,13 @@ export default function PaymentsReportsPage() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Export Reports</h3>
           <div className="flex flex-wrap gap-4">
             <button
-              onClick={handlePrint}
+              onClick={handleExportCSV}
               className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v12m0 0l-4-4m4 4l4-4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
               </svg>
-              Print Report
+              Export CSV
             </button>
             
             <button
