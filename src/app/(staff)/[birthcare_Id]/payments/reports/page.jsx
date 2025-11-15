@@ -403,8 +403,9 @@ export default function PaymentsReportsPage() {
   const recentBills = dashboardData.recent_bills || [];
   const monthlyData = generateMonthlyChart();
   const maxRevenue = Math.max(...monthlyData.map(d => d.revenue), 1);
-  const monthsWithData = monthlyData.filter(d => d.revenue > 0).length || monthlyData.length;
-  const avgMonthlyRevenue = Math.round(monthlyData.reduce((sum, d) => sum + d.revenue, 0) / monthsWithData);
+  const avgMonthlyRevenue = Math.round(
+    monthlyData.reduce((sum, d) => sum + d.revenue, 0) / (monthlyData.length || 1)
+  );
   const growthRateNum = Number(analyticsData.revenue_trends?.growth_rate ?? 0);
   const growthRateFormatted = `${growthRateNum > 0 ? '+' : ''}${growthRateNum.toFixed(1)}%`;
   const trendLabel = (analyticsData.revenue_trends?.trend || 'stable') === 'up' ? 'Increasing' : ((analyticsData.revenue_trends?.trend || 'stable') === 'down' ? 'Decreasing' : 'Stable');
