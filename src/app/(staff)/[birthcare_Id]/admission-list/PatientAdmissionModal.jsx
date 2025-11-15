@@ -388,7 +388,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
               {/* Patient Selection */}
               <div className="relative">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Patient *
+                  Select Patient <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -444,7 +444,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Admission Date *
+                      Admission Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
@@ -458,7 +458,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Admission Time *
+                      Admission Time <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="time"
@@ -472,7 +472,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Admission Type *
+                      Admission Type <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="admission_type"
@@ -548,7 +548,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Room *
+                      Room <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="room_id"
@@ -568,7 +568,7 @@ const PatientAdmissionModal = ({ isOpen, onClose, birthcare_Id, onAdmissionCreat
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Bed *
+                      Bed <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="bed_id"
