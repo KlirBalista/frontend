@@ -356,7 +356,7 @@ export default function RegisterBirthcare() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6">
         {/* Step 1: Facility Information */}
         {currentStep === 1 && (
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm animate-fadeIn">
@@ -589,7 +589,8 @@ export default function RegisterBirthcare() {
                 </Button>
               ) : (
                 <Button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit(onSubmit)}
                   className={`px-6 py-3 bg-gradient-to-r from-[#A41F39] to-[#BF3853] hover:from-[#923649] hover:to-[#A41F39] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""}`}
                   disabled={isSubmitting}
                 >
