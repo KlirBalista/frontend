@@ -159,7 +159,21 @@ export default function PaymentsReportsPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
+      const emptyDashboard = {
+        summary: {
+          total_bills: 0,
+          total_revenue: 0,
+          total_paid: 0,
+          total_outstanding: 0,
+          overdue_amount: 0,
+          bills_by_status: {},
+        },
+        monthly_revenue: {},
+        recent_bills: [],
+        overdue_count: 0,
+      };
+
       // Fetch multiple data sources in parallel
       const [dashboardResponse, reportsResponse, analyticsResponse] = await Promise.allSettled([
         axios.get(`/api/birthcare/${birthcare_Id}/payments/dashboard`),
@@ -167,59 +181,77 @@ export default function PaymentsReportsPage() {
           params: {
             start_date: dateRange.start,
             end_date: dateRange.end,
-            period: selectedPeriod
-          }
+            period: selectedPeriod,
+          },
         }),
         axios.get(`/api/birthcare/${birthcare_Id}/payments/analytics`, {
           params: {
-            period: selectedPeriod
-          }
-        })
+            period: selectedPeriod,
+          },
+        }),
       ]);
 
-      // Handle dashboard data
-      if (dashboardResponse.status === 'fulfilled' && dashboardResponse.value.data.success) {
+      // ------- DASHBOARD DATA (with fallback) -------
+      let effectiveDashboard = emptyDashboard;
+
+      if (dashboardResponse.status === 'fulfilled' && dashboardResponse.value.data?.success) {
         const apiData = dashboardResponse.value.data.data || {};
-        console.log('Real monthly revenue data from API:', apiData.monthly_revenue);
-        setDashboardData(apiData);
+        console.log('Dashboard API data:', apiData);
+        effectiveDashboard = { ...emptyDashboard, ...apiData };
       } else {
-        console.warn('Dashboard API failed, using empty data', {
+        console.warn('Dashboard API failed, trying payments index fallback', {
           status: dashboardResponse.status,
-          error: dashboardResponse.reason || dashboardResponse.value?.data
+          error: dashboardResponse.reason || dashboardResponse.value?.data,
         });
-        setDashboardData({
-          summary: {
-            total_bills: 0,
-            total_revenue: 0,
-            total_paid: 0,
-            total_outstanding: 0,
-            overdue_amount: 0,
-            bills_by_status: {}
-          },
-          monthly_revenue: {},
-          recent_bills: [],
-          overdue_count: 0
-        });
+
+        // Fallback: use /payments index which also returns a summary
+        try {
+          const fallbackRes = await axios.get(`/api/birthcare/${birthcare_Id}/payments`, {
+            params: { status: 'all', per_page: 50 },
+          });
+
+          if (fallbackRes.data?.success) {
+            const bills = fallbackRes.data.data?.data || fallbackRes.data.data || [];
+            const summary = fallbackRes.data.summary || emptyDashboard.summary;
+
+            effectiveDashboard = {
+              summary,
+              // Use latest 5 bills as "recent bills"
+              recent_bills: bills.slice(0, 5),
+              monthly_revenue: {},
+              overdue_count: summary.overdue_amount > 0 ? 1 : 0,
+            };
+          } else {
+            console.warn('Payments index fallback did not return success, using empty dashboard data');
+          }
+        } catch (fallbackErr) {
+          console.error('Payments index fallback failed:', fallbackErr);
+        }
       }
 
-      // Handle reports data
-      if (reportsResponse.status === 'fulfilled' && reportsResponse.value.data.success) {
+      setDashboardData(effectiveDashboard);
+
+      // ------- REPORTS DATA -------
+      if (reportsResponse.status === 'fulfilled' && reportsResponse.value.data?.success) {
         setReportsData(reportsResponse.value.data.data || {});
       } else {
-        console.warn('Reports API failed, using empty data');
+        console.warn('Reports API failed, using empty data', {
+          status: reportsResponse.status,
+          error: reportsResponse.reason || reportsResponse.value?.data,
+        });
         setReportsData({
           payment_methods: {},
           daily_collections: [],
-          top_services: []
+          top_services: [],
         });
       }
 
-      // Handle analytics data
-      if (analyticsResponse.status === 'fulfilled' && analyticsResponse.value.data.success) {
+      // ------- ANALYTICS DATA -------
+      if (analyticsResponse.status === 'fulfilled' && analyticsResponse.value.data?.success) {
         setAnalyticsData(analyticsResponse.value.data.data || {});
       } else {
         console.warn('Analytics API failed, calculating from available data');
-        setAnalyticsData(calculateRealAnalyticsData(dashboardData));
+        setAnalyticsData(calculateRealAnalyticsData(effectiveDashboard));
       }
 
     } catch (err) {
