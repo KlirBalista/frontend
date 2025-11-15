@@ -9,6 +9,7 @@ import { saveNewbornScreeningAsPDF, downloadNewbornScreeningPDF } from '@/utils/
 import SearchablePatientSelect from '@/components/SearchablePatientSelect'
 import SearchableMidwifeSelect from '@/components/SearchableMidwifeSelect'
 import CustomDialog from '@/components/CustomDialog'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 export default function NewbornScreeningResults() {
     const { user } = useAuth({ middleware: "auth" })
@@ -18,6 +19,7 @@ export default function NewbornScreeningResults() {
     const [birthCareInfo, setBirthCareInfo] = useState(null)
     const [loading, setLoading] = useState(true)
     const [patients, setPatients] = useState([])
+    const [isSaving, setIsSaving] = useState(false)
     const [selectedPatient, setSelectedPatient] = useState(null)
     const [midwives, setMidwives] = useState([])
     const [dialog, setDialog] = useState({ isOpen: false, type: 'info', title: '', message: '', onConfirm: null })
@@ -308,6 +310,8 @@ export default function NewbornScreeningResults() {
             return
         }
 
+        setIsSaving(true)
+
         try {
             // Generate PDF and save to patient documents
             const pdfData = await saveNewbornScreeningAsPDF(
@@ -342,6 +346,8 @@ export default function NewbornScreeningResults() {
                 message: 'Error generating PDF. Please try again.',
                 onConfirm: () => setDialog(prev => ({ ...prev, isOpen: false }))
             })
+        } finally {
+            setIsSaving(false)
         }
     }
 
@@ -970,7 +976,7 @@ export default function NewbornScreeningResults() {
                             <button
                                 type="button"
                                 onClick={handlePreviewPDF}
-                                disabled={!selectedPatient}
+                                disabled={!selectedPatient || isSaving}
                                 className="px-6 py-3 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <span className="flex items-center">
@@ -980,11 +986,12 @@ export default function NewbornScreeningResults() {
                             <button
                                 type="button"
                                 onClick={generatePDF}
-                                disabled={!selectedPatient}
+                                disabled={!selectedPatient || isSaving}
                                 className="px-6 py-3 bg-gradient-to-r from-[#BF3853] to-[#A41F39] hover:from-[#A41F39] hover:to-[#8B1D36] border border-transparent rounded-lg text-sm font-semibold text-white hover:shadow-lg hover:shadow-[#BF3853]/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <span className="flex items-center">
-                                    Save to Documents
+                                <span className="flex items-center gap-2">
+                                    {isSaving && <LoadingSpinner size="small" color="white" />}
+                                    <span>Save to Documents</span>
                                 </span>
                             </button>
                         </div>
