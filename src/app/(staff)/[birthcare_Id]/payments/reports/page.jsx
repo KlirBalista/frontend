@@ -403,8 +403,9 @@ export default function PaymentsReportsPage() {
   const recentBills = dashboardData.recent_bills || [];
   const monthlyData = generateMonthlyChart();
   const maxRevenue = Math.max(...monthlyData.map(d => d.revenue), 1);
+  const monthsWithData = monthlyData.filter(d => d.revenue > 0).length || monthlyData.length;
   const avgMonthlyRevenue = Math.round(
-    monthlyData.reduce((sum, d) => sum + d.revenue, 0) / (monthlyData.length || 1)
+    monthlyData.reduce((sum, d) => sum + d.revenue, 0) / monthsWithData
   );
   const growthRateNum = Number(analyticsData.revenue_trends?.growth_rate ?? 0);
   const growthRateFormatted = `${growthRateNum > 0 ? '+' : ''}${growthRateNum.toFixed(1)}%`;
@@ -720,9 +721,12 @@ export default function PaymentsReportsPage() {
             
             {/* Main trend line */}
             <polyline
-              points={monthlyData.map((data, index) => 
-                `${80 + (index * 55)},${250 - (data.revenue / maxRevenue) * 180}`
-              ).join(' ')}
+              points={monthlyData.map((data, index) => {
+                const chartBottom = 255; // matches y-position of ₱0 label
+                const chartHeight = 200; // distance from ₱0 to top (₱max)
+                const y = chartBottom - (data.revenue / maxRevenue) * chartHeight;
+                return `${80 + (index * 55)},${y}`;
+              }).join(' ')}
               fill="none"
               stroke="#3b82f6"
               strokeWidth="3"
@@ -735,7 +739,9 @@ export default function PaymentsReportsPage() {
               const currentMonthIndex = new Date().getMonth();
               const isCurrentMonth = index === currentMonthIndex;
               const cx = 80 + (index * 55);
-              const cy = 250 - (data.revenue / maxRevenue) * 180;
+              const chartBottom = 255; // matches y-position of ₱0 label
+              const chartHeight = 200; // distance from ₱0 to top (₱max)
+              const cy = chartBottom - (data.revenue / maxRevenue) * chartHeight;
               
               return (
                 <g key={index}>
