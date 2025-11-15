@@ -559,17 +559,11 @@ export default function PaymentsReportsPage() {
           </div>
           
           {/* Simple Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-sm text-gray-900">Current Month</div>
               <div className="text-lg font-bold text-green-600">
                 ₱{(monthlyData[new Date().getMonth()]?.revenue || 0).toLocaleString()}
-              </div>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-900">Average</div>
-              <div className="text-lg font-bold text-green-600">
-                ₱{Math.round(monthlyData.reduce((sum, data) => sum + data.revenue, 0) / monthlyData.length || 0).toLocaleString()}
               </div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
