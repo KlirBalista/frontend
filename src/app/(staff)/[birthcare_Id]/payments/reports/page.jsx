@@ -876,6 +876,9 @@ export default function PaymentsReportsPage() {
                   Amount
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  Payments
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
                   Status
                 </th>
               </tr>
@@ -883,7 +886,7 @@ export default function PaymentsReportsPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {recentBills.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-900">
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-900">
                     No recent payments found.
                   </td>
                 </tr>
@@ -901,6 +904,24 @@ export default function PaymentsReportsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
                       ₱{parseFloat(bill.total_amount).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {bill.payments && bill.payments.length > 0 ? (
+                        <div className="space-y-1">
+                          {bill.payments.map((payment) => (
+                            <div key={payment.id} className="flex justify-between text-xs">
+                              <span className="text-gray-700">
+                                {payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : ''}
+                              </span>
+                              <span className="font-semibold text-green-600">
+                                ₱{parseFloat(payment.amount || 0).toLocaleString()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-500">No payments yet</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
