@@ -970,7 +970,8 @@ export default function FacilityDashboard() {
             {birthcare.status === "rejected" && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                 <p className="text-sm text-red-800 mb-2 font-medium">
-                  Your facility was rejected. Please upload updated documents to resubmit.
+                  Your facility was rejected. Upload the corrected documents, then click
+                  <span className="font-semibold"> "Resubmit for Review"</span> when you're ready.
                 </p>
                 {birthcare.rejection_reason && (
                   <p className="text-sm text-red-700 italic">
@@ -1022,6 +1023,19 @@ export default function FacilityDashboard() {
               <div className="mt-4 flex items-center justify-center space-x-2 p-4 bg-blue-50 rounded-xl">
                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-t-2 border-blue-200 border-t-[#BF3853]"></div>
                 <span className="text-sm text-gray-700 font-medium">Uploading...</span>
+              </div>
+            )}
+
+            {birthcare.status === "rejected" && (
+              <div className="mt-6 flex justify-end">
+                <Button
+                  type="button"
+                  onClick={handleResubmit}
+                  disabled={isResubmitting}
+                  className="px-6 py-3 bg-gradient-to-r from-[#A41F39] to-[#BF3853] hover:from-[#923649] hover:to-[#A41F39] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-60"
+                >
+                  {isResubmitting ? "Resubmitting..." : "Resubmit for Review"}
+                </Button>
               </div>
             )}
           </div>
