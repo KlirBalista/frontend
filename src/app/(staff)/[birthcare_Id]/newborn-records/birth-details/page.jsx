@@ -135,18 +135,30 @@ export default function BirthDetails() {
   const fetchMidwives = async () => {
     try {
       const response = await axios.get(`/api/birthcare/${birthcare_Id}/staff`);
-      // Filter only midwives (those with role that contains "midwife" or role_id for midwife)
-      const allStaff = response.data || [];
-      const midwivesOnly = allStaff.filter(staff => 
-        staff.role?.toLowerCase().includes('midwife') || 
-        staff.role_name?.toLowerCase().includes('midwife')
-      );
+      // Handle both plain array and { data: [] } API shapes
+      const allStaff = response.data?.data || response.data || [];
+
+      // Normalize role name – backend may return role as an object or a plain string
+      const midwivesOnly = allStaff.filter(staff => {
+        const roleName = (
+          // role as nested object with name
+          staff.role?.name ||
+          // role already flattened as a string
+          (typeof staff.role === 'string' ? staff.role : '') ||
+          // explicit role_name field used elsewhere in the app
+          staff.role_name ||
+          ''
+        ).toLowerCase();
+
+        return roleName.includes('midwife');
+      });
+
       setMidwives(midwivesOnly);
     } catch (error) {
       console.error('Error fetching midwives:', error);
+      setMidwives([]);
     }
   };
-
   // Handle common birth info changes
   const handleBirthInfoChange = (field, value) => {
     setBirthInfo(prev => ({
