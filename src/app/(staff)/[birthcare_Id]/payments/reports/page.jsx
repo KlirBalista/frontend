@@ -403,10 +403,6 @@ export default function PaymentsReportsPage() {
   const recentBills = dashboardData.recent_bills || [];
   const monthlyData = generateMonthlyChart();
   const maxRevenue = Math.max(...monthlyData.map(d => d.revenue), 1);
-  const monthsWithData = monthlyData.filter(d => d.revenue > 0).length || monthlyData.length;
-  const avgMonthlyRevenue = Math.round(
-    monthlyData.reduce((sum, d) => sum + d.revenue, 0) / monthsWithData
-  );
   const growthRateNum = Number(analyticsData.revenue_trends?.growth_rate ?? 0);
   const growthRateFormatted = `${growthRateNum > 0 ? '+' : ''}${growthRateNum.toFixed(1)}%`;
   const trendLabel = (analyticsData.revenue_trends?.trend || 'stable') === 'up' ? 'Increasing' : ((analyticsData.revenue_trends?.trend || 'stable') === 'down' ? 'Decreasing' : 'Stable');
@@ -842,11 +838,11 @@ export default function PaymentsReportsPage() {
             <div className="text-xs text-gray-900">{monthlyData.reduce((max, current) => current.revenue > max.revenue ? current : max, monthlyData[0] || {}).month}</div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-900">Average Monthly</div>
+            <div className="text-sm text-gray-900">Average Monthly Change</div>
             <div className="text-lg font-bold text-green-600">
-              ₱{avgMonthlyRevenue.toLocaleString()}
+              {growthRateFormatted}
             </div>
-            <div className="text-xs text-gray-900">across all months</div>
+            <div className="text-xs text-gray-900">vs. last month</div>
           </div>
           <div className="text-center">
             <div className="text-sm text-gray-900">Current Trend</div>
