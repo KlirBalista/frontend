@@ -495,7 +495,7 @@ export default function PaymentsReportsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-gray-900">Total Payments</h3>
-              <p className="text-3xl font-bold text-green-600">{summary.total_bills || 0}</p>
+              <p className="text-3xl font-bold text-green-600">{summary.total_payments || 0}</p>
             </div>
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center border border-blue-200">
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
