@@ -547,12 +547,15 @@ export default function PatientChargesPage() {
       // Admission ID may not exist for prenatal / non-admitted patients.
       let admissionId = selectedPatient.admission_id || selectedPatient.id || null;
 
+      // Build payload; only include admission_id when we actually have one.
       const chargeData = {
         patient_id: parseInt(patientId),
-        // If there is no admission, send null so backend can treat this as an outpatient/prenatal charge
-        admission_id: admissionId ? parseInt(admissionId) : null,
         services: servicesPayload
       };
+
+      if (admissionId) {
+        chargeData.admission_id = parseInt(admissionId);
+      }
 
       console.log('=== FINALIZING CHARGE ===');
       console.log('Payload being sent:', JSON.stringify(chargeData, null, 2));
