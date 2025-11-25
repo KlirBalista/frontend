@@ -41,6 +41,7 @@ export default function BirthDetails() {
   const [babies, setBabies] = useState([{
     id: 1,
     baby_name: '',
+    time_of_birth: new Date().toTimeString().slice(0, 5), // Individual time for each baby
     sex: 'male',
     weight: '',
     length: '',
@@ -182,6 +183,7 @@ export default function BirthDetails() {
               current.push({
                 id: i + 1,
                 baby_name: '',
+                time_of_birth: new Date().toTimeString().slice(0, 5),
                 sex: 'male',
                 weight: '',
                 length: '',
@@ -252,6 +254,7 @@ export default function BirthDetails() {
     setBabies(prev => [...prev, {
       id: newId,
       baby_name: '',
+      time_of_birth: new Date().toTimeString().slice(0, 5),
       sex: 'male',
       weight: '',
       length: '',
@@ -293,16 +296,37 @@ export default function BirthDetails() {
     // Validate common birth info
     if (!birthInfo.patient_id) newErrors.patient_id = 'Patient is required';
     if (!birthInfo.date_of_birth) newErrors.date_of_birth = 'Date of birth is required';
-    if (!birthInfo.time_of_birth) newErrors.time_of_birth = 'Time of birth is required';
     if (!birthInfo.place_of_birth) newErrors.place_of_birth = 'Place of birth is required';
     if (!birthInfo.attendant_name) newErrors.attendant_name = 'Attendant name is required';
 
     // Validate each baby
     babies.forEach((baby, index) => {
       if (!baby.baby_name) newErrors[`baby_${baby.id}_baby_name`] = `Baby ${index + 1} name is required`;
+      if (!baby.time_of_birth) newErrors[`baby_${baby.id}_time_of_birth`] = `Baby ${index + 1} time of birth is required`;
       if (!baby.weight) newErrors[`baby_${baby.id}_weight`] = `Baby ${index + 1} weight is required`;
       if (!baby.length) newErrors[`baby_${baby.id}_length`] = `Baby ${index + 1} length is required`;
     });
+
+    // For multiple births, validate that each baby has a different time of birth
+    if (babies.length > 1) {
+      const times = babies.map(b => b.time_of_birth).filter(t => t);
+      const uniqueTimes = new Set(times);
+      
+      if (times.length > 0 && uniqueTimes.size !== times.length) {
+        // Find which babies have duplicate times
+        const timeMap = {};
+        babies.forEach((baby, index) => {
+          if (baby.time_of_birth) {
+            if (timeMap[baby.time_of_birth]) {
+              newErrors[`baby_${baby.id}_time_of_birth`] = `Each baby must have a different time of birth`;
+              newErrors[`baby_${timeMap[baby.time_of_birth]}_time_of_birth`] = `Each baby must have a different time of birth`;
+            } else {
+              timeMap[baby.time_of_birth] = baby.id;
+            }
+          }
+        });
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -381,6 +405,7 @@ export default function BirthDetails() {
         setBabies([{
           id: 1,
           baby_name: '',
+          time_of_birth: new Date().toTimeString().slice(0, 5),
           sex: 'male',
           weight: '',
           length: '',
@@ -567,6 +592,7 @@ export default function BirthDetails() {
                   setBabies([{
                     id: 1,
                     baby_name: 'Maria Isabella Santos',
+                    time_of_birth: '08:30',
                     sex: 'female',
                     weight: '3250',
                     length: '50.5',
@@ -597,7 +623,7 @@ export default function BirthDetails() {
                 Common Birth Information
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
                   <input
@@ -608,19 +634,7 @@ export default function BirthDetails() {
                   />
                   {errors.date_of_birth && <p className="text-red-500 text-xs mt-1">{errors.date_of_birth}</p>}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Time of Birth</label>
-                  <input
-                    type="time"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
-                    value={birthInfo.time_of_birth}
-                    onChange={(e) => handleBirthInfoChange('time_of_birth', e.target.value)}
-                  />
-                  {errors.time_of_birth && <p className="text-red-500 text-xs mt-1">{errors.time_of_birth}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Place of Birth</label>
-                  <input
+                                 <input
                     type="text"
                     placeholder="Facility name or location"
                     className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
@@ -728,6 +742,22 @@ export default function BirthDetails() {
                           onChange={(e) => handleBabyChange(baby.id, 'baby_name', e.target.value)}
                         />
                         {errors[`baby_${baby.id}_baby_name`] && <p className="text-red-500 text-xs mt-1">{errors[`baby_${baby.id}_baby_name`]}</p>}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Time of Birth {babies.length > 1 && <span className="text-red-600">*</span>}
+                        </label>
+                        <input
+                          type="time"
+                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BF3853] focus:border-transparent"
+                          value={baby.time_of_birth}
+                          onChange={(e) => handleBabyChange(baby.id, 'time_of_birth', e.target.value)}
+                        />
+                        {errors[`baby_${baby.id}_time_of_birth`] && <p className="text-red-500 text-xs mt-1">{errors[`baby_${baby.id}_time_of_birth`]}</p>}
+                        {babies.length > 1 && (
+                          <p className="text-xs text-gray-500 mt-1">Each baby must have a different birth time</p>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
